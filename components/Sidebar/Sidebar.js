@@ -67,12 +67,12 @@ export default function Sidebar() {
               
 
               <li className="items-center">
-                <Link href="/admin/settings">
+                <Link href="/doctor/settings">
                   <a
-                    href="/admin/settings"
+                    href="/doctor/settings"
                     className={
                       "text-xs uppercase py-3 font-bold block " +
-                      (router.pathname.indexOf("/admin/settings") !== -1
+                      (router.pathname.indexOf("/doctor/settings") !== -1
                         ? "text-lightBlue-500 hover:text-lightBlue-600"
                         : "text-blueGray-700 hover:text-blueGray-500")
                     }
@@ -80,7 +80,7 @@ export default function Sidebar() {
                     <i
                       className={
                         "fas fa-tools mr-2 text-sm " +
-                        (router.pathname.indexOf("/admin/settings") !== -1
+                        (router.pathname.indexOf("/doctor/settings") !== -1
                           ? "opacity-75"
                           : "text-blueGray-300")
                       }
@@ -88,7 +88,53 @@ export default function Sidebar() {
                     Settings
                   </a>
                 </Link>
-              </li>          
+              </li>   
+              <li className="items-center">
+                <Link href="/doctor/appointments">
+                  <a
+                    href="/doctor/appointments"
+                    className={
+                      "text-xs uppercase py-3 font-bold block " +
+                      (router.pathname.indexOf("/doctor/appointments") !== -1
+                        ? "text-lightBlue-500 hover:text-lightBlue-600"
+                        : "text-blueGray-700 hover:text-blueGray-500")
+                    }
+                  >
+                    <i
+                      className={
+                        "fas fa-tools mr-2 text-sm " +
+                        (router.pathname.indexOf("/doctor/appointments") !== -1
+                          ? "opacity-75"
+                          : "text-blueGray-300")
+                      }
+                    ></i>{" "}
+                    Appointments 
+                  </a>
+                </Link>
+              </li>  
+              <li className="items-center">
+                <Link href="/doctor/history">
+                  <a
+                    href="/doctor/history"
+                    className={
+                      "text-xs uppercase py-3 font-bold block " +
+                      (router.pathname.indexOf("/doctor/history") !== -1
+                        ? "text-lightBlue-500 hover:text-lightBlue-600"
+                        : "text-blueGray-700 hover:text-blueGray-500")
+                    }
+                  >
+                    <i
+                      className={
+                        "fas fa-tools mr-2 text-sm " +
+                        (router.pathname.indexOf("/doctor/history") !== -1
+                          ? "opacity-75"
+                          : "text-blueGray-300")
+                      }
+                    ></i>{" "}
+                    Appointments History
+                  </a>
+                </Link>
+              </li>        
             </ul>
           </div>
         </div>

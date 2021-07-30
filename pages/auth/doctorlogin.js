@@ -1,13 +1,27 @@
 import React from "react";
 import {auth,provider} from '../../firebase'
 import LoginLayout from "layouts/LoginLayout.js";
+import axios from "axios";
 
 export default function DoctorLogin() {
+
+  const addDoctorInfo = async(user) =>{
+          const response= await axios.post("http://ec2-3-108-250-40.ap-south-1.compute.amazonaws.com:1337/api/v1/",user);
+      console.log(response,"response")
+  }
   
+
   const signIn = () =>{
     auth.signInWithPopup(provider)
-    .then(({userInfo})=>{
-        console.log(userInfo)        
+    .then(({user})=>{
+        let userInfo = {
+          email:user.email,
+          googleAuthId: user.uid,
+          firstname:user.displayName,
+          lastname:user.displayName,
+          image:user.photoURL, 
+        }
+        addDoctorInfo(userInfo);
     })
     .catch(error=>alert(error.message))
   }
