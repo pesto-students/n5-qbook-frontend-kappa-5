@@ -6,7 +6,10 @@ import axios from "axios";
 export default function DoctorLogin() {
 
   const addDoctorInfo = async(user) =>{
-          const response= await axios.post("http://ec2-3-108-250-40.ap-south-1.compute.amazonaws.com:1337/api/v1/",user);
+           const apiUrl = 'http://ec2-13-126-203-170.ap-south-1.compute.amazonaws.com:1337/api/v1/user/login';
+          // const apiUrl = 'http://localhost:1337/api/v1/user/login';
+
+          const response= await axios.post(apiUrl,user);
       console.log(response,"response")
   }
   
