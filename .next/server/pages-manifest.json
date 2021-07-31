@@ -1,0 +1,9 @@
+{
+  "/_app": "pages/_app.js",
+  "/auth/doctorlogin": "pages/auth/doctorlogin.js",
+  "/auth/patientlogin": "pages/auth/patientlogin.js",
+  "/doctor/settings": "pages/doctor/settings.js",
+  "/": "pages/index.js",
+  "/_error": "pages/_error.js",
+  "/_document": "pages/_document.js"
+}
