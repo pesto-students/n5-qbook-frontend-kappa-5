@@ -6,6 +6,7 @@ import axios from "axios";
 export default function DoctorLogin() {
 
   const addDoctorInfo = async(user) =>{
+    console.log("user",user)
            const apiUrl = 'http://ec2-13-126-203-170.ap-south-1.compute.amazonaws.com:1337/api/v1/user/login';
           // const apiUrl = 'http://localhost:1337/api/v1/user/login';
 
@@ -33,11 +34,22 @@ export default function DoctorLogin() {
       <div className="container mx-auto px-4 h-full">
         <div className="flex content-center items-center justify-center h-full">
           <div className="w-full lg:w-4/12 px-4">
-            <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-blueGray-200 border-0">
+            <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-blueGray-600 border-0">
               <div className="rounded-t mb-0 px-6 py-6">
-                <div className="text-center mb-3">
-                  <h6 className="text-blueGray-500 text-sm font-bold">
-                    Sign in with
+              <div className="flex flex-wrap justify-center">
+              <div className="w-full lg:w-12/12 px-4">
+                <p className="mb-4 text-base leading-relaxed text-white ">
+                  <span className="font-bold">QBook</span> helps to ease your consultation process by providing a track
+                  of the ongoing & past consultations digitally. Easy configurations of available timings, 
+                   cancelling the appointments in case of any emergencies, generating a QR code for the patients
+                  to book the appointments without any hassle and a lot more...!!
+                </p>
+                
+              </div>
+            </div>
+                <div className="text-center mb-3 mt-2">
+                  <h6 className="text-white text-sm font-bold">
+                    Sign in to get started..!
                   </h6>
                 </div>
                 <div className="btn-wrapper text-center">                 
@@ -50,7 +62,10 @@ export default function DoctorLogin() {
                     Google
                   </button>
                 </div>
-                <hr className="mt-6 border-b-1 border-blueGray-300" />
+               
+                <div className="mt-10 py-10 border-t border-blueGray-200 text-center">
+            
+          </div>
               </div>          
             </div>          
           </div>

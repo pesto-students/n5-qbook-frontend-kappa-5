@@ -4157,3 +4157,20 @@ select {
 
 @media (min-width: 1536px) {
 }
+/* .toggle-checkbox:checked {
+  right:0;
+
+  border-color: #68D391;
+}
+.toggle-checkbox:checked {
+
+  background-color: #68D391;
+}
+.toggle-label {
+
+  background-color: #68D391;
+}
+input:checked ~ .dot {
+  transform: translateX(100%);
+  background-color: #48bb78;
+} */
