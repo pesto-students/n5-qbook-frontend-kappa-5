@@ -1,4 +1,4 @@
-import { Avatar } from "@material-ui/core";
+//import { Avatar } from "@material-ui/core";
 
 export default function DoctorNavbar() {
   return (
@@ -9,8 +9,8 @@ export default function DoctorNavbar() {
             Dashboard
           </p> 
           <div className="flex right-0 flex-wrap items-stretch">
-          <Avatar className="cursor-pointer" src="">
-                </Avatar>
+          {/* <Avatar className="cursor-pointer" src="">
+                </Avatar> */}
             </div>     
         </div>
       </nav>

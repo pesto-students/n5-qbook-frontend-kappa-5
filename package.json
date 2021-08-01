@@ -2,6 +2,7 @@
   "name": "qbook-frontend",
   "dependencies": {
     "@fortawesome/fontawesome-free": "5.15.3",
+    "@headlessui/react": "^1.4.0",
     "@tailwindcss/forms": "0.2.1",
     "axios": "^0.21.1",
     "firebase": "^8.8.0",
