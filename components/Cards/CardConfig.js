@@ -1,10 +1,33 @@
 import React,{useState} from "react";
 import Toggle from 'components/Sidebar/Toggle';
-
+import firebase from '../../firebase'
 export default function CardConfig() {
 const [onDuty, setOnDuty] = useState(true);
 const [sendNotifications, setSendNotifications] = useState(true);
 const [enabled, setEnabled] = useState(false)
+
+// const messaging = firebase.messaging();
+// messaging.getToken({vapidKey: "BE-QIly0dhEhwxGy7HK1-0ukeqjzbmJE9IIqCFRe1-fV2MSpnhtc-ipMGXOktjTXkrIeGx0948zOZSUVh1aosqk"}).then((currentToken) => {
+//   if (currentToken) {
+//     // Send the token to your server and update the UI if necessary
+//     console.log(currentToken,"token")
+//     // ...
+//   } else {
+//     // Show permission request UI
+//     console.log('No registration token available. Request permission to generate one.');
+//     // ...
+//   }
+// }).catch((err) => {
+//   console.log('An error occurred while retrieving token. ', err);
+//   // ...
+// });
+//console.log("messaging",messaging)
+// messaging.requestPermission().then(()=>{
+//   console.log("have permission")
+//   //return messaging.getToken()
+// }).catch(function(err){
+//   console.log('err')
+// })
 const cancelAppointments =() =>{
   //api call
 }
@@ -16,36 +39,7 @@ const cancelAppointments =() =>{
         <div className="flex flex-wrap flex-col  m-20 space-y-2">
           <div className="w-full lg:w-12/12 px-1 mt-5 flex flex-row items-center">
          
-
-                {/* <p className="text-bg-blueGray-600 font-bold uppercase text-xs px-1 py-2">ON/OFF DUTY (Adhoc Break)</p> */}
-             
-
-                {/* <div className="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
-    <input type="checkbox" name="toggle" id="toggle" className="toggle-checkbox absolute block w-6 h-6 rounded-full bg-rose-500 border-4 appearance-none cursor-pointer"/>
-    <label htmlFor="toggle" className="toggle-label block overflow-hidden h-6 rounded-full bg-blue-700 cursor-pointer"></label>
-</div>
-<label htmlFor="toggle" className="text-xs text-gray-700">Toggle me.</label> */}
-
-<div className="">
-
-<span className="text-sm text-gray-800">Light</span>
-<div>
- <input type="checkbox" name="" id="toggle" className="hidden"/>
-  <label htmlFor="toggle">
-
-  <div className="w-9 h-5  bg-blueGray-400 active:bg-blueGray-400 rounded-full p-1">
-    
-
-    <div className="toggle-dot bg-white w-4 h-4 rounded-full shadow-md transform duration-300 ease-out"></div>
-  
-    </div>
-    </label>
-  </div>
-
- 
-
-</div>
-              {/* adding the code */}
+          <Toggle/>
               </div>
               <div className="w-full lg:w-12/12 px-1 mt-5 flex flex-row items-center">
                <Toggle/>

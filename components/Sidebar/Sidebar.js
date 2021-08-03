@@ -50,7 +50,7 @@ export default function Sidebar() {
                     className="cursor-pointer text-black opacity-50 md:hidden px-3 py-1 text-xl leading-none bg-transparent rounded border border-solid border-transparent"
                     onClick={() => setCollapseShow("hidden")}
                   >
-                    {/* <i className="fas fa-times"></i> */}
+                    <i className="fas fa-times"></i>
                   </button>
                 </div>
               </div>
@@ -58,10 +58,7 @@ export default function Sidebar() {
 
             <hr className="my-4 md:min-w-full" />
 
-            <h6 className="md:min-w-full text-blueGray-500 text-xs uppercase font-bold block pt-1 pb-4 no-underline">
-              Doctor Pages
-            </h6>
-
+            
 
             <ul className="md:flex-col md:min-w-full flex flex-col list-none">
               
@@ -77,14 +74,14 @@ export default function Sidebar() {
                         : "text-blueGray-700 hover:text-blueGray-500")
                     }
                   >
-                    {/* <i
+                    <i
                       className={
                         "fas fa-tools mr-2 text-sm " +
                         (router.pathname.indexOf("/doctor/settings") !== -1
                           ? "opacity-75"
                           : "text-blueGray-300")
                       }
-                    ></i>{" "} */}
+                    ></i>{" "}
                     Settings
                   </a>
                 </Link>
@@ -100,14 +97,14 @@ export default function Sidebar() {
                         : "text-blueGray-700 hover:text-blueGray-500")
                     }
                   >
-                    {/* <i
+                    <i
                       className={
                         "fas fa-tools mr-2 text-sm " +
                         (router.pathname.indexOf("/doctor/appointments") !== -1
                           ? "opacity-75"
                           : "text-blueGray-300")
                       }
-                    ></i>{" "} */}
+                    ></i>{" "}
                     Appointments 
                   </a>
                 </Link>
@@ -123,14 +120,14 @@ export default function Sidebar() {
                         : "text-blueGray-700 hover:text-blueGray-500")
                     }
                   >
-                    {/* <i
+                    <i
                       className={
                         "fas fa-tools mr-2 text-sm " +
                         (router.pathname.indexOf("/doctor/history") !== -1
                           ? "opacity-75"
                           : "text-blueGray-300")
                       }
-                    ></i>{" "} */}
+                    ></i>{" "}
                     Appointments History
                   </a>
                 </Link>

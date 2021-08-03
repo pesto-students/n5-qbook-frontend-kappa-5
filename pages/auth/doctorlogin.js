@@ -1,16 +1,24 @@
-import React from "react";
-import {auth,provider} from '../../firebase'
+import React, { useContext } from "react";
+import {auth,provider,askForPermissioToReceiveNotifications} from '../../firebase'
 import LoginLayout from "layouts/LoginLayout.js";
 import axios from "axios";
+import Router from 'next/router'
+import Settings from "pages/doctor/settings";
+import { ProfileContext } from "Context/ProfileContext";
 
 export default function DoctorLogin() {
-
+  const {profileInfo,setProfileInfo} = useContext(ProfileContext)
   const addDoctorInfo = async(user) =>{
+            setProfileInfo({ 
+              ...profileInfo,
+              name:user.firstname,
+              photoUrl:user.image,     
+            });
            const apiUrl = 'http://ec2-52-66-15-186.ap-south-1.compute.amazonaws.com:1337/api/v1/user/login';
           // const apiUrl = 'http://localhost:1337/api/v1/user/login';
-
           const response= await axios.post(apiUrl,user);
-      console.log(response,"response")
+          console.log(response,"response")
+          Router.push("/doctor/settings")     
   }
   
 
@@ -60,6 +68,9 @@ export default function DoctorLogin() {
                     <img alt="..." className="w-5 mr-1" src="/img/google.svg" />
                     Google
                   </button>
+                  <button onClick={askForPermissioToReceiveNotifications} >
+      click to receive notifications
+    </button>
                 </div>
                
                 <div className="mt-10 py-10 border-t border-blueGray-200 text-center">
