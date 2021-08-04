@@ -10,9 +10,24 @@ const firebaseConfig = {
     appId: "1:19685698585:web:39d0145adad5d905558e88",
     measurementId: "G-EZ3MV84DRS"
   };
-  export const initializeFirebase = () => {
+  if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
-  }
+}else {
+   firebase.app(); 
+}
+
+//let messaging;
+
+
+ // messaging = firebase.messaging();
+
+const auth = firebase.auth();
+const provider = new firebase.auth.GoogleAuthProvider();
+
+const db = firebase.firestore();
+
+export {auth,provider}
+export default firebase;
 
   // if (firebase.apps.length === 0) {
   //   firebase.initializeApp(firebaseConfig);}
@@ -28,12 +43,12 @@ const firebaseConfig = {
   //     } 
   //   });
   
-  navigator.serviceWorker
-    .register('/public/firebase-messaging-sw.js')
-    .then((registration) => {
-     firebase.messaging().useServiceWorker(registration);
+  // navigator.serviceWorker
+  //   .register('/public/firebase-messaging-sw.js')
+  //   .then((registration) => {
+  //    firebase.messaging().useServiceWorker(registration);
 
-    });
+  //   });
 
 //   if (!firebase.apps.length) {
 //     initializeFirebase();
@@ -46,21 +61,21 @@ const firebaseConfig = {
 //    firebase.messaging().useServiceWorker(registration);
 //  });
 
-  const auth = firebase.auth();
-  const provider = new firebase.auth.GoogleAuthProvider();
+ // const auth = firebase.auth();
+ // const provider = new firebase.auth.GoogleAuthProvider();
 
-  export const askForPermissioToReceiveNotifications = async () => {
-    try {
-      const messaging = firebase.messaging();
-      await messaging.requestPermission();
-      const token = await messaging.getToken();
-      console.log('token do push notifications:', token);
+  // export const askForPermissioToReceiveNotifications = async () => {
+  //   try {
+  //     const messaging = firebase.messaging();
+  //     await messaging.requestPermission();
+  //     const token = await messaging.getToken();
+  //     console.log('token do push notifications:', token);
       
-      return token;
-    } catch (error) {
-      console.error(error);
-    }
-  }
+  //     return token;
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // }
 //   const messaging = firebase.messaging();
 // const publicKey = "BE-QIly0dhEhwxGy7HK1-0ukeqjzbmJE9IIqCFRe1-fV2MSpnhtc-ipMGXOktjTXkrIeGx0948zOZSUVh1aosqk";
 // export const getToken = async (setTokenFound) =>{
@@ -78,5 +93,5 @@ const firebaseConfig = {
 //     }
 //     return currentToken;
 // };
-  export {auth,provider}
-  export default firebase;
+//  export {auth,provider}
+ // export default firebase;

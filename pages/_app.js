@@ -4,11 +4,14 @@ import App from "next/app";
 import Head from "next/head";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "styles/tailwind.css";
-import ProfileContextProvider from 'Context/ProfileContext'
-//import { firebaseCloudMessaging } from '../webPush';
+import ProfileContextProvider from 'Context/ProfileContext';
+import firebase from "firebase/app";
+import 'firebase/messaging';
+import { firebaseCloudMessaging } from '../components/Service/webPush';
+import { func } from "prop-types";
 
-import { initializeFirebase } from '../firebase';
-import firebase from '../firebase'
+
+//import firebase from '../firebase'
 // export default class MyApp extends App {
   
 //   static async getInitialProps({ Component, router, ctx }) {
@@ -41,30 +44,38 @@ import firebase from '../firebase'
 // }
 
  const MyApp =(props)=> {
-  //  useEffect(() => {
-  //     setToken();
-  //     async function setToken() {
-  //       try {
-  //         const token = await firebaseCloudMessaging.init();
-  //         if (token) {
-  //           getMessage();
-  //         }
-  //       } catch (error) {
-  //         console.log(error);
-  //       }
-  //     }
-  //     function getMessage() {
-  //       const messaging = firebase.messaging();
-  //       console.log({ messaging });
-  //       messaging.onMessage((message) => {
-  //         const { title, body } = JSON.parse(message.data.notification);
-  //         var options = {
-  //           body,
-  //         };
-  //         window.self.registration.showNotification(title, options);
-  //       });
-  //     }
-  //   });
+   
+   useEffect(() => {
+    setToken()
+     if("serviceWorker" in navigator){
+       navigator.serviceWorker.register('./firebase-messaging-sw.js')
+       .then(function(registration){
+        console.log("Registration successful, scope is:", registration.scope);
+        navigator.serviceWorker.addEventListener('message', (event) => console.log('event for the service worker', event))
+       }).catch(function(err){
+         console.log("Service worker registration failed, error:", err)
+       })
+     }
+    });
+
+
+    async function setToken(){
+      try{
+        const token = await firebaseCloudMessaging.init();
+        if(token){
+          console.log('token',token);
+          getMessage();
+        }
+      }catch(err){
+        console.log(err);
+      }
+    }
+
+    async function getMessage(){
+      console.log('message functions')
+    const messaging = firebase.messaging()
+    messaging.onMessage((message) => console.log('foreground', message))
+    }
   // useEffect(() => {
     
   //   navigator.serviceWorker

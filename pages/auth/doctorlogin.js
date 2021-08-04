@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import {auth,provider,askForPermissioToReceiveNotifications} from '../../firebase'
+import {auth,provider} from '../../firebase'
 import LoginLayout from "layouts/LoginLayout.js";
 import axios from "axios";
 import Router from 'next/router'
@@ -68,9 +68,9 @@ export default function DoctorLogin() {
                     <img alt="..." className="w-5 mr-1" src="/img/google.svg" />
                     Google
                   </button>
-                  <button onClick={askForPermissioToReceiveNotifications} >
+                  {/* <button onClick={askForPermissioToReceiveNotifications} >
       click to receive notifications
-    </button>
+    </button> */}
                 </div>
                
                 <div className="mt-10 py-10 border-t border-blueGray-200 text-center">
