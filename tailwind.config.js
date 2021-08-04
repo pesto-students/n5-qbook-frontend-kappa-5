@@ -17,6 +17,11 @@ module.exports = {
       minHeight: {
         "screen-75": "75vh",
       },
+      colors: {
+        cadet_blue: {
+          light: "#5F9EA0",
+        },
+      },
       fontSize: {
         55: "55rem",
       },

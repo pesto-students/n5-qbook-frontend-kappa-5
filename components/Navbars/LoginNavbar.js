@@ -15,7 +15,14 @@ export default function LoginNavbar(props) {
               >
                 QBook
               </p>
-            </Link>            
+            </Link> 
+            {/* <div className="relative flex flex-col lg:flex-row mr-auto">
+                <img
+                  alt="..."
+                  src="/img/logo.png"
+                  className="shadow-xl rounded-full h-auto align-middle border-none absolute -m-16 -ml-20 lg:-ml-16 max-w-150-px"
+                />
+              </div>            */}
           </div>        
         </div>
       </nav>

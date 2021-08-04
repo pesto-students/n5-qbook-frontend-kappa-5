@@ -1,8 +1,19 @@
 import React,{useState,useRef} from "react";
 import firebase from '../../firebase'
 import LoginLayout from "layouts/LoginLayout.js";
-
+//import DeviceInfo from 'react-native-device-info';
+//import {isMobile,getUA} from "react-device-detect";
 export default function PatientLogin() {
+  const [deviceId, setDeviceId] =  useState('');
+
+  // const getdeviceId = () => {
+  //   var uniqueId = getUA
+  //  //var uniqueId = MediaDeviceInfo.deviceId;
+  //  //var uniqueId = getUA();
+  //   console.log(uniqueId)
+  //   setDeviceId(uniqueId);
+  // };
+
     const [phoneNumber,setPhoneNumber] = useState('');
     const [otp,setOtp] = useState('');
     const capthaRef = useRef();
@@ -88,6 +99,11 @@ export default function PatientLogin() {
                     <button
                       className="bg-blueGray-800 text-white active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150"
                       type="button"  onClick={onSubmitOtp}>Verify OTP & Book Appointment</button>
+                  </div>
+                  <div className="text-center mt-6">
+                    {/* <button
+                      className="bg-blueGray-800 text-white active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150"
+                      type="button"  onClick={getdeviceId}>generate unique id</button> */}
                   </div>
                 </form>
               </div>

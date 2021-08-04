@@ -4,6 +4,8 @@ import Link from "next/link";
 import LoginLayout from "../layouts/LoginLayout.js";
 
 export default function Index() {
+ 
+  
   return (
     <div className="container mx-auto px-4 h-full">
         <div className="flex content-center items-center justify-center h-full">
