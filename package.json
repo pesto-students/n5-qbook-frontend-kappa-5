@@ -16,6 +16,7 @@
   },
   "scripts": {
     "start": "next start",
+    "cypress": "npx cypress open",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:ci": "jest --ci",
