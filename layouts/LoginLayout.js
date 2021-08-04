@@ -1,6 +1,6 @@
 import React from "react";
-import LoginNavbar from "components/Navbars/LoginNavbar.js";
-import FooterLogin from "components/Footers/FooterLogin";
+import LoginNavbar from "../components/Navbars/LoginNavbar.js";
+import FooterLogin from "../components/Footers/FooterLogin";
 
 export default function LoginLayout({ children }) {
   return (
