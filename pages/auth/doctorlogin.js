@@ -2,26 +2,18 @@ import React, { useContext } from "react";
 import {auth,provider} from '../../firebase'
 import LoginLayout from "layouts/LoginLayout.js";
 import axios from "axios";
-import Router from 'next/router'
-import Settings from "pages/doctor/settings";
+import {useRouter} from "next/router"
 import { ProfileContext } from "Context/ProfileContext";
-
 export default function DoctorLogin() {
-  const {profileInfo,setProfileInfo} = useContext(ProfileContext)
+  const router = useRouter();
+  const {setDoctorLoginInfo} = useContext(ProfileContext)
   const addDoctorInfo = async(user) =>{
-            setProfileInfo({ 
-              ...profileInfo,
-              name:user.firstname,
-              photoUrl:user.image,     
-            });
-           const apiUrl = 'http://ec2-52-66-15-186.ap-south-1.compute.amazonaws.com:1337/api/v1/user/login';
-          // const apiUrl = 'http://localhost:1337/api/v1/user/login';
-          const response= await axios.post(apiUrl,user);
-          console.log(response,"response")
-          Router.push("/doctor/settings")     
+           const apiUrl = 'http://api.qbooks.in:1337/api/v1/user/login';
+          const {data}= await axios.post(apiUrl,user);
+          console.log(data.result,"response")
+          setDoctorLoginInfo(data);
+          router.push("/doctor/settings")     
   }
-  
-
   const signIn = () =>{
     auth.signInWithPopup(provider)
     .then(({user})=>{
@@ -68,14 +60,9 @@ export default function DoctorLogin() {
                     <img alt="..." className="w-5 mr-1" src="/img/google.svg" />
                     Google
                   </button>
-                  {/* <button onClick={askForPermissioToReceiveNotifications} >
-      click to receive notifications
-    </button> */}
                 </div>
-               
-                <div className="mt-10 py-10 border-t border-blueGray-200 text-center">
-            
-          </div>
+                <div className="mt-10 py-10 border-t border-blueGray-200 text-center">           
+                </div>
               </div>          
             </div>          
           </div>
@@ -84,5 +71,4 @@ export default function DoctorLogin() {
     </>
   );
 }
-
 DoctorLogin.layout = LoginLayout;

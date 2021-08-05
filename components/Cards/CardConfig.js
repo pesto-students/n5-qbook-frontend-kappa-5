@@ -39,10 +39,10 @@ const cancelAppointments =() =>{
         <div className="flex flex-wrap flex-col  m-20 space-y-2">
           <div className="w-full lg:w-12/12 px-1 mt-5 flex flex-row items-center">
          
-          <Toggle/>
+          <Toggle value="ON/OFF Duty (Adhoc)"/>
               </div>
               <div className="w-full lg:w-12/12 px-1 mt-5 flex flex-row items-center">
-               <Toggle/>
+               <Toggle value="ON/OFF Notifications"/>
                 
               </div>
               <div className="w-full lg:w-12/12 px-4 mt-5 mb-5 ml-5">

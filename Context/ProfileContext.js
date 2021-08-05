@@ -1,9 +1,17 @@
 
+import firebase from "firebase";
 import {createContext,useState} from "react";
 
 export const ProfileContext = createContext();
 
 function ProfileContextProvider({children}){
+    const [selectedDate, setSelectedDate] = useState(new Date())
+    const [searchTerm, setSearchTerm] = useState("")
+    const [patientList,setPatientList] = useState([{name:"Anna",phoneNumber:"12345678",date:"08/08/2021",paymentMode:"online"},
+    {name:"helen",phoneNumber:"12225678",date:"08/08/2021",paymentMode:"online"},
+    {name:"tom",phoneNumber:"34345656",date:"03/09/2021",paymentMode:"online"},
+    {name:"Anna",phoneNumber:"67676756",date:"03/09/2021",paymentMode:"online"}]);
+    const [doctorLoginInfo,setDoctorLoginInfo] = useState({});
     const [profileInfo,setProfileInfo] = useState({
         name:"",
         photoUrl:"",
@@ -40,8 +48,13 @@ function ProfileContextProvider({children}){
         let propValue = e.target.value;
         setProfileInfo({...profileInfo,[propName]:propValue})
     }
+    const signOut = () =>{
+        firebase.auth.signOut();
+    };
+    
     return(
-        <ProfileContext.Provider value={{profileInfo,setProfileInfo,handleInput,handleStartTime,handleEndTime}}>
+        <ProfileContext.Provider value={{doctorLoginInfo,setDoctorLoginInfo,profileInfo,setProfileInfo,handleInput,handleStartTime,
+        handleEndTime,selectedDate,setSelectedDate,patientList,searchTerm, setSearchTerm,signOut}}>
             {children}
         </ProfileContext.Provider>
     )

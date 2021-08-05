@@ -17,7 +17,7 @@ export default function Sidebar() {
           >
             <i className="fas fa-bars"></i>
           </button>
-          {/* Brand */}
+
           <Link href="/">
             <a
               href="/"
@@ -57,12 +57,7 @@ export default function Sidebar() {
             </div>
 
             <hr className="my-4 md:min-w-full" />
-
-            
-
             <ul className="md:flex-col md:min-w-full flex flex-col list-none">
-              
-
               <li className="items-center">
                 <Link href="/doctor/settings">
                   <a
@@ -99,7 +94,7 @@ export default function Sidebar() {
                   >
                     <i
                       className={
-                        "fas fa-tools mr-2 text-sm " +
+                        "fas fa-calendar mr-2 text-sm " +
                         (router.pathname.indexOf("/doctor/appointments") !== -1
                           ? "opacity-75"
                           : "text-blueGray-300")
@@ -122,7 +117,7 @@ export default function Sidebar() {
                   >
                     <i
                       className={
-                        "fas fa-tools mr-2 text-sm " +
+                        "fas fa-id-card-alt mr-2 text-sm " +
                         (router.pathname.indexOf("/doctor/history") !== -1
                           ? "opacity-75"
                           : "text-blueGray-300")
@@ -131,7 +126,53 @@ export default function Sidebar() {
                     Appointments History
                   </a>
                 </Link>
-              </li>        
+              </li> 
+              <li className="items-center">
+                <Link href="/doctor/reports">
+                  <a
+                    href="/doctor/reports"
+                    className={
+                      "text-xs uppercase py-3 font-bold block " +
+                      (router.pathname.indexOf("/doctor/reports") !== -1
+                        ? "text-lightBlue-500 hover:text-lightBlue-600"
+                        : "text-blueGray-700 hover:text-blueGray-500")
+                    }
+                  >
+                    <i
+                      className={
+                        "fas fa-chart-bar mr-2 text-sm " +
+                        (router.pathname.indexOf("/doctor/reports") !== -1
+                          ? "opacity-75"
+                          : "text-blueGray-300")
+                      }
+                    ></i>{" "}
+                    Reports
+                  </a>
+                </Link>
+              </li>     
+              <li className="items-center">
+                <Link href="/doctor/support">
+                  <a
+                    href="/doctor/support"
+                    className={
+                      "text-xs uppercase py-3 font-bold block " +
+                      (router.pathname.indexOf("/doctor/support") !== -1
+                        ? "text-lightBlue-500 hover:text-lightBlue-600"
+                        : "text-blueGray-700 hover:text-blueGray-500")
+                    }
+                  >
+                    <i
+                      className={
+                        "fas fa-question-circle mr-2 text-sm " +
+                        (router.pathname.indexOf("/doctor/support") !== -1
+                          ? "opacity-75"
+                          : "text-blueGray-300")
+                      }
+                    ></i>{" "}
+                    Support
+                  </a>
+                </Link>
+              </li>     
             </ul>
           </div>
         </div>

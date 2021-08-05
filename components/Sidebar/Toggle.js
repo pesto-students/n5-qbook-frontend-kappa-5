@@ -1,14 +1,14 @@
 import { useState } from 'react'
 import { Switch } from '@headlessui/react'
 
-export default function Toggle() {
+export default function Toggle({value}) {
   const [enabled, setEnabled] = useState(false)
 
   return (
     <div className="flex items-center justify-center p-12">
       <div className="w-full max-w-xs mx-auto">
     <Switch.Group as="div" className="flex items-center space-x-4">
-        <Switch.Label>Enabled messages</Switch.Label>
+        <Switch.Label className="font-bold uppercase text-xs px-4">{value}</Switch.Label>
         <Switch
           as="button"
           checked={enabled}

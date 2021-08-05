@@ -1,6 +1,25 @@
-import React from "react";
+
+import { ProfileContext } from "Context/ProfileContext";
+import React,{useState,useEffect, useContext} from "react";
+import router from "next/router";
 
 export default function CardTable() {
+  const {patientList,selectedDate,searchTerm} = useContext(ProfileContext)
+  console.log(patientList,"patientList")
+  const startConsultation = () =>{
+    router.push({
+      pathname: 'consultation'
+  })
+  }
+  //  const [patientList,setPatientList] = useState([]);
+  //   useEffect(() => {
+  //     //get the data from db
+  //      const patient = [{name:"Anna",phoneNumber:"12345678",date:"03/08/2021",paymentMode:"online"},
+  //      {name:"Anna",phoneNumber:"12345678",date:"03/08/2021",paymentMode:"online"},
+  //      {name:"Anna",phoneNumber:"12345678",date:"03/08/2021",paymentMode:"online"},
+  //      {name:"Anna",phoneNumber:"12345678",date:"03/08/2021",paymentMode:"online"}];
+  //      setPatientList(patient);
+  //   }, [])
   return (
     <>
       <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded bg-white">
@@ -17,126 +36,56 @@ export default function CardTable() {
           <table className="items-center w-full bg-transparent border-collapse">
             <thead>
               <tr>
-                <th
-                  className=
-                    "px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left  bg-blueGray-50 text-blueGray-500 border-blueGray-100">
+                <th className="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left  bg-blueGray-50 text-blueGray-500 border-blueGray-100">
                   Patient Name
                 </th>
-                <th
-                  className="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-blueGray-50 text-blueGray-500 border-blueGray-100">
+                <th className="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-blueGray-50 text-blueGray-500 border-blueGray-100">
                   Phone Number
                 </th>
-                <th
-                  className=
-                    "px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-blueGray-50 text-blueGray-500 border-blueGray-100" 
-                >
+                <th className="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-blueGray-50 text-blueGray-500 border-blueGray-100">
                   Date
                 </th>
-                <th
-                  className=
-                    "px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-blueGray-50 text-blueGray-500 border-blueGray-100" 
-                   
-                >
+                <th className="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-blueGray-50 text-blueGray-500 border-blueGray-100">
                   Payment Mode
                 </th>
-                <th
-                  className=
-                    "px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-blueGray-50 text-blueGray-500 border-blueGray-100" 
-                   
-                ></th>
               </tr>
             </thead>
-            <tbody>
-              <tr>
+            <tbody className="overflow-y-scroll h-56">
+           
+            {patientList?.filter((val)=>{
+              if(searchTerm==="" && selectedDate===null){
+                return val;
+              }
+              else if(searchTerm==="" && new Date(val.date).setHours(0,0,0,0) === new Date(selectedDate).setHours(0,0,0,0)){
+                return val;
+              }else if((searchTerm!=="") && 
+                (val.name.toLowerCase().includes(searchTerm.toLowerCase())||
+                val.phoneNumber.includes(searchTerm)||
+                (new Date(val.date).setHours(0,0,0,0) === new Date(selectedDate).setHours(0,0,0,0)))){                    
+                    return val;                           
+                }
+            })
+            .map((patient=>(
+              <tr key={patient.phoneNumber}>
                 <th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left flex items-center">                 
-                  <span   className=
-                      "ml-3 font-bold text-blueGray-600">
-                    Anna Brown
-                  </span>
+                  <span className="ml-3 font-bold text-blueGray-600">{patient.name}</span>
                 </th>
                 <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                  123456789
+                  {patient.phoneNumber}
                 </td>
                 <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                <span>22/07/2021</span>
-                </td>
-               
+                <span>{patient.date}</span>
+                </td>              
                 <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                <span>Online</span>
+                <span>{patient.paymentMode}</span>
+                </td>
+                <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                <button onClick={()=>startConsultation()}
+              className="bg-blueGray-700 active:bg-blueGray-600 text-white font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
+              type="button">Start</button>
                 </td>
               </tr>
-              <tr>
-                <th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left flex items-center">                 
-                <span   className=
-                      "ml-3 font-bold text-blueGray-600">
-                    Anna Brown
-                  </span>
-                </th>
-                <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                  123456789
-                </td>
-                <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                <span>22/07/2021</span>
-                </td>
-               
-                <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                <span>Online</span>
-                </td>
-              </tr>
-              <tr>
-                <th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left flex items-center">                 
-                <span   className=
-                      "ml-3 font-bold text-blueGray-600">
-                    Anna Brown
-                  </span>
-                </th>
-                <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                  123456789
-                </td>
-                <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                <span>22/07/2021</span>
-                </td>
-                
-                <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                <span>Online</span>
-                </td>
-              </tr>
-              <tr>
-                <th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left flex items-center">                 
-                <span   className=
-                      "ml-3 font-bold text-blueGray-600">
-                    Anna Brown
-                  </span>
-                </th>
-                <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                  123456789
-                </td>
-                <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                <span>22/07/2021</span>
-                </td>
-                
-                <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                <span>Online</span>
-                </td>
-              </tr>
-              <tr>
-                <th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left flex items-center">                 
-                  <span   className=
-                      "ml-3 font-bold text-blueGray-600">
-                    Anna Brown
-                  </span>
-                </th>
-                <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                  123456789
-                </td>
-                <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                <span>22/07/2021</span>
-                </td>
-                
-                <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                <span>Online</span>
-                </td>
-              </tr>
+            )))}             
             </tbody>
           </table>
         </div>
