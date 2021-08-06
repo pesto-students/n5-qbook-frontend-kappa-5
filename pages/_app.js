@@ -11,7 +11,8 @@ import { firebaseCloudMessaging } from '../components/Service/webPush';
 import 'react-datepicker/dist/react-datepicker.css';
 import router from "next/router";
 import PageChange from "components/PageChange/PageChange";
-
+import { Provider } from "react-redux";
+import { store } from '../app/store'
 router.events.on("routeChangeStart", (url) => {
   console.log(`Loading: ${url}`);
   document.body.classList.add("body-page-transition");
@@ -63,7 +64,7 @@ router.events.on("routeChangeError", () => {
     const Layout = Component.layout || (({ children }) => <>{children}</>);
     return (
       <React.Fragment>
-      <ProfileContextProvider>
+      <Provider store={store}>
         <Head>
           <meta
             name="viewport"
@@ -74,7 +75,7 @@ router.events.on("routeChangeError", () => {
         <Layout>
           <Component {...pageProps} />
         </Layout>
-        </ProfileContextProvider>
+        </Provider>
       </React.Fragment>
     );
   

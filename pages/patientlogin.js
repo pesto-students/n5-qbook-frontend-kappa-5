@@ -1,5 +1,5 @@
 import React,{useState,useRef} from "react";
-import firebase from '../../firebase'
+import firebase from '../firebase'
 import LoginLayout from "layouts/LoginLayout.js";
 //import DeviceInfo from 'react-native-device-info';
 //import {isMobile,getUA} from "react-device-detect";

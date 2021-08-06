@@ -1,6 +1,5 @@
 
 import firebase from "firebase";
-import "firebase/messaging";
 const firebaseConfig = {
     apiKey: "AIzaSyCHVyikBLtktkc5QZa4e1xTNZ8PFNTIu8s",
     authDomain: "api-project-19685698585.firebaseapp.com",
@@ -15,9 +14,8 @@ const firebaseConfig = {
 }else {
    firebase.app(); 
 }
-const auth = firebase.auth();
-const provider = new firebase.auth.GoogleAuthProvider();
-export {auth,provider}
+export const firebaseAuth = firebase.auth();
+export const provider = new firebase.auth.GoogleAuthProvider();
 export default firebase;
 
   

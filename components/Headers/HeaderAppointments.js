@@ -1,13 +1,23 @@
-import React,{useContext} from "react";
+import React from "react";
 
 import DatePicker from 'react-datepicker';
 import CardStats from "components/Cards/CardStats.js";
-import { ProfileContext } from "Context/ProfileContext";
 
+import { selectAppointmentList,selectSearchTerm,selectedDate,updateSearchTerm,updateSelectedDate } from '../../slices/appointmentSlice'
+import { useSelector,useDispatch } from 'react-redux';
 
 export default function HeaderAppointments() {
+  const appointmentListData = useSelector(selectAppointmentList)
+  const searchText = useSelector(selectSearchTerm)
+  const searchDate = useSelector(selectedDate)
+  const dispatch = useDispatch();
 
-  const {selectedDate,setSelectedDate,searchTerm,setSearchTerm,patientList} = useContext(ProfileContext)
+  const handleSearchText=(e)=>{
+    dispatch(updateSearchTerm(e.target.value))
+  }
+  const handleSearchDate=(date)=>{
+    dispatch(updateSelectedDate(date))
+  }
   return (
     <>
       {/* Header */}
@@ -24,8 +34,8 @@ export default function HeaderAppointments() {
               </span>
               <input
                 type="text"
-                value={searchTerm}
-                onChange={(e)=>setSearchTerm(e.target.value)}
+                value={searchText}
+                onChange={handleSearchText}
                 placeholder="Search by Name Or Phone Number"
                 className="border-0 px-3 py-3 mr-1 placeholder-blueGray-300 text-blueGray-600 relative bg-white bg-white rounded text-sm shadow outline-none focus:outline-none focus:ring w-full pl-10"
               />
@@ -33,8 +43,8 @@ export default function HeaderAppointments() {
             </div>
             <div className="relative flex w-6/12 flex-wrap items-stretch xl:w-6/12">
             <DatePicker
-              selected = {selectedDate}
-              onChange={date=>setSelectedDate(date)}
+              selected = {searchDate}
+              onChange={date=>handleSearchDate(date)}
               showYearDropdown
               dateFormat="dd/MM/yyyy"
               isClearable
@@ -51,7 +61,7 @@ export default function HeaderAppointments() {
           <div className="relative flex lg:w-full flex-wrap items-stretch xl:w-6/12">
           <CardStats
                   statSubtitle="Appointments"
-                  statTitle={patientList.length}
+                  statTitle={appointmentListData?.length}
                 />
                 </div>
               </div>             

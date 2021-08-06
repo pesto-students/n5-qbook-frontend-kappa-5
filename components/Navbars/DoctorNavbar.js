@@ -1,9 +1,17 @@
 
-import { ProfileContext } from 'Context/ProfileContext';
-import { useContext } from 'react';
-export default function DoctorNavbar() {
-  const {doctorLoginInfo,signOut} = useContext(ProfileContext)
 
+import {  useDispatch,useSelector } from 'react-redux';
+import {  logout, selectUser } from "slices/doctorSlice";
+import {firebaseAuth} from '../../firebase'
+export default function DoctorNavbar() {
+  //const {doctorLoginInfo,signOut} = useContext(ProfileContext)
+  const userLogin = useSelector(selectUser)
+  const dispatch = useDispatch()
+  const signOut = () =>{
+    firebaseAuth.signOut().then(()=>{
+          dispatch(logout());
+      });
+  };
   return (
     <>
       <nav className="absolute top-0 left-0 w-full z-10 bg-transparent md:flex-row md:flex-nowrap md:justify-start flex items-center p-4">
@@ -16,7 +24,8 @@ export default function DoctorNavbar() {
                   <img
                     alt="..."
                     className="w-full rounded-full align-middle border-none shadow-lg"
-                    src={doctorLoginInfo?.result?.image} 
+                    //src={doctorLoginInfo?.result?.image} 
+                    src={userLogin?.photoUrl}
                     onClick={signOut}                  
                   />
                 </span>

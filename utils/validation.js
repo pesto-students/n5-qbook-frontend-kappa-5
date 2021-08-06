@@ -8,11 +8,20 @@ function validation(values) {
     if(!values.specialization.trim()){
         errors.specialization="specialization is Required"
     }
-    if(!values.maxAppointments.trim()){
+    if(!values.maxAppointments){
         errors.maxAppointments="maxAppointments is Required"
     }
-    if(!values.fees.trim()){
+    if(!values.fees){
         errors.fees="fees is Required"
+    }
+    if(!values.diagnosis.trim()){
+        errors.diagnosis="diagnosis is Required"
+    }
+    if(!values.patientName.trim()){
+        errors.patientName="Name is Required"
+    }
+    if(!values.prescription.trim()){
+        errors.prescription="prescription is Required"
     }
     if(values.startTime.hours>values.endTime.hours || 
         (values.startTime.hours===values.endTime.hours && values.startTime.minutes===values.endTime.minutes 

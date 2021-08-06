@@ -1,49 +1,48 @@
 import React,{useState} from "react";
 import Toggle from 'components/Sidebar/Toggle';
-import firebase from '../../firebase'
-export default function CardConfig() {
-const [onDuty, setOnDuty] = useState(true);
-const [sendNotifications, setSendNotifications] = useState(true);
-const [enabled, setEnabled] = useState(false)
+import { updateConfig,selectConfigData } from '../../slices/settingsSlice'
+import { useDispatch, useSelector } from 'react-redux';
 
-// const messaging = firebase.messaging();
-// messaging.getToken({vapidKey: "BE-QIly0dhEhwxGy7HK1-0ukeqjzbmJE9IIqCFRe1-fV2MSpnhtc-ipMGXOktjTXkrIeGx0948zOZSUVh1aosqk"}).then((currentToken) => {
-//   if (currentToken) {
-//     // Send the token to your server and update the UI if necessary
-//     console.log(currentToken,"token")
-//     // ...
-//   } else {
-//     // Show permission request UI
-//     console.log('No registration token available. Request permission to generate one.');
-//     // ...
-//   }
-// }).catch((err) => {
-//   console.log('An error occurred while retrieving token. ', err);
-//   // ...
-// });
-//console.log("messaging",messaging)
-// messaging.requestPermission().then(()=>{
-//   console.log("have permission")
-//   //return messaging.getToken()
-// }).catch(function(err){
-//   console.log('err')
-// })
+export default function CardConfig() {
+const configData = useSelector(selectConfigData)
+const dispatch = useDispatch();
+const [configInfo,setConfigInfo] = useState(configData);
+const setDutyEnabled =(e) =>{
+  setConfigInfo(values=>({
+    ...values,
+      setting:{
+        ...values.setting,
+        is_duty:e
+  }
+  }))
+  dispatch(updateConfig(configInfo));
+}
+const setNotificationEnabled =(e) =>{
+  setConfigInfo(values=>({
+    ...values,
+      setting:{
+        ...values.setting,
+        is_notification:e
+  }
+  }))
+  dispatch(updateConfig(configInfo));
+}
 const cancelAppointments =() =>{
   //api call
 }
   return (
     <>
-     
-      <div className="relative flex flex-col  min-w-0 break-words bg-white w-full mb-6 shadow-xl rounded-lg mt-16">
-        
+      <div className="relative flex flex-col  min-w-0 break-words bg-white w-full mb-6 shadow-xl rounded-lg mt-16">        
         <div className="flex flex-wrap flex-col  m-20 space-y-2">
-          <div className="w-full lg:w-12/12 px-1 mt-5 flex flex-row items-center">
-         
-          <Toggle value="ON/OFF Duty (Adhoc)"/>
+          <div className="w-full lg:w-12/12 px-1 mt-5 flex flex-row items-center">        
+          <Toggle value="ON/OFF Duty (Adhoc)"  enabled={configData?.setting?.is_duty} 
+              setEnabled={setDutyEnabled} name="is_duty"
+              />
               </div>
               <div className="w-full lg:w-12/12 px-1 mt-5 flex flex-row items-center">
-               <Toggle value="ON/OFF Notifications"/>
-                
+               <Toggle value="ON/OFF Notifications" enabled={configData?.setting?.is_notification} 
+                 setEnabled={setNotificationEnabled} name="is_notification"
+               />
               </div>
               <div className="w-full lg:w-12/12 px-4 mt-5 mb-5 ml-5">
                 <button

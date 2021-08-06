@@ -1,21 +1,38 @@
-import React, { useContext } from "react";
-import {auth,provider} from '../../firebase'
+import React from "react";
+import {firebaseAuth,provider} from '../firebase'
 import LoginLayout from "layouts/LoginLayout.js";
 import axios from "axios";
-import {useRouter} from "next/router"
-import { ProfileContext } from "Context/ProfileContext";
+//import {useRouter} from "next/router"
+import { useDispatch } from 'react-redux'
+import { login } from '../slices/doctorSlice'
+
 export default function DoctorLogin() {
-  const router = useRouter();
-  const {setDoctorLoginInfo} = useContext(ProfileContext)
-  const addDoctorInfo = async(user) =>{
-           const apiUrl = 'http://api.qbooks.in:1337/api/v1/user/login';
-          const {data}= await axios.post(apiUrl,user);
-          console.log(data.result,"response")
-          setDoctorLoginInfo(data);
-          router.push("/doctor/settings")     
+  //const router = useRouter();
+  const dispatch = useDispatch();
+  const addDoctorInfo = (user) =>{
+          //  const apiUrl = 'http://api.qbooks.in:1337/api/v1/user/login';
+          // const response= await axios.post(apiUrl,user);
+          // console.log(response,"response")
+          // //setDoctorLoginInfo(data);
+          // dispatch(login(response))
+         // router.push("/doctor/settings") 
+         debugger;
+         const response = {
+              "createdAt": 1627318466653,
+              "updatedAt": 1628227119331,
+              "id": "60fee8c26343f4eba4aaa963",
+              "firstname": "Gaurav",
+              "lastname": "Tayal",
+              "email": "abc@gmail.com",
+              "googleAuthId": "dsdsd24234sadasdasdsd",
+              "image": "http://google.com/abc.jpeg",
+              "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjBmZWU4YzI2MzQzZjRlYmE0YWFhOTYzIiwiaWF0IjoxNjI4MjI3MTE5LCJleHAiOjE2Mjg4MzE5MTl9.cQlIg6QsIoHCVoM-7yXx348q0rviYGrCtok_jodV-9c"  
+      }
+      sessionStorage.setItem("doctor_login",JSON.stringify(response));
+      dispatch(login(response)); 
   }
   const signIn = () =>{
-    auth.signInWithPopup(provider)
+    firebaseAuth.signInWithPopup(provider)
     .then(({user})=>{
         let userInfo = {
           email:user.email,
@@ -24,7 +41,7 @@ export default function DoctorLogin() {
           lastname:user.displayName,
           image:user.photoURL, 
         }
-        addDoctorInfo(userInfo);
+        addDoctorInfo(userInfo);   
     })
     .catch(error=>alert(error.message))
   }

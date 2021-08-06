@@ -1,7 +1,7 @@
 
 import Time from "./Time"
 
-function TimePicker({setTime}) {
+function TimePicker({nested,id,setTime}) {
 
     const optionsHours = [];
     const optionsMinutes = [];
@@ -16,10 +16,12 @@ function TimePicker({setTime}) {
     return (
        <div>
             <div className="inline-flex text-lg border rounded-md shadow-lg p-2">
-                <Time options={optionsHours} setTime={setTime} name="hours" />               
+                <Time options={optionsHours} setTime={setTime} nested={nested} id={id}  name="hours" />               
                 <span className="px-3">:</span>
-                <Time options={optionsMinutes} setTime={setTime} name="minutes"/>              
+                <Time options={optionsMinutes} setTime={setTime} nested={nested} id={id} name="minutes"/>              
                 <select name="period" className="pl-2 pr-9 outline-none appearance-none bg-transparent border-none"
+                data-id={id}
+                data-nested={nested}
                 onChange={(e)=>setTime(e)}
                 >
                 <option value="AM">AM</option>

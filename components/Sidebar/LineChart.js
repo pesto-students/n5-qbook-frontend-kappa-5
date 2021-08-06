@@ -1,7 +1,7 @@
 import React from "react";
 import { Line } from "react-chartjs-2";
 
-function Chart({chartData,selectedChart}) {  
+function LineChart({chartData}) {  
     return (
         <Line
         data={chartData}
@@ -44,4 +44,4 @@ function Chart({chartData,selectedChart}) {
     )
 }
 
-export default Chart
+export default LineChart
