@@ -1,22 +1,16 @@
 import React from "react";
 import {firebaseAuth,provider} from '../../firebase'
 import LoginLayout from "layouts/LoginLayout.js";
-import axios from "axios";
 import { useDispatch } from 'react-redux'
 import { login } from '../../slices/doctorSlice'
 import { qBook,signInText,Google } from '../../utils/Constants';
+import {doctorLoginInfo} from '../../utils/ApiRequests';
+
 export default function DoctorLogin() {
-  //const router = useRouter();
   const dispatch = useDispatch();
   const addDoctorInfo = async(user) =>{
-           const apiUrl = 'http://api.qbooks.in:1337/api/v1/user/login';
-          const response1= await axios.post(apiUrl,user);
-           console.log(response1,"response")
-          // //setDoctorLoginInfo(data);
-          // dispatch(login(response))
-         // router.push("/doctor/settings") 
-      
-         const response = {
+        const response1= doctorLoginInfo(user);
+        const response = {
               "createdAt": 1627318466653,
               "updatedAt": 1628227119331,
               "id": "60fee8c26343f4eba4aaa963",
@@ -53,12 +47,6 @@ export default function DoctorLogin() {
               <div className="rounded-t mb-0 px-6 py-6">
               <div className="flex flex-wrap justify-center">
               <div className="w-full lg:w-12/12 px-4">
-                {/* <p className="mb-4 text-base leading-relaxed text-white ">
-                  <span className="font-bold">qBook</span> helps to ease your consultation process by providing a track
-                  of the ongoing & past consultations digitally. Easy configurations of available timings, 
-                   cancelling the appointments in case of any emergencies, generating a QR code for the patients
-                  to book the appointments without any hassle and a lot more...!!
-                </p> */}
                 <p className="mb-4 text-base leading-relaxed text-white ">
                   <span className="font-bold">{qBook}</span> helps to ease your consultation process by providing a track
                   of the ongoing & past consultations digitally. Easy configurations of available timings, 

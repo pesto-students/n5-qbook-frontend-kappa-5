@@ -4,6 +4,7 @@ import validation from "../../utils/Validation";
 import { updateConfig,selectConfigData } from '../../slices/settingsSlice'
 import { useDispatch, useSelector } from 'react-redux';
 import CardSettingsForm from "./CardSettingsForm";
+import {getAppointments} from '../../utils/ApiRequests';
 export default function CardSettings() {
   const configData = useSelector(selectConfigData)
   const dispatch = useDispatch();
@@ -11,19 +12,22 @@ export default function CardSettings() {
   const [successMessage,setSuccessMessage] = useState(false);
   useEffect(() => {
     //get the dashboard data from api
-    axios({
-      url: 'http://api.qbooks.in:1337/api/v1/user/dashboard',
-      method: 'get',
-      headers: {
-          'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjBmZWU4YzI2MzQzZjRlYmE0YWFhOTYzIiwiaWF0IjoxNjI3NzA4NTkwLCJleHAiOjE2MjgzMTMzOTB9.pP-6EQMMy26Q2xxRjnRuMknT1JmsBehi9uTHURjoP0E',
-      }
-   })
-   .then(response => {
-      console.log(response)
-   }) 
-   .catch(err => {
-      console.log(err);
-   });
+    const loginInfo = JSON.parse(sessionStorage.getItem("doctor_login"));
+    const appointmentsData = getAppointments(loginInfo.accessToken);
+  //   axios({
+  //    // url: 'http://api.qbooks.in:1337/api/v1/user/dashboard',
+  //    url:'http://localhost:1337/api/v1/user/dashboard',
+  //     method: 'get',
+  //     headers: {
+  //         'Authorization': 'Bearer ' + loginInfo.accessToken,
+  //     }
+  //  })
+  //  .then(response => {
+  //     console.log(response)
+  //  }) 
+  //  .catch(err => {
+  //     console.log(err);
+  //  });
     const response = {
       "record": {
           "createdAt": 1627318466653,
