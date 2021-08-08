@@ -6,21 +6,21 @@ export default function CardLineChart() {
   const [selectedChart,setSelectedChart] = useState(weekLabels);
   const [chartFrequency,setChartFrequency] = useState("");
   // const chart = () =>{
-  //   let empSal = [];
-  //   //let empAge = [];
   //   // axios
   //   //   .get("")
   //   //   .then(res => {
   //   //     console.log(res);}
-  // useEffect(() => {
-  //   chart();
-  // }, []);
+  useEffect(() => {
+    //chart();
+    setSelectedChart(weekLabels);
+    setChartFrequency('weekly');
+  }, []);
 useEffect(() => {
   setChartData({
     labels:selectedChart,
     datasets:[
       {
-        data:[32,45,12,76,69],
+        data:[3200,4500,1200,760,690],
         borderWidth:1,
         backgroundColor: "#ffffff",
         borderColor: "#ffffff",
@@ -59,21 +59,21 @@ useEffect(() => {
         <div className="p-4 flex-auto">
         <div className="p-4 flex justify-evenly">
         <button name="weekly" 
-        className={"text-xs uppercase py-3 font-bold block " +
+        className={"text-xs uppercase py-3 font-bold block focus:outline-none " +
                       (chartFrequency === "weekly"
                         ? "text-lightBlue-500 hover:text-lightBlue-600"
                         : "text-white hover:text-white")
                     }
         onClick={handleChartData}>Weekly</button>
         <button name="monthly" 
-        className={"text-xs uppercase py-3 font-bold block " +
+        className={"text-xs uppercase py-3 font-bold block focus:outline-none " +
                       (chartFrequency === "monthly"
                         ? "text-lightBlue-500 hover:text-lightBlue-600"
                         : "text-white hover:text-white")
                     }
          onClick={handleChartData}>Monthly</button>
         <button name="yearly" 
-        className={"text-xs uppercase py-3 font-bold block " +
+        className={"text-xs uppercase py-3 font-bold block focus:outline-none " +
                       (chartFrequency === "yearly"
                         ? "text-lightBlue-500 hover:text-lightBlue-600"
                         : "text-white hover:text-white")

@@ -19,7 +19,7 @@ function TimePicker({nested,id,setTime}) {
                 <Time options={optionsHours} setTime={setTime} nested={nested} id={id}  name="hours" />               
                 <span className="px-3">:</span>
                 <Time options={optionsMinutes} setTime={setTime} nested={nested} id={id} name="minutes"/>              
-                <select name="period" className="pl-2 pr-9 outline-none appearance-none bg-transparent border-none"
+                <select name="period" className="pl-2 pr-9 outline-none appearance-none bg-transparent border-none focus:outline-none "
                 data-id={id}
                 data-nested={nested}
                 onChange={(e)=>setTime(e)}

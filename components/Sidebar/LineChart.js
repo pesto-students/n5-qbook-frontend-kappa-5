@@ -19,7 +19,11 @@ function LineChart({chartData}) {
               {                  
                 ticks: {
                   color: "white",
-                  beginAtZero: true
+                  beginAtZero: true,
+                  stepSize: 300,
+                  callback: function(value, index, values) {
+                        return '$' + value;
+                    }
                 },
                 display: true,                  
                 grid: {

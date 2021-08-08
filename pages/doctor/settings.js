@@ -8,7 +8,7 @@ import { updateConfig } from '../../slices/settingsSlice';
 export default function Settings() {
   const dispatch = useDispatch();
   useEffect(() => {
-    //get the dashboard data rom api
+    //get the dashboard data from api
     const response = {
       "record": {
           "createdAt": 1627318466653,

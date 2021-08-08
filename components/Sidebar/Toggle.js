@@ -28,7 +28,7 @@ export default function Toggle({value,enabled,setEnabled,name}) {
         </Switch>
       </Switch.Group>
     </div>
-    
     </div>
+    
   )
 }

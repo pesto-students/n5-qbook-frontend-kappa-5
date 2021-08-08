@@ -46,7 +46,7 @@ export default function HeaderAppointments() {
               selected = {searchDate}
               onChange={date=>handleSearchDate(date)}
               showYearDropdown
-              dateFormat="dd/MM/yyyy"
+              dateFormat="MM/dd/yyyy"
               isClearable
               scrollableMonthYearDropdown
               onChangeRaw={(e)=>e.preventDefault()}

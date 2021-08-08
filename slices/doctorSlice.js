@@ -9,7 +9,6 @@ export const doctorSlice = createSlice({
   initialState,
   reducers: {
     login: (state,action)=>{
-      debugger;
       state.user = action.payload;
     },
     logout: (state) => {

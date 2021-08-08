@@ -14,7 +14,6 @@ import PageChange from "components/PageChange/PageChange";
 import { Provider } from "react-redux";
 import { store } from '../app/store'
 router.events.on("routeChangeStart", (url) => {
-  console.log(`Loading: ${url}`);
   document.body.classList.add("body-page-transition");
   ReactDOM.render(
     <PageChange path={url} />,
@@ -36,7 +35,7 @@ router.events.on("routeChangeError", () => {
      if("serviceWorker" in navigator){
        navigator.serviceWorker.register('./firebase-messaging-sw.js')
        .then(function(registration){
-        console.log("Registration successful, scope is:", registration.scope);
+        //console.log("Registration successful, scope is:", registration.scope);
         navigator.serviceWorker.addEventListener('message', (event) => console.log('event for the service worker', event))
        }).catch(function(err){
          console.log("Service worker registration failed, error:", err)
@@ -47,7 +46,6 @@ router.events.on("routeChangeError", () => {
       try{
         const token = await firebaseCloudMessaging.init();
         if(token){
-          console.log('token',token);
           sessionStorage.setItem('fcm_token', token)
           getMessage();
         }
@@ -58,7 +56,11 @@ router.events.on("routeChangeError", () => {
     async function getMessage(){
       console.log('message functions')
     const messaging = firebase.messaging()
-    messaging.onMessage((message) => console.log('foreground', message))
+    messaging.onMessage((message) => {
+     console.log("Message received. ", message);
+     let msg = message.data.notification
+     console.log(msg,"destructured msg");
+    })
     }
     const { Component, pageProps } = props;
     const Layout = Component.layout || (({ children }) => <>{children}</>);

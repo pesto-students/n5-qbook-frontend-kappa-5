@@ -9,51 +9,50 @@ function CardSettingsForm({updateProfile,profileInfo,handleInput,errors}) {
             <div className="flex flex-wrap">
               <div className="w-full lg:w-6/12 px-4">
                 <div className="relative w-full mb-3">
-                  <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2">Preferred Name</label>
-                  <input  type="text" data-id="record" name="firstname" value={profileInfo?.record.firstname} required className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                     
+                  <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2">Preferred Name<span className="text-xs text-red-500 px-1">*</span></label>
+                  <input  type="text" data-id="record" name="firstname" value={profileInfo?.record.firstname} required className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150 " 
                      onChange={handleInput}/>
-                     {errors?.name && <p className="text-xs text-red-600 px-2">{errors?.name}</p>}
+                     {errors?.firstname && <p className="text-xs text-red-500 px-2">{errors?.firstname}</p>}
                 </div>
               </div>
               <div className="w-full lg:w-6/12 px-4">
                 <div className="relative w-full mb-3">
-                  <label  className="block uppercase text-blueGray-600 text-xs font-bold mb-2">Specialization</label>
+                  <label  className="block uppercase text-blueGray-600 text-xs font-bold mb-2">Specialization<span className="text-xs text-red-500 px-1">*</span></label>
                   <input  type="text" data-id="setting"  name="title" value={profileInfo?.setting.title} className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                     onChange={handleInput}/>
-                    {errors?.specialization && <p className="text-xs text-red-600 px-2">{errors?.specialization}</p>}
+                    {errors?.title && <p className="text-xs text-red-500 px-2">{errors?.title}</p>}
                 </div>
-              </div>           
+              </div>   
+              <div className="w-full lg:w-12/12 px-4">
+                <div className="relative w-full mb-3">
+                  <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2">Short Bio<span className="text-xs text-red-500 px-1">*</span></label>
+                  <input  type="text" data-id="setting" name="brief" value={profileInfo?.setting.brief} className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
+                    onChange={handleInput}/>
+                    {errors?.brief && <p className="text-xs text-red-500 px-2">{errors?.brief}</p>}
+                </div>
+              </div>         
             </div>
             <hr className="mt-4 border-b-1 border-blueGray-300" />
             <h6 className="text-blueGray-400 text-sm mt-3 mb-6 font-bold uppercase">Consultation Information</h6>
             <div className="flex flex-wrap">
-            <div className="w-full lg:w-6/12 px-4">
+              <div className="w-full lg:w-12/12 px-4">
                 <div className="relative w-full mb-3">
-                  <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2">Short Bio</label>
-                  <input  type="text" data-id="setting" name="brief" value={profileInfo?.setting.brief} className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                    onChange={handleInput}/>
-                    {errors?.maxAppointments && <p className="text-xs text-red-600 px-2">{errors?.maxAppointments}</p>}
-                </div>
-              </div>
-              <div className="w-full lg:w-6/12 px-4">
-                <div className="relative w-full mb-3">
-                  <label  className="block uppercase text-blueGray-600 text-xs font-bold mb-2">Consultation Fees</label>
+                  <label  className="block uppercase text-blueGray-600 text-xs font-bold mb-2">Consultation Fees<span className="text-xs text-red-500 px-1">*</span></label>
                   <input  type="number" data-id="setting" name="fees" value={profileInfo?.setting.fees} className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                     onChange={handleInput}/>
-                    {errors?.fees && <p className="text-xs text-red-600 px-2">{errors?.fees}</p>}
+                    {errors?.fees && <p className="text-xs px-2 text-red-500 ">{errors?.fees}</p>}
                 </div>
               </div>
               <div className="w-full lg:w-6/12 px-4">
               <div className="relative w-full mb-3">
-                  <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2">Start Time</label>
+                  <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2">Start Time<span className="text-xs text-red-500 px-1">*</span></label>
                   <TimePicker  name="startTime" nested="nested" id="startTime" setTime={handleInput}/>
-                  {errors.startTime && <h6 className="text-xs text-red-600 px-2">{errors.startTime}</h6>}
+                  {errors.startTime && <h6 className="text-xs  px-2 text-red-500 ">{errors.startTime}</h6>}
                 </div>
               </div>
               <div className="w-full lg:w-6/12 px-4">
               <div className="relative w-full mb-3">
-                  <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2">End Time</label>
+                  <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2">End Time<span className="text-xs text-red-500 px-1">*</span></label>
                   <TimePicker data-nested="nested" name="endTime" nested="nested" id="endTime" setTime={handleInput}/>
                 </div>
               </div>             

@@ -9,8 +9,7 @@ export const settingsSlice = createSlice({
   initialState,
   reducers: {
     updateConfig : (state,action) =>{
-        state.configData = action.payload
-       
+        state.configData = action.payload 
     },
   },
 });

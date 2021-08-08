@@ -14,13 +14,6 @@ export default function FooterDoctor() {
             </div>
             <div className="w-full md:w-8/12 px-4">
               <ul className="flex flex-wrap list-none md:justify-end  justify-center">
-                
-                <li>
-                  <p
-                    className="text-blueGray-600 hover:text-blueGray-800 text-sm font-semibold block py-1 px-3">
-                    About Us
-                  </p>
-                </li>
                 <li>
                   <p  className="text-blueGray-600 hover:text-blueGray-800 text-sm font-semibold block py-1 px-3">
                     Contact

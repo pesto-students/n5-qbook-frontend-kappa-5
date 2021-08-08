@@ -1,19 +1,64 @@
 import React,{useState,useEffect} from "react";
 import axios from "axios";
-import validation from "../../utils/validation";
+import validation from "../../utils/Validation";
 import { updateConfig,selectConfigData } from '../../slices/settingsSlice'
 import { useDispatch, useSelector } from 'react-redux';
 import CardSettingsForm from "./CardSettingsForm";
 export default function CardSettings() {
   const configData = useSelector(selectConfigData)
   const dispatch = useDispatch();
-  const [profileInfo,setProfileInfo] = useState(configData);
+  const [profileInfo,setProfileInfo] = useState();
+  const [successMessage,setSuccessMessage] = useState(false);
+  useEffect(() => {
+    //get the dashboard data from api
+    axios({
+      url: 'http://api.qbooks.in:1337/api/v1/user/dashboard',
+      method: 'get',
+      headers: {
+          'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjBmZWU4YzI2MzQzZjRlYmE0YWFhOTYzIiwiaWF0IjoxNjI3NzA4NTkwLCJleHAiOjE2MjgzMTMzOTB9.pP-6EQMMy26Q2xxRjnRuMknT1JmsBehi9uTHURjoP0E',
+      }
+   })
+   .then(response => {
+      console.log(response)
+   }) 
+   .catch(err => {
+      console.log(err);
+   });
+    const response = {
+      "record": {
+          "createdAt": 1627318466653,
+          "updatedAt": 1628240250763,
+          "id": "60fee8c26343f4eba4aaa963",
+          "firstname": "Gaurav",
+          "lastname": "Tayal",
+          "email": "abc@gmail.com",
+          "googleAuthId": "dsdsd24234sadasdasdsd",
+          "image": "http://google.com/abc.jpeg",
+          "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjBmZWU4YzI2MzQzZjRlYmE0YWFhOTYzIiwiaWF0IjoxNjI4MjQwMjUwLCJleHAiOjE2Mjg4NDUwNTB9.19ML11B6bMIH64KCOvb4p3AenMAQmTC4Q-Qxc-TK3MY"
+      },
+      "setting": {
+          "createdAt": 1627700780186,
+          "updatedAt": 1627700780186,
+          "id": "6104be2c71fb14712b4d88c1",
+          "title": "MBBS MS",
+          "brief": "Got Gold Medal in throat infection",
+          "fees": 500,
+          "userId": "60fee8c26343f4eba4aaa963",         
+          "startTime":{hours:"00",minutes:"00",period:"AM"},
+          "endTime":{hours:"00",minutes:"00",period:"AM"},
+          "is_duty": false,
+          "is_notification": false
+      }
+  };
+  dispatch(updateConfig(response));
+  setProfileInfo(response);
+  }, [])
   const [errors,setErrors] = useState({});
-  console.log(profileInfo,"profileInfo")
   const updateProfile = (e) =>{
     e.preventDefault();
     setErrors(validation(profileInfo));
-    dispatch(updateConfig(profileInfo))  
+    dispatch(updateConfig(profileInfo)) 
+    setSuccessMessage(true); 
   }
 const handleInput = (e) =>{
     const { dataset, name, value } = e.target;
@@ -51,6 +96,9 @@ const handleInput = (e) =>{
             handleInput={handleInput}
             errors={errors}
           />
+           {successMessage &&
+            <p className="block uppercase text-xs font-bold py-2 text-green-400 ">Settings updated Successfully!</p>
+           }
         </div>
       </div>
     </>

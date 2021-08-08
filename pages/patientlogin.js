@@ -23,10 +23,8 @@ export default function PatientLogin() {
     }    
     window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('sign-in-button', {
       'size': 'invisible',
-      'callback': (response) => {
-        console.log("captha verified");         
-      },
-      defaultCountry:"IN",
+      'callback': (response) => {        
+      }
     })}
     const signInPatient = () =>{
       configureCaptha();    
@@ -36,7 +34,6 @@ export default function PatientLogin() {
           .then((confirmationResult) => {
             window.confirmationResult = confirmationResult;
           }).catch((error) => {
-            console.log("sms not sent",error.message);
             window.recaptchaVerifier.reset();
           });
     }
@@ -46,7 +43,6 @@ export default function PatientLogin() {
         const user = result.user;
         console.log(JSON.stringify(user));
       }).catch((error) => {
-        console.log("otp invalid",error.message);
         window.recaptchaVerifier.reset();
         window.recaptchaVerifier.clear();
       });}
