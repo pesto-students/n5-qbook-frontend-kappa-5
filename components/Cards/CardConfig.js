@@ -1,4 +1,4 @@
-import React,{useState} from "react";
+import React,{useState,useEffect} from "react";
 import Toggle from 'components/Sidebar/Toggle';
 import { updateConfig,selectConfigData } from '../../slices/settingsSlice'
 import { useDispatch, useSelector } from 'react-redux';
@@ -6,7 +6,12 @@ import { useDispatch, useSelector } from 'react-redux';
 export default function CardConfig() {
 const configData = useSelector(selectConfigData)
 const dispatch = useDispatch();
-const [configInfo,setConfigInfo] = useState(configData);
+const [configInfo,setConfigInfo] = useState();
+useEffect(() => {
+  //get the config data from db
+  //console.log(configData,"configData")
+  setConfigInfo(configData);
+}, [])
 const setDutyEnabled =(e) =>{
   setConfigInfo(values=>({
     ...values,

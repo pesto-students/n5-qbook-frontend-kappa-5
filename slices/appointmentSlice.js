@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   appointmentList:null,
   searchTerm:"",
-  selectedDate:new Date(),
+  selectedDate:null,
   appointmentHistoryList:null
 };
 

@@ -54,7 +54,7 @@ router.events.on("routeChangeError", () => {
       }
     }
     async function getMessage(){
-      console.log('message functions')
+     // console.log('message functions')
     const messaging = firebase.messaging()
     messaging.onMessage((message) => {
      console.log("Message received. ", message);

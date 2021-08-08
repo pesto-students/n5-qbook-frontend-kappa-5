@@ -4,12 +4,12 @@ import LoginLayout from "layouts/LoginLayout.js";
 import { useDispatch } from 'react-redux'
 import { login } from '../../slices/doctorSlice'
 import { qBook,signInText,Google } from '../../utils/Constants';
-import {doctorLoginInfo} from '../../utils/ApiRequests';
+import {doctorLoginInfo, getAsyncPostData} from '../../utils/ApiRequests';
 
 export default function DoctorLogin() {
   const dispatch = useDispatch();
   const addDoctorInfo = async(user) =>{
-        const response1= doctorLoginInfo(user);
+        const response1= getAsyncPostData('/user/login',user);
         const response = {
               "createdAt": 1627318466653,
               "updatedAt": 1628227119331,

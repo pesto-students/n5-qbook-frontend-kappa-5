@@ -24,12 +24,14 @@ export default function CardPatientInfo({uuid}) {
     let propValue = e.target.value;
     setPatientDetails({...patientDetails,[propName]:propValue})
   }
-  const updateProfile = (data) =>{
-    console.log(data,"data")
+  const updateProfile = (e) =>{
+    e.preventDefault();
+    handleSubmit(e);
+    //console.log(data,e,"data")
     dispatch(updateAppointment(patientDetails))
     router.push({
         pathname: '/doctor/appointments'
-    })
+    },{shallow: true})
   }
  console.log(errors,"errors")
   return (
@@ -41,7 +43,7 @@ export default function CardPatientInfo({uuid}) {
           </div>
         </div>
         <div className="flex-auto px-4 lg:px-10 py-10 pt-0">
-          <form onSubmit={handleSubmit(updateProfile)}>
+          <form onSubmit={updateProfile}>
             <h6 className="text-blueGray-400 text-sm mt-3 mb-6 font-bold uppercase">Patient Information</h6>
             <div className="flex flex-wrap">
               <div className="w-full lg:w-6/12 px-4">
@@ -88,7 +90,7 @@ export default function CardPatientInfo({uuid}) {
                 <div className="relative w-full mb-3">
                 {/* <Link href={`/doctor/appointments`}> */}
                   <button  className="bg-blueGray-700 active:bg-blueGray-600 text-white font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
-                    type="submit" onClick={updateProfile}>Close Examination</button>
+                    type="button" onClick={updateProfile}>Close Examination</button>
                     {/* </Link> */}
                 </div>
               </div>          

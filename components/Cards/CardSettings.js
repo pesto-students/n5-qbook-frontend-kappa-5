@@ -4,7 +4,7 @@ import validation from "../../utils/Validation";
 import { updateConfig,selectConfigData } from '../../slices/settingsSlice'
 import { useDispatch, useSelector } from 'react-redux';
 import CardSettingsForm from "./CardSettingsForm";
-import {getAppointments} from '../../utils/ApiRequests';
+import {getConfigData} from '../../utils/ApiRequests';
 export default function CardSettings() {
   const configData = useSelector(selectConfigData)
   const dispatch = useDispatch();
@@ -12,22 +12,12 @@ export default function CardSettings() {
   const [successMessage,setSuccessMessage] = useState(false);
   useEffect(() => {
     //get the dashboard data from api
+    
     const loginInfo = JSON.parse(sessionStorage.getItem("doctor_login"));
-    const appointmentsData = getAppointments(loginInfo.accessToken);
-  //   axios({
-  //    // url: 'http://api.qbooks.in:1337/api/v1/user/dashboard',
-  //    url:'http://localhost:1337/api/v1/user/dashboard',
-  //     method: 'get',
-  //     headers: {
-  //         'Authorization': 'Bearer ' + loginInfo.accessToken,
-  //     }
-  //  })
-  //  .then(response => {
-  //     console.log(response)
-  //  }) 
-  //  .catch(err => {
-  //     console.log(err);
-  //  });
+    const headers ={
+      Authorization:'Bearer ' + loginInfo.accessToken,
+    }
+    const appointmentsData = getConfigData('/user/dashboard',{},headers);
     const response = {
       "record": {
           "createdAt": 1627318466653,
