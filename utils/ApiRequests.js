@@ -25,26 +25,24 @@ export const getAsyncPostData = async (url, params, headers) => {
   const response = responseData ? responseData.data : false;
   return response;
 };
-export const getConfigData = async (url, params, headers) => {
-
-  headers = headers ? headers : {};
-  params = params ? params : {};
+export const getAsyncData = async (url, headers) => {
+  // console.log('Async Data', url,config);
+  headers = headers ? headers : [];
   let apiURL = config.BASE_API_URL + url;
+  console.log('api get url=', apiURL)
   const responseData = await axios
-    .post(apiURL, params, headers)
+    .get(apiURL, headers)
     .then((res) => {
-      //console.log(res.status);
-      if (res.status == 201 || res.status == 200) {
+      if (res.status == 200) {
         return res;
-      } else {
-        return false;
       }
     })
     .catch((error) => {
-      console.log("Error In Api = " + error);
+      console.log(error);
+      console.log("Error In Api = " + url);
       return false;
     });
-  //console.log(responseData);
+  // console.log('getAsyncData',responseData);
   const response = responseData ? responseData.data : false;
   return response;
 };

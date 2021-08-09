@@ -4,20 +4,21 @@ import validation from "../../utils/Validation";
 import { updateConfig,selectConfigData } from '../../slices/settingsSlice'
 import { useDispatch, useSelector } from 'react-redux';
 import CardSettingsForm from "./CardSettingsForm";
-import {getConfigData} from '../../utils/ApiRequests';
+import {getAsyncData} from '../../utils/ApiRequests';
 export default function CardSettings() {
   const configData = useSelector(selectConfigData)
   const dispatch = useDispatch();
   const [profileInfo,setProfileInfo] = useState();
   const [successMessage,setSuccessMessage] = useState(false);
-  useEffect(() => {
+  useEffect(async () => {
     //get the dashboard data from api
     
     const loginInfo = JSON.parse(sessionStorage.getItem("doctor_login"));
-    const headers ={
-      Authorization:'Bearer ' + loginInfo.accessToken,
-    }
-    const appointmentsData = getConfigData('/user/dashboard',{},headers);
+    const params ={headers:{
+      Authorization:'Bearer ' + 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjEwNGUxNDM5ZTc5ZTQwNjFjNmMyZTg2IiwiaWF0IjoxNjI4NDg2MTg2LCJleHAiOjE2MjkwOTA5ODZ9.5QLZlqSoUPuCEnCp86JEa0hecHJhYAZJ2Htte4_eAn0' 
+    }};
+    const appointmentsData = await getAsyncData('/user/dashboard',params);
+    console.log(appointmentsData);
     const response = {
       "record": {
           "createdAt": 1627318466653,
