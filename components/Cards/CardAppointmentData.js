@@ -1,12 +1,27 @@
-import React from "react";
+import React,{useEffect} from "react";
 import Link from "next/link";
 import { selectAppointmentList,selectSearchTerm,selectedDate } from '../../slices/appointmentSlice'
 import { useSelector } from 'react-redux';
-
+import {getAsyncData,getAsyncPostData} from '../../utils/ApiRequests';
 export default function CardAppointmentData() {
       const appointmentList = useSelector(selectAppointmentList)
       const searchText = useSelector(selectSearchTerm)
       const searchDate = useSelector(selectedDate)
+      const getAppointmentList = async() =>{
+       const params={
+          status: '1',
+          date:'2021-08-21',
+          name:'gaurav',
+      }
+         const response = await getAsyncData('/booking/list',params);
+         console.log(response,"res in appoint"); 
+        // dispatch(updateConfig(response));
+        // setProfileInfo(response);
+      }
+      useEffect( () => {
+        //get the dashboard data from api
+        getAppointmentList();
+      }, [])
   return (
     <>
       <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded bg-white">
@@ -32,7 +47,7 @@ export default function CardAppointmentData() {
                 <th className="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-blueGray-50 text-blueGray-500 border-blueGray-100">
                   Date
                 </th>
-                <th className="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-blueGray-50 text-blueGray-500 border-blueGray-100">
+                <th className="hidden md:block lg:table-cell px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-blueGray-50 text-blueGray-500 border-blueGray-100">
                   Payment Mode
                 </th>
               </tr>
@@ -62,12 +77,12 @@ export default function CardAppointmentData() {
                 <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
                 <span>{patient.date}</span>
                 </td>              
-                <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                <td className="hidden md:block border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
                 <span>{patient.paymentMode}</span>
                 </td>
 				        <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
                 <Link href={`/doctor/consultation/${patient.uuid}`}>
-                <button className="bg-blueGray-700 active:bg-blueGray-600 text-white font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
+                <button className="bg-blueGray-700 active:bg-blueGray-600 text-white font-bold uppercase text-xs px-2 md:px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
                     type="button">Start</button></Link>
                 </td>
               </tr>

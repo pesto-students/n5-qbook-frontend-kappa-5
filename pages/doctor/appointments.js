@@ -19,7 +19,7 @@ export default function Appointments() {
   return (
     <>   
       <div className="flex flex-wrap mt-4">
-        <div className="w-full mb-12 px-4 lg:w-8/12">
+        <div className="w-full px-4 lg:w-8/12">
           <CardAppointmentData/>
         </div>
         <div className="w-full lg:w-4/12 px-4">

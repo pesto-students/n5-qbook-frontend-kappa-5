@@ -31,7 +31,7 @@ export default function CardPatientInfo({uuid}) {
     dispatch(updateAppointment(patientDetails))
     router.push({
         pathname: '/doctor/appointments'
-    },{shallow: true})
+    })
   }
  console.log(errors,"errors")
   return (

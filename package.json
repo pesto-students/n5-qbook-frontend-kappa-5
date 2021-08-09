@@ -3,6 +3,7 @@
   "dependencies": {
     "@fortawesome/fontawesome-free": "5.15.3",
     "@headlessui/react": "^1.4.0",
+    "@popperjs/core": "^2.9.3",
     "@reduxjs/toolkit": "^1.6.1",
     "@tailwindcss/forms": "0.2.1",
     "axios": "^0.21.1",

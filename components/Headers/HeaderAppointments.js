@@ -2,7 +2,7 @@ import React from "react";
 
 import DatePicker from 'react-datepicker';
 import CardStats from "components/Cards/CardStats.js";
-
+import { useRouter } from "next/router";
 import { selectAppointmentList,selectSearchTerm,selectedDate,updateSearchTerm,updateSelectedDate } from '../../slices/appointmentSlice'
 import { useSelector,useDispatch } from 'react-redux';
 
@@ -11,7 +11,8 @@ export default function HeaderAppointments() {
   const searchText = useSelector(selectSearchTerm)
   const searchDate = useSelector(selectedDate)
   const dispatch = useDispatch();
-
+  const router = useRouter();
+  console.log(router.pathname.indexOf("/doctor/appointments"),"page url")
   const handleSearchText=(e)=>{
     dispatch(updateSearchTerm(e.target.value))
   }
@@ -27,7 +28,8 @@ export default function HeaderAppointments() {
             <div className="flex flex-wrap">
               <div className="w-full lg:w-12/12 xl:w-12/12 px-4 flex flex-row">
                
-                <form className="md:flex hidden flex-wrap items-center mr-3 w-full ml-3 justify-between">
+            {/* <form className="md:flex hidden flex-wrap items-center mr-3 w-full ml-3 justify-between"> */}
+            <form className="md:flex hidden flex-wrap items-center mr-3 w-full ml-3 justify-between">
             <div className="relative flex w-6/12 flex-wrap items-stretch xl:w-6/12">
               <span className="z-10 h-full leading-snug font-normal absolute text-center text-blueGray-300 absolute bg-transparent rounded text-base items-center justify-center w-8 pl-3 py-3">
                 <i className="fas fa-search"></i>
@@ -41,7 +43,9 @@ export default function HeaderAppointments() {
               />
               
             </div>
-            <div className="relative flex w-6/12 flex-wrap items-stretch xl:w-6/12">
+            {router.pathname.indexOf("/doctor/appointments")===-1
+            ?(
+              <div className="relative flex w-6/12 flex-wrap items-stretch xl:w-6/12">
             <DatePicker
               selected = {searchDate}
               onChange={date=>handleSearchDate(date)}
@@ -57,6 +61,10 @@ export default function HeaderAppointments() {
                 <i className="fas fa-filter"></i>
               </span>             
               </div>
+            ):(
+                <></>
+            )}
+           
           </form>
           <div className="relative flex lg:w-full flex-wrap items-stretch xl:w-6/12">
           <CardStats

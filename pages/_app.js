@@ -1,34 +1,15 @@
 import React,{useEffect} from "react";
-import ReactDOM from "react-dom";
-import App from "next/app";
 import Head from "next/head";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "styles/tailwind.css";
-import ProfileContextProvider from 'Context/ProfileContext';
 import firebase from "firebase/app";
 import 'firebase/messaging';
 import { firebaseCloudMessaging } from '../components/Service/webPush';
 import 'react-datepicker/dist/react-datepicker.css';
-import router from "next/router";
-import PageChange from "components/PageChange/PageChange";
 import { Provider } from "react-redux";
 import { store } from '../app/store'
-router.events.on("routeChangeStart", (url) => {
-  document.body.classList.add("body-page-transition");
-  ReactDOM.render(
-    <PageChange path={url} />,
-    document.getElementById("page-transition")
-  );
-});
-router.events.on("routeChangeComplete", () => {
-  ReactDOM.unmountComponentAtNode(document.getElementById("page-transition"));
-  document.body.classList.remove("body-page-transition");
-});
-router.events.on("routeChangeError", () => {
-  ReactDOM.unmountComponentAtNode(document.getElementById("page-transition"));
-  document.body.classList.remove("body-page-transition");
-});
- const MyApp =(props)=> {
+ 
+const MyApp =(props)=> {
    
    useEffect(() => {
     setToken()
@@ -58,8 +39,6 @@ router.events.on("routeChangeError", () => {
     const messaging = firebase.messaging()
     messaging.onMessage((message) => {
      console.log("Message received. ", message);
-     let msg = message.data.notification
-     console.log(msg,"destructured msg");
     })
     }
     const { Component, pageProps } = props;
@@ -83,11 +62,11 @@ router.events.on("routeChangeError", () => {
   
 }
 
-MyApp.getInitialProps = async({ Component, router, ctx }) =>{
-  let pageProps = {};
-  if (Component.getInitialProps) {
-    pageProps = await Component.getInitialProps(ctx);
-  }
-  return { pageProps };
-}
+// MyApp.getInitialProps = async({ Component, router, ctx }) =>{
+//   let pageProps = {};
+//   if (Component.getInitialProps) {
+//     pageProps = await Component.getInitialProps(ctx);
+//   }
+//   return { pageProps };
+// }
 export default MyApp;

@@ -4,25 +4,14 @@ import LoginLayout from "layouts/LoginLayout.js";
 import { useDispatch } from 'react-redux'
 import { login } from '../../slices/doctorSlice'
 import { qBook,signInText,Google } from '../../utils/Constants';
-import {doctorLoginInfo, getAsyncPostData} from '../../utils/ApiRequests';
+import {getAsyncPostData} from '../../utils/ApiRequests';
 
 export default function DoctorLogin() {
   const dispatch = useDispatch();
   const addDoctorInfo = async(user) =>{
-        const response1= getAsyncPostData('/user/login',user);
-        const response = {
-              "createdAt": 1627318466653,
-              "updatedAt": 1628227119331,
-              "id": "60fee8c26343f4eba4aaa963",
-              "firstname": "Gaurav",
-              "lastname": "Tayal",
-              "email": "abc@gmail.com",
-              "googleAuthId": "dsdsd24234sadasdasdsd",
-              "image": "https://lh3.googleusercontent.com/a-/AOh14GgtKaIRiTyICW-iqoBJGO9K-3RR413hvjHihsrc_w=s96-c",
-              "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjBmZWU4YzI2MzQzZjRlYmE0YWFhOTYzIiwiaWF0IjoxNjI4MjI3MTE5LCJleHAiOjE2Mjg4MzE5MTl9.cQlIg6QsIoHCVoM-7yXx348q0rviYGrCtok_jodV-9c"  
-      }
-      sessionStorage.setItem("doctor_login",JSON.stringify(response));
-      dispatch(login(response)); 
+      const {data}= await getAsyncPostData('/user/login',user);
+      sessionStorage.setItem("doctor_login",JSON.stringify(data));
+      dispatch(login(data)); 
   }
   const signIn = () =>{
     firebaseAuth.signInWithPopup(provider)
