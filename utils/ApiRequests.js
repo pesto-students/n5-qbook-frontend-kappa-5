@@ -7,8 +7,8 @@ export const getAsyncPostData = async (url, params, headers) => {
   params = params ? params : {};
   let apiURL = config.BASE_API_URL + url;
   const headerValue = {headers:headers }
-  console.log('Async Data', url,params,headerValue);
-  debugger;
+  //console.log('Async Data', url,params,headerValue);
+  //debugger;
   const responseData = await axios
     .post(apiURL, params, headerValue)
     .then((res) => {
@@ -35,14 +35,14 @@ export const getAsyncData = async (url,params, headers) => {
      headers,
     params: params,
   }
-   console.log('Async Data', url,configValues);
+  // console.log('Async Data', url,configValues);
   headers = headers ? headers : [];
   let apiURL = config.BASE_API_URL + url;
-  console.log('api get url=', apiURL)
+  //console.log('api get url=', apiURL)
   const responseData = await axios
     .get(apiURL,configValues)
     .then((res) => {
-      console.log(res,"res in api")
+      //console.log(res,"res in api")
       if (res.status == 200) {
         return res;
       }

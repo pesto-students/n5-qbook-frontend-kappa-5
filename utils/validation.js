@@ -1,4 +1,4 @@
-import {errorName,errorSpecialization,errorBio,errorFees} from './Constants'
+//import {errorName,errorSpecialization,errorBio,errorFees} from './Constants'
 function validation(values) {
     let errors={};
     if(!values.firstname.trim()){

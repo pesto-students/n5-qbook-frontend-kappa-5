@@ -1,22 +1,21 @@
 import React,{useEffect} from "react";
 import Link from "next/link";
-import { selectAppointmentList,selectSearchTerm,selectedDate } from '../../slices/appointmentSlice'
-import { useSelector } from 'react-redux';
-import {getAsyncData,getAsyncPostData} from '../../utils/ApiRequests';
+import { selectAppointmentList,selectSearchTerm,updateAppointmentsList } from '../../slices/appointmentSlice'
+import { useSelector,useDispatch } from 'react-redux';
+import {getAsyncData} from '../../utils/ApiRequests';
 export default function CardAppointmentData() {
-      const appointmentList = useSelector(selectAppointmentList)
-      const searchText = useSelector(selectSearchTerm)
-      const searchDate = useSelector(selectedDate)
-      const getAppointmentList = async() =>{
-       const params={
+        const appointmentList = useSelector(selectAppointmentList)
+        const searchText = useSelector(selectSearchTerm)
+        const dispatch = useDispatch();
+        //console.log(new Date().toJSON().slice(0,10),"date")
+        const getAppointmentList = async() =>{
+        const params={
           status: '1',
-          date:'2021-08-21',
-          name:'gaurav',
-      }
-         const response = await getAsyncData('/booking/list',params);
-         console.log(response,"res in appoint"); 
-        // dispatch(updateConfig(response));
-        // setProfileInfo(response);
+          date:new Date().toJSON().slice(0,10),
+          name:'',
+        }
+        const response = await getAsyncData('/booking/list',params);
+        dispatch(updateAppointmentsList(response.data)); 
       }
       useEffect( () => {
         //get the dashboard data from api
@@ -54,15 +53,13 @@ export default function CardAppointmentData() {
             </thead>
             <tbody className="overflow-y-scroll h-56">
             {appointmentList?.filter((val)=>{
-              if(searchText==="" && searchDate===null){
+              if(searchText===""){
                 return val;
               }
-              else if(searchText==="" && new Date(val.date).setHours(0,0,0,0) === new Date(searchDate).setHours(0,0,0,0)){
-                return val;
-              }else if((searchText!=="") && 
+              else if((searchText!=="") && 
                 (val.name.toLowerCase().includes(searchText?.toLowerCase())||
-                val.phoneNumber.includes(searchText)||
-                (new Date(val.date).setHours(0,0,0,0) === new Date(searchDate).setHours(0,0,0,0)))){                    
+                val.phoneNumber.includes(searchText)
+                )){                    
                     return val;                           
                 }
             })

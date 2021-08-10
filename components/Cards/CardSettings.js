@@ -37,13 +37,15 @@ export default function CardSettings() {
    }
   }
   useEffect(() => {
-     if(errors===undefined || Object.keys(errors).length>0){
+   
+     if(errors!==undefined && Object.keys(errors).length>0){
       setSuccessMessage(false);
       return;
      } 
      else{
       dispatch(updateConfig(profileInfo));
       formatInput();
+      setSuccessMessage(true);
      }
   }, [errors])
   const updateProfile = (e) =>{

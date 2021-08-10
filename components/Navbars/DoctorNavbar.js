@@ -30,9 +30,9 @@ export default function DoctorNavbar() {
   const signOut = (e) =>{
     e.preventDefault()
     firebaseAuth.signOut().then(()=>{
+          router.push('/')
           dispatch(logout());
           sessionStorage.clear();
-          router.push('/')
       });
   };
   const handlePopOver = (e) =>{

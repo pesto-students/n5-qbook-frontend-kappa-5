@@ -10,18 +10,21 @@ import { Provider } from "react-redux";
 import { store } from '../app/store'
  
 const MyApp =(props)=> {
-   
+  
    useEffect(() => {
-    setToken()
-     if("serviceWorker" in navigator){
-       navigator.serviceWorker.register('./firebase-messaging-sw.js')
-       .then(function(registration){
-        //console.log("Registration successful, scope is:", registration.scope);
-        navigator.serviceWorker.addEventListener('message', (event) => console.log('event for the service worker', event))
-       }).catch(function(err){
-         console.log("Service worker registration failed, error:", err)
-       })
-     }
+    const tokenFCM = (sessionStorage.getItem("fcm_token"));
+    if(!tokenFCM){
+      setToken()
+      if("serviceWorker" in navigator){
+        navigator.serviceWorker.register('./firebase-messaging-sw.js')
+        .then(function(registration){
+         navigator.serviceWorker.addEventListener('message', (event) => console.log('event for the service worker', event))
+        }).catch(function(err){
+          console.log("Service worker registration failed, error:", err)
+        })
+      }
+    }
+    
     });
     async function setToken(){
       try{
@@ -35,7 +38,6 @@ const MyApp =(props)=> {
       }
     }
     async function getMessage(){
-     // console.log('message functions')
     const messaging = firebase.messaging()
     messaging.onMessage((message) => {
      console.log("Message received. ", message);

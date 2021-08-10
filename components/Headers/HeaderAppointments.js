@@ -1,22 +1,34 @@
 import React from "react";
-
 import DatePicker from 'react-datepicker';
 import CardStats from "components/Cards/CardStats.js";
 import { useRouter } from "next/router";
-import { selectAppointmentList,selectSearchTerm,selectedDate,updateSearchTerm,updateSelectedDate } from '../../slices/appointmentSlice'
+import { selectAppointmentList,selectSearchTerm,selectedDate,updateSearchTerm,updateSelectedDate,updateAppointmentsList } from '../../slices/appointmentSlice'
 import { useSelector,useDispatch } from 'react-redux';
-
+import {getAsyncData} from '../../utils/ApiRequests';
 export default function HeaderAppointments() {
   const appointmentListData = useSelector(selectAppointmentList)
   const searchText = useSelector(selectSearchTerm)
   const searchDate = useSelector(selectedDate)
   const dispatch = useDispatch();
   const router = useRouter();
-  console.log(router.pathname.indexOf("/doctor/appointments"),"page url")
+
   const handleSearchText=(e)=>{
     dispatch(updateSearchTerm(e.target.value))
   }
-  const handleSearchDate=(date)=>{
+  const handleSearchDate=async(date)=>{
+    //api call to retrieve data based on date
+    if(date!==null){
+      const params={
+        status: '2',
+        date:date.toJSON().slice(0,10),
+        name:'',
+      }
+     const response = await getAsyncData('/booking/list',params); 
+    //  console.log(appointmentListData,"applist")
+    //  console.log(response.data,"new date appointments")
+     dispatch(updateAppointmentsList(response.data));
+     dispatch(updateSelectedDate(date.toJSON().slice(0,10)))
+    } else 
     dispatch(updateSelectedDate(date))
   }
   return (
@@ -26,8 +38,7 @@ export default function HeaderAppointments() {
         <div className="mt-5 px-4 md:px-10 mx-auto w-full">
           <div>
             <div className="flex flex-wrap">
-              <div className="w-full lg:w-12/12 xl:w-12/12 px-4 flex flex-row">
-               
+              <div className="w-full lg:w-12/12 xl:w-12/12 px-4 flex flex-row"> 
             {/* <form className="md:flex hidden flex-wrap items-center mr-3 w-full ml-3 justify-between"> */}
             <form className="md:flex hidden flex-wrap items-center mr-3 w-full ml-3 justify-between">
             <div className="relative flex w-6/12 flex-wrap items-stretch xl:w-6/12">
@@ -43,11 +54,12 @@ export default function HeaderAppointments() {
               />
               
             </div>
-            {router.pathname.indexOf("/doctor/appointments")===-1
+            {(router.pathname.indexOf("/doctor/history")===0 && (router.pathname.indexOf("/")!==0||
+              router.pathname.indexOf("/doctor/appointments")!==0))
             ?(
               <div className="relative flex w-6/12 flex-wrap items-stretch xl:w-6/12">
             <DatePicker
-              selected = {searchDate}
+              selected = {searchDate?new Date(searchDate):null}
               onChange={date=>handleSearchDate(date)}
               showYearDropdown
               dateFormat="MM/dd/yyyy"
@@ -62,22 +74,28 @@ export default function HeaderAppointments() {
               </span>             
               </div>
             ):(
-                <></>
+                <></> 
             )}
            
           </form>
-          <div className="relative flex lg:w-full flex-wrap items-stretch xl:w-6/12">
+          {!(router.pathname.indexOf("/doctor/history")===0 && (router.pathname.indexOf("/")!==0||
+              router.pathname.indexOf("/doctor/appointments")!==0))
+          ?(
+            <div className="relative flex lg:w-full flex-wrap items-stretch xl:w-6/12">
           <CardStats
                   statSubtitle="Appointments"
                   statTitle={appointmentListData?.length}
                 />
-                </div>
-              </div>             
-            </div>
-            
           </div>
+          )
+          :(
+            <></>
+          )}
+          </div>             
         </div>
       </div>
+      </div>
+    </div>
     </>
   );
 }
