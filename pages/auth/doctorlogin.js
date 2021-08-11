@@ -10,7 +10,6 @@ export default function DoctorLogin() {
   const dispatch = useDispatch();
   const addDoctorInfo = async(user) =>{
       const response= await getAsyncPostData(`${loginUrlAPI}`,user);
-      debugger;
       if(response){
         sessionStorage.setItem(`${doctorLogin}`,JSON.stringify(response.data));
       dispatch(login(response.data));

@@ -11,23 +11,24 @@ export default function HeaderAppointments() {
   const searchDate = useSelector(selectedDate)
   const dispatch = useDispatch();
   const router = useRouter();
-
   const handleSearchText=(e)=>{
     dispatch(updateSearchTerm(e.target.value))
   }
   const handleSearchDate=async(date)=>{
     //api call to retrieve data based on date
+       
     if(date!==null){
+      var dateString = new Date(date.getTime() - (date.getTimezoneOffset() * 60000 ))
+                    .toISOString()
+                    .split("T")[0];  
       const params={
         status: '2',
-        date:date.toJSON().slice(0,10),
+        date:dateString,
         name:'',
       }
      const response = await getAsyncData('/booking/list',params); 
-    //  console.log(appointmentListData,"applist")
-    //  console.log(response.data,"new date appointments")
      dispatch(updateAppointmentsList(response.data));
-     dispatch(updateSelectedDate(date.toJSON().slice(0,10)))
+     dispatch(updateSelectedDate(dateString))
     } else 
     dispatch(updateSelectedDate(date))
   }

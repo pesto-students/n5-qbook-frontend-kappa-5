@@ -1,7 +1,7 @@
 import React,{useState,useEffect} from "react";
 import {useRouter} from "next/router";
 import { updateAppointmentsHistoryList } from '../../slices/appointmentSlice'
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useForm } from "react-hook-form";
 import {getAsyncData,getAsyncPostData} from '../../utils/ApiRequests';
 export default function CardPatientInfo({searchToken}) {
@@ -12,9 +12,7 @@ export default function CardPatientInfo({searchToken}) {
     const params={
       searchToken: searchToken,
     }
-    debugger;
     const response = await getAsyncData('/booking/detail',params);
-    console.log(response,"response")
     if(response){
       setPatientDetails(response.data);
     } 
@@ -22,13 +20,7 @@ export default function CardPatientInfo({searchToken}) {
   useEffect( () => {
     getPatientInfo();
   }, [])
-  const { register, handleSubmit, formState: { errors } } = useForm(
-    // {
-    //   defaultValues: {
-    //     patientName: patientDetails?.name,
-    //   }
-    // }
-  );
+  const { register, handleSubmit, formState: { errors } } = useForm();
   const handleInput = (e) =>{
     let propName = e.target.name;
     let propValue = e.target.value;
@@ -46,7 +38,6 @@ export default function CardPatientInfo({searchToken}) {
   const updateProfile = (e) =>{
     e.preventDefault();
     handleSubmit(e);
-    debugger;
     const data = {
       searchToken:searchToken,
       diagnosis:patientDetails.diagnosis,
@@ -54,7 +45,7 @@ export default function CardPatientInfo({searchToken}) {
     }
     updatePatientInfoAPI(data);
   }
- console.log(errors,"errors")
+
   return (
     <>
       <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-blueGray-100 border-0">
@@ -70,13 +61,8 @@ export default function CardPatientInfo({searchToken}) {
               <div className="w-full lg:w-6/12 px-4">
                 <div className="relative w-full mb-3">
                   <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2">Patient Name<span className="text-xs text-red-500 px-1">*</span></label>
-                  {/* <input {...register('name', { required: true })} type="text" name="patientName" value={patientDetails?.name}  className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                    onChange={handleInput} required 
-                  /> */}
-                  <input  type="text" name="patientName" value={patientDetails?.customer?.name ||''} readOnly className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                    // onChange={handleInput} {...register('patientName', { required: true })} readOnly 
+                  <input  type="text" name="patientName" value={patientDetails?.customer?.name ||''} readOnly className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150" 
                   />
-                  {/* {errors?.patientName && <span className="text-xs text-red-500 ">Name is Required!</span>} */}
                 </div>
               </div>
               <div className="w-full lg:w-6/12 px-4">
@@ -111,10 +97,8 @@ export default function CardPatientInfo({searchToken}) {
             </div>
               <div className="w-full lg:w-6/12 px-4 mt-3">
                 <div className="relative w-full mb-3">
-                {/* <Link href={`/doctor/appointments`}> */}
                   <button  className="bg-blueGray-700 active:bg-blueGray-600 text-white font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
                     type="button" onClick={updateProfile}>Close Examination</button>
-                    {/* </Link> */}
                 </div>
               </div>          
             </div>

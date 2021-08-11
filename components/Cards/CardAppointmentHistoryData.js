@@ -9,7 +9,6 @@ export default function CardAppointmentHistoryData() {
       const getAppointmentHistoryList = async() =>{
             const params={
               status: '2',
-              date:new Date().toJSON().slice(0,10),
           }
           const response = await getAsyncData('/booking/list',params);
           dispatch(updateAppointmentsHistoryList(response.data));
@@ -50,26 +49,28 @@ export default function CardAppointmentHistoryData() {
             </thead>
             <tbody className="overflow-y-scroll h-56">
             {appointmentHistoryList?.filter((val)=>{
+              let patientName = val?.customerInfo?.name;
+              let phoneNumber = val?.customerInfo?.mobile
               if(searchText===""){
                 return val;
               }
              else if((searchText!=="") && 
-                (val.name.toLowerCase().includes(searchText?.toLowerCase())||
-                val.phoneNumber.includes(searchText)
+                (patientName?.toString()?.toLowerCase().includes(searchText?.toLowerCase())||
+                phoneNumber?.toString()?.toLowerCase().includes(searchText)
                 )){                    
                     return val;                           
                 }
             })
             .map((patient=>(
-              <tr key={patient.uuid}>
+              <tr key={patient?.id}>
                 <th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left flex items-center">                 
-                  <span className="ml-3 font-bold text-blueGray-600">{patient.name}</span>
+                  <span className="ml-3 font-bold text-blueGray-600">{patient?.customerInfo?.name}</span>
                 </th>
                 <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                  {patient.phoneNumber}
+                  {patient?.customerInfo?.mobile}
                 </td>
                 <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                <span>{patient.date}</span>
+                <span>{patient?.bookingDateTime?.split("T")[0]}</span>
                 </td>              
                 <td className="hidden md:block border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
                 <span>{patient.paymentMode}</span>

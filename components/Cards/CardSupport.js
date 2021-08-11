@@ -6,9 +6,7 @@ export default function CardSupport() {
   const[queries,setQueries] = useState({});
   const [successMessage,setSuccessMessage] = useState(false);
   const { register, handleSubmit, formState: { errors } } = useForm();
-  console.log(errors.count,"errors")
   const sendQuery = (e) =>{
-    console.log("inside update ")
     //e.preventDefault();
     setSuccessMessage(true)
     //console.log("profile",profileInfo);
