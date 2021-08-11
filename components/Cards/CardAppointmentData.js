@@ -1,20 +1,25 @@
-import React,{useEffect} from "react";
+import React,{useEffect,useState} from "react";
 import Link from "next/link";
 import { selectAppointmentList,selectSearchTerm,updateAppointmentsList } from '../../slices/appointmentSlice'
 import { useSelector,useDispatch } from 'react-redux';
-import {getAsyncData} from '../../utils/ApiRequests';
+import {getAsyncData,getAsyncPostData} from '../../utils/ApiRequests';
 export default function CardAppointmentData() {
-        const appointmentList = useSelector(selectAppointmentList)
+        //const appointmentList1 = useSelector(selectAppointmentList)
         const searchText = useSelector(selectSearchTerm)
         const dispatch = useDispatch();
+        const [appointmentList,setAppointmentList] = useState();
         //console.log(new Date().toJSON().slice(0,10),"date")
+        console.log(appointmentList,"booking list")
         const getAppointmentList = async() =>{
         const params={
           status: '1',
           date:new Date().toJSON().slice(0,10),
-          name:'',
+          //date
+          //name:'',
         }
         const response = await getAsyncData('/booking/list',params);
+        
+        setAppointmentList(response.data);
         dispatch(updateAppointmentsList(response.data)); 
       }
       useEffect( () => {
@@ -57,28 +62,33 @@ export default function CardAppointmentData() {
                 return val;
               }
               else if((searchText!=="") && 
-                (val.name.toLowerCase().includes(searchText?.toLowerCase())||
-                val.phoneNumber.includes(searchText)
+                (val.customerInfo.name.toLowerCase().includes(searchText?.toLowerCase())||
+                val.customerInfo.mobile.includes(searchText)
                 )){                    
                     return val;                           
                 }
             })
             .map((patient=>(
-              <tr key={patient.uuid}>
+              <tr key={patient.id}>
                 <th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left flex items-center">                 
-                  <span className="ml-3 font-bold text-blueGray-600">{patient.name}</span>
+                  <span className="ml-3 font-bold text-blueGray-600">{patient.customerInfo.name}</span>
                 </th>
                 <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                  {patient.phoneNumber}
+                  {patient.customerInfo.mobile}
                 </td>
                 <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                <span>{patient.date}</span>
+                <span>{patient.bookingDateTime}</span>
                 </td>              
                 <td className="hidden md:block border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
                 <span>{patient.paymentMode}</span>
                 </td>
 				        <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                <Link href={`/doctor/consultation/${patient.uuid}`}>
+                <Link 
+                href={{
+                  pathname:`/doctor/consultation/${patient.searchToken}`,
+                  query:{searchToken:`${patient.searchToken}`}
+                  }}
+                  as={`/doctor/consultation/${patient.searchToken}`} >
                 <button className="bg-blueGray-700 active:bg-blueGray-600 text-white font-bold uppercase text-xs px-2 md:px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
                     type="button">Start</button></Link>
                 </td>

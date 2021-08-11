@@ -10,7 +10,6 @@ export default function CardAppointmentHistoryData() {
             const params={
               status: '2',
               date:new Date().toJSON().slice(0,10),
-              name:'',
           }
           const response = await getAsyncData('/booking/list',params);
           dispatch(updateAppointmentsHistoryList(response.data));

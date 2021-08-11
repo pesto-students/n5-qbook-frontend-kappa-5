@@ -1,37 +1,58 @@
-import React,{useState} from "react";
-import axios from "axios";
-import Link from "next/link";
+import React,{useState,useEffect} from "react";
 import {useRouter} from "next/router";
-import { selectAppointmentList,updateAppointment } from '../../slices/appointmentSlice'
+import { updateAppointmentsHistoryList } from '../../slices/appointmentSlice'
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from "react-hook-form";
-export default function CardPatientInfo({uuid}) {
- 
+import {getAsyncData,getAsyncPostData} from '../../utils/ApiRequests';
+export default function CardPatientInfo({searchToken}) {
   const dispatch = useDispatch();
    const router = useRouter();
-  //const [errors] = useState({});
-  const patientsList = useSelector(selectAppointmentList);
-  const [patientDetails,setPatientDetails] = useState(patientsList?.filter((patient)=>patient.uuid===uuid)[0]);
-  const { register, handleSubmit, formState: { errors } } = useForm(
-    {
-      defaultValues: {
-        patientName: patientDetails?.name,
-      }
+  const [patientDetails,setPatientDetails] = useState({});
+  const getPatientInfo = async() =>{
+    const params={
+      searchToken: searchToken,
     }
+    debugger;
+    const response = await getAsyncData('/booking/detail',params);
+    console.log(response,"response")
+    if(response){
+      setPatientDetails(response.data);
+    } 
+    }
+  useEffect( () => {
+    getPatientInfo();
+  }, [])
+  const { register, handleSubmit, formState: { errors } } = useForm(
+    // {
+    //   defaultValues: {
+    //     patientName: patientDetails?.name,
+    //   }
+    // }
   );
   const handleInput = (e) =>{
     let propName = e.target.name;
     let propValue = e.target.value;
     setPatientDetails({...patientDetails,[propName]:propValue})
   }
+  const updatePatientInfoAPI = async(data) =>{
+    const response = await getAsyncPostData('/booking/addPrescription',data); 
+    if(response){
+      dispatch(updateAppointmentsHistoryList(response.data))
+      router.push({
+          pathname: '/doctor/appointments'
+      })
+    }
+   }
   const updateProfile = (e) =>{
     e.preventDefault();
     handleSubmit(e);
-    //console.log(data,e,"data")
-    dispatch(updateAppointment(patientDetails))
-    router.push({
-        pathname: '/doctor/appointments'
-    })
+    debugger;
+    const data = {
+      searchToken:searchToken,
+      diagnosis:patientDetails.diagnosis,
+      prescription:patientDetails.prescription,
+    }
+    updatePatientInfoAPI(data);
   }
  console.log(errors,"errors")
   return (
@@ -52,17 +73,17 @@ export default function CardPatientInfo({uuid}) {
                   {/* <input {...register('name', { required: true })} type="text" name="patientName" value={patientDetails?.name}  className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                     onChange={handleInput} required 
                   /> */}
-                  <input  type="text" name="patientName" value={patientDetails?.patientName}  className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                    onChange={handleInput} {...register('patientName', { required: true })}  
+                  <input  type="text" name="patientName" value={patientDetails?.customer?.name ||''} readOnly className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
+                    // onChange={handleInput} {...register('patientName', { required: true })} readOnly 
                   />
-                  {errors?.patientName && <span className="text-xs text-red-500 ">Name is Required!</span>}
+                  {/* {errors?.patientName && <span className="text-xs text-red-500 ">Name is Required!</span>} */}
                 </div>
               </div>
               <div className="w-full lg:w-6/12 px-4">
                 <div className="relative w-full mb-3">
                   <label  className="block uppercase text-blueGray-600 text-xs font-bold mb-2">Contact Number<span className="text-xs text-red-500 px-1">*</span></label>
-                  <input  type="text" name="phoneNumber" value={patientDetails?.phoneNumber} className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                    onChange={handleInput} required 
+                  <input  type="text" name="phoneNumber" value={patientDetails?.customer?.mobileNum ||''} className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
+                     readOnly
                   />                    
                 </div>
               </div>           
@@ -73,7 +94,9 @@ export default function CardPatientInfo({uuid}) {
             <div className="w-full lg:w-12/12 px-4">
                 <div className="relative w-full mb-3">
                   <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2">Diagnosis<span className="text-xs text-red-500 px-1">*</span></label>
-                  <textarea  rows={3} cols={3} {...register('diagnosis', { required: true })}  name="diagnosis" value={patientDetails?.diagnosis} className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
+                  <textarea  rows={3} cols={3} {...register('diagnosis', { required: true })}  name="diagnosis" 
+                  value={patientDetails?.diagnosis} 
+                  className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                     onChange={handleInput} />
                     {errors?.diagnosis && <p className="text-xs text-red-500 px-2">Diagnosis is Required!</p>}
                 </div>

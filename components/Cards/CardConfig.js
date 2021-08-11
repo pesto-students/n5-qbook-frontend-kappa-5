@@ -8,14 +8,15 @@ const configData = useSelector(selectConfigData)
 const dispatch = useDispatch();
 const [configInfo,setConfigInfo] = useState({});
 const getDashboardInfo = async() =>{
-  const loginInfo = JSON.parse(sessionStorage.getItem("doctor_login"));
-  const res = await getAsyncData('/user/dashboard');
+  const response = await getAsyncData('/user/dashboard');
+  if(response){
     const userConfig = {
-      is_duty: res.data.setting.is_duty,
-      is_notification: res.data.setting.is_notification,
+      is_duty: response?.data?.setting?.is_duty===undefined?false:response?.data?.setting?.is_duty,
+      is_notification: response?.data?.setting?.is_notification===undefined?false:response?.data?.setting?.is_notification,
     }
     setConfigInfo(userConfig);
     dispatch(updateConfig(userConfig));
+  } 
   }
 useEffect( () => {
   getDashboardInfo();

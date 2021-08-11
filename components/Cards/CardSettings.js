@@ -4,27 +4,34 @@ import { updateConfig } from '../../slices/settingsSlice'
 import { useDispatch } from 'react-redux';
 import CardSettingsForm from "./CardSettingsForm";
 import {getAsyncData,getAsyncPostData} from '../../utils/ApiRequests';
+import {selectConfigData} from '../../slices/settingsSlice'
 export default function CardSettings() {
   const dispatch = useDispatch();
   const [profileInfo,setProfileInfo] = useState({firstname:"",title: "",brief: "",fees: 0,});
   const [successMessage,setSuccessMessage] = useState(false);
   const [errors,setErrors] = useState();
-  console.log(errors,"errors in page")
+  const [configUpdated,setConfigUpdated] = useState(false);
   const getDashboardInfo = async() =>{
-    const res = await getAsyncData('/user/dashboard');
-      let {end,start} = res.data.setting.slots[0];
-      let endTimeValues= end.split(':');
-      let startTimeValues= start.split(':');
+    const response = await getAsyncData('/user/dashboard');
+    if(response && response?.data?.setting && response?.data?.setting?.slots){
+      let array=[];
+      array.push(response?.data?.setting?.slots[0]);
+      if(array.length===0)
+      return;
+      const {end,start} = array[0];
+      let endTimeValues= end?.split(':');
+      let startTimeValues= start?.split(':');
       const userConfig = {
-        firstname:res?.data?.record?.firstname,
-        title:res?.data?.setting?.title,
-        brief:res?.data?.setting?.brief,
-        fees:res?.data?.setting?.fees,
+        firstname:response?.data?.record?.firstname,
+        title:response?.data?.setting?.title,
+        brief:response?.data?.setting?.brief,
+        fees:response?.data?.setting?.fees,
         startTime:{hours:startTimeValues[0],minutes:startTimeValues[1]},
         endTime:{hours:endTimeValues[0],minutes:endTimeValues[1]},
       }
       setProfileInfo(userConfig);
       dispatch(updateConfig(userConfig));
+    } 
     }
   useEffect( () => {
     getDashboardInfo();
@@ -33,20 +40,26 @@ export default function CardSettings() {
    const response = await getAsyncPostData('/user/updateConfig',data); 
    if(response){
     setSuccessMessage(true);
-    setErrors();
+    setConfigUpdated(true);
+    setErrors({});
    }
   }
   useEffect(() => {
-   
-     if(errors!==undefined && Object.keys(errors).length>0){
+    if(errors===undefined){
+      setSuccessMessage(false);
+    }
+    else if(errors!==undefined && Object.keys(errors).length>0){
       setSuccessMessage(false);
       return;
      } 
-     else{
+     else if(Object.keys(errors).length===0 && !configUpdated){
       dispatch(updateConfig(profileInfo));
       formatInput();
       setSuccessMessage(true);
      }
+     else if(Object.keys(errors).length===0){
+      setSuccessMessage(true);
+    }
   }, [errors])
   const updateProfile = (e) =>{
     e.preventDefault();
@@ -111,9 +124,11 @@ const handleInput = (e) =>{
             handleStartTime={handleStartTime}
             handleEndTime={handleEndTime}
           />
+          <div>
            {successMessage &&
-            <p className="block uppercase text-xs font-bold py-2 text-green-400 ">Settings updated Successfully!</p>
+            <p className="block uppercase text-xs font-bold py-2 text-teal-200">Settings updated Successfully!</p>
            }
+           </div>
         </div>
       </div>
   );
