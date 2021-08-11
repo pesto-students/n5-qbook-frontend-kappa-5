@@ -13,21 +13,21 @@ import router from "next/router";
 import PageChange from "components/PageChange/PageChange";
 import { Provider } from "react-redux";
 import { store } from '../app/store'
-router.events.on("routeChangeStart", (url) => {
-  document.body.classList.add("body-page-transition");
-  ReactDOM.render(
-    <PageChange path={url} />,
-    document.getElementById("page-transition")
-  );
-});
-router.events.on("routeChangeComplete", () => {
-  ReactDOM.unmountComponentAtNode(document.getElementById("page-transition"));
-  document.body.classList.remove("body-page-transition");
-});
-router.events.on("routeChangeError", () => {
-  ReactDOM.unmountComponentAtNode(document.getElementById("page-transition"));
-  document.body.classList.remove("body-page-transition");
-});
+// router.events.on("routeChangeStart", (url) => {
+//   document.body.classList.add("body-page-transition");
+//   ReactDOM.render(
+//     <PageChange path={url} />,
+//     document.getElementById("page-transition")
+//   );
+// });
+// router.events.on("routeChangeComplete", () => {
+//   ReactDOM.unmountComponentAtNode(document.getElementById("page-transition"));
+//   document.body.classList.remove("body-page-transition");
+// });
+// router.events.on("routeChangeError", () => {
+//   ReactDOM.unmountComponentAtNode(document.getElementById("page-transition"));
+//   document.body.classList.remove("body-page-transition");
+// });
  const MyApp =(props)=> {
    
    useEffect(() => {
