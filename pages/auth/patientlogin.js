@@ -1,11 +1,29 @@
 import React,{useState,useRef} from "react";
 import firebase from '../../firebase'
 import LoginLayout from "layouts/LoginLayout.js";
+import { useRouter } from 'next/router'
+
 //import DeviceInfo from 'react-native-device-info';
 //import {isMobile,getUA} from "react-device-detect";
+function loadScript(src) {
+	return new Promise((resolve) => {
+		const script = document.createElement('script')
+		script.src = src
+		script.onload = () => {
+			resolve(true)
+		}
+		script.onerror = () => {
+			resolve(false)
+		}
+		document.body.appendChild(script)
+	})
+}
+
 export default function PatientLogin() {
   const [deviceId, setDeviceId] =  useState('');
-
+  const router = useRouter();
+  const { uuid } = router.query;
+        
   // const getdeviceId = () => {
   //   var uniqueId = getUA
   //  //var uniqueId = MediaDeviceInfo.deviceId;
@@ -41,15 +59,61 @@ export default function PatientLogin() {
           });
     }
     const onSubmitOtp =() =>{
-      const code = otp;
-      window.confirmationResult.confirm(code).then((result) => {
-        const user = result.user;
-        console.log(JSON.stringify(user));
-      }).catch((error) => {
-        console.log("otp invalid",error.message);
-        window.recaptchaVerifier.reset();
-        window.recaptchaVerifier.clear();
-      });}
+
+      // const code = otp;
+      // window.confirmationResult.confirm(code).then((result) => {
+      //   const user = result.user;
+      //   console.log(JSON.stringify(user));
+      // }).catch((error) => {
+      //   console.log("otp invalid",error.message);
+      //   window.recaptchaVerifier.reset();
+      //   window.recaptchaVerifier.clear();
+      // });
+      displayRazorpay();
+    }
+
+      let displayRazorpay = async () => {
+        const res = await loadScript('https://checkout.razorpay.com/v1/checkout.js')
+    
+        if (!res) {
+          alert('Razorpay SDK failed to load. Are you online?')
+          return
+        }
+    
+        const dataQrCode = await fetch('http://api.qbooks.in:1337/api/v1/booking/checkAvailability?uuid='+uuid, { method: 'GET' }).then((t) =>
+          t.json()
+        )
+        // const data = await fetch('http://localhost:1337user/generate-code', { method: 'GET' }).then((t) =>
+        //   t.json()
+        // )
+    
+        console.log('dataQrCode', dataQrCode);
+        if(dataQrCode && dataQrCode.data){
+            const options = {
+              key: 'rzp_test_Mj02y5458xshqx',
+              currency: 'INR',
+              amount: '500',//data.amount.toString(),
+              order_id: dataQrCode.data.orderId,
+              name: 'Donation',
+              description: 'Thank you for nothing. Please give us some money',
+              image: 'https://www.newzealand.com/assets/Operator-Database/f59158f2b6/img-1536060335-6557-12242-p-6F1EB578-C4BC-BE00-91796DF7718B39A2-2544003__aWxvdmVrZWxseQo_CropResizeWzk0MCw1MzAsNzUsImpwZyJd.jpg',
+              handler: function (response) {
+                // alert(response.razorpay_payment_id)
+                // alert(response.razorpay_order_id)
+                // alert(response.razorpay_signature)
+                console.log('response',response);
+              },
+              prefill: {
+                name,
+                email: 'sdfdsjfh2@ndsfdf.com',
+                phone_number: '9899999999'
+              }
+            }
+            const paymentObject = new window.Razorpay(options)
+            paymentObject.open()
+        }
+       
+      }
   return (
     <>
       <div className="container mx-auto px-4 h-full">
