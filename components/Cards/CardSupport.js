@@ -1,18 +1,14 @@
 import React,{useState} from "react";
-import axios from "axios";
 import { useForm } from "react-hook-form";
 
 export default function CardSupport() {
   const[queries,setQueries] = useState({});
   const [successMessage,setSuccessMessage] = useState(false);
   const { register, handleSubmit, formState: { errors } } = useForm();
-  const sendQuery = (e) =>{
-    //e.preventDefault();
-    setSuccessMessage(true)
-    //console.log("profile",profileInfo);
-      // const apiUrl = 'http://ec2-13-126-203-170.ap-south-1.compute.amazonaws.com:1337/api/v1/user/login';
-      // const response= await axios.post(apiUrl,profile);
-      // console.log(response,"response")
+  const sendQuery = (data,e) =>{
+    e.preventDefault();
+    console.log(data)
+    setSuccessMessage(true);
   }
   const handleInput = (e) =>{
     let propName = e.target.name;
@@ -59,9 +55,9 @@ export default function CardSupport() {
             </div>
             <hr className="mt-4 border-b-1 border-blueGray-300" />  
             {successMessage &&
-              <div class="text-center py-4 lg:px-4">
-              <div class="p-2 items-center text-indigo-100 leading-none lg:rounded-full flex lg:inline-flex" role="alert">
-                <span class="flex rounded-full uppercase px-2 py-1 text-xs font-bold mr-3 text-green-800 ">Query Sent Successfully!</span>
+              <div className="text-center py-4 lg:px-4">
+              <div className="p-2 items-center text-indigo-100 leading-none lg:rounded-full flex lg:inline-flex" role="alert">
+                <span className="flex rounded-full uppercase px-2 py-1 text-xs font-bold mr-3 text-green-800 ">Query Sent Successfully!</span>
               </div>
             </div> 
            }

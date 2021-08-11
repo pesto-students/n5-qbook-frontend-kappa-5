@@ -35,15 +35,15 @@ export default function CardPatientInfo({searchToken}) {
       })
     }
    }
-  const updateProfile = (e) =>{
+  const updateProfile = (data,e) =>{
+    debugger;
     e.preventDefault();
-    handleSubmit(e);
-    const data = {
+    const prescriptionData = {
       searchToken:searchToken,
       diagnosis:patientDetails.diagnosis,
       prescription:patientDetails.prescription,
     }
-    updatePatientInfoAPI(data);
+    updatePatientInfoAPI(prescriptionData);
   }
 
   return (
@@ -55,7 +55,7 @@ export default function CardPatientInfo({searchToken}) {
           </div>
         </div>
         <div className="flex-auto px-4 lg:px-10 py-10 pt-0">
-          <form onSubmit={updateProfile}>
+          <form onSubmit={handleSubmit(updateProfile)}>
             <h6 className="text-blueGray-400 text-sm mt-3 mb-6 font-bold uppercase">Patient Information</h6>
             <div className="flex flex-wrap">
               <div className="w-full lg:w-6/12 px-4">
@@ -98,7 +98,7 @@ export default function CardPatientInfo({searchToken}) {
               <div className="w-full lg:w-6/12 px-4 mt-3">
                 <div className="relative w-full mb-3">
                   <button  className="bg-blueGray-700 active:bg-blueGray-600 text-white font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
-                    type="button" onClick={updateProfile}>Close Examination</button>
+                    type="submit">Close Examination</button>
                 </div>
               </div>          
             </div>

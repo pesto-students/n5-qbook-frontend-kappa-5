@@ -5,13 +5,7 @@ export default function CardLineChart() {
   let weekLabels = ["monday","tuesday","wednesday","thursday","friday"];
   const [selectedChart,setSelectedChart] = useState(weekLabels);
   const [chartFrequency,setChartFrequency] = useState("");
-  // const chart = () =>{
-  //   // axios
-  //   //   .get("")
-  //   //   .then(res => {
-  //   //     console.log(res);}
   useEffect(() => {
-    //chart();
     setSelectedChart(weekLabels);
     setChartFrequency('weekly');
   }, []);
