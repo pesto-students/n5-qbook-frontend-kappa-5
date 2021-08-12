@@ -1,37 +1,101 @@
-import React,{useState,useContext,useEffect} from "react";
-import {useForm} from "react-hook-form"
-import axios from "axios";
-import TimePicker from "components/Sidebar/TimePicker";
-import {ProfileContext} from '../../Context/ProfileContext';
-import validation from "layouts/utils/validation";
-
+import React,{useState,useEffect} from "react";
+import validation from "../../utils/Validation";
+import { updateConfig } from '../../slices/settingsSlice'
+import { useDispatch } from 'react-redux';
+import CardSettingsForm from "./CardSettingsForm";
+import {getAsyncData,getAsyncPostData} from '../../utils/ApiRequests';
 export default function CardSettings() {
-
-  const {profileInfo,handleInput,handleStartTime,handleEndTime} = useContext(ProfileContext)
-useEffect(() => {
-  const getUserInfo = async() =>{
-    const apiUrl = 'http://ec2-13-126-203-170.ap-south-1.compute.amazonaws.com:1337/api/v1/user/dashboard';
-      const response= await axios.get(apiUrl);
-      console.log(response,"response")
+  const dispatch = useDispatch();
+  const [profileInfo,setProfileInfo] = useState({firstname:"",title: "",brief: "",fees: 0,});
+  const [successMessage,setSuccessMessage] = useState(false);
+  const [errors,setErrors] = useState();
+  console.log(errors,"errors in page")
+  const getDashboardInfo = async() =>{
+    const res = await getAsyncData('/user/dashboard');
+      let {end,start} = res.data.setting.slots[0];
+      let endTimeValues= end.split(':');
+      let startTimeValues= start.split(':');
+      const userConfig = {
+        firstname:res?.data?.record?.firstname,
+        title:res?.data?.setting?.title,
+        brief:res?.data?.setting?.brief,
+        fees:res?.data?.setting?.fees,
+        startTime:{hours:startTimeValues[0],minutes:startTimeValues[1]},
+        endTime:{hours:endTimeValues[0],minutes:endTimeValues[1]},
+      }
+      setProfileInfo(userConfig);
+      dispatch(updateConfig(userConfig));
+    }
+  useEffect( () => {
+    getDashboardInfo();
+  }, [])
+  const updateConfigAPI = async(data) =>{
+   const response = await getAsyncPostData('/user/updateConfig',data); 
+   if(response){
+    setSuccessMessage(true);
+    setErrors();
+   }
   }
-  getUserInfo();
-}, [])
-
- // const { register, handleSubmit, formState: { errors } } = useForm();
-  const [errors,setErrors] = useState({});
-  console.log(profileInfo,"profileInfo")
+  useEffect(() => {
+   
+     if(errors!==undefined && Object.keys(errors).length>0){
+      setSuccessMessage(false);
+      return;
+     } 
+     else{
+      dispatch(updateConfig(profileInfo));
+      formatInput();
+      setSuccessMessage(true);
+     }
+  }, [errors])
   const updateProfile = (e) =>{
-    console.log("inside update ")
     e.preventDefault();
-      setErrors(validation(profileInfo))
-    
-    //console.log("profile",profileInfo);
-      // const apiUrl = 'http://ec2-13-126-203-170.ap-south-1.compute.amazonaws.com:1337/api/v1/user/login';
-      // const response= await axios.post(apiUrl,profile);
-      // console.log(response,"response")
+    setErrors(validation(profileInfo));
   }
+  const handleStartTime = (e) =>{
+    let valueProp = e.target.name
+    setProfileInfo({ 
+        ...profileInfo,
+        startTime: {
+            ...profileInfo.startTime, // Spread the startTime object to preserve all values
+            [valueProp]: e.target.value
+        }
+    });  
+}
+const handleEndTime = (e) =>{
+    let valueProp = e.target.name
+    setProfileInfo({ 
+        ...profileInfo,
+        endTime: {
+            ...profileInfo.endTime, // Spread the endTime object to preserve all values
+            [valueProp]: e.target.value
+        }
+    });   
+}
+const formatInput = () =>{
+  let array = [];
+  let start = profileInfo?.startTime?.hours +":" +profileInfo?.startTime?.minutes;
+  let end = profileInfo?.endTime?.hours +":" +profileInfo?.endTime?.minutes;
+  array.push({start,end});
+  let options={
+    slots:array
+  }
+  setProfileInfo({...profileInfo, ...options})
+  const updatedConfigData = {
+    title: profileInfo.title,
+    firstname:profileInfo.firstname,
+    brief: profileInfo.brief,
+    fees: profileInfo.fees,
+    slots: array,
+  };
+  updateConfigAPI(updatedConfigData)
+}
+const handleInput = (e) =>{
+    let propName = e.target.name;
+    let propValue = e.target.value;
+    setProfileInfo({...profileInfo,[propName]:propValue})
+}
   return (
-    <>
       <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-blueGray-100 border-0">
         <div className="rounded-t bg-white mb-0 px-6 py-6">
           <div className="text-center flex justify-between">
@@ -39,73 +103,18 @@ useEffect(() => {
           </div>
         </div>
         <div className="flex-auto px-4 lg:px-10 py-10 pt-0">
-          <form onSubmit={updateProfile}>
-            <h6 className="text-blueGray-400 text-sm mt-3 mb-6 font-bold uppercase">Doctor Information</h6>
-            <div className="flex flex-wrap">
-              <div className="w-full lg:w-6/12 px-4">
-                <div className="relative w-full mb-3">
-                  <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2">Preferred Name</label>
-                  <input  type="text" name="name" value={profileInfo.name}  className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                     onChange={handleInput}
-                    // {...register("name", {required: true})}
-                     />
-                     {errors.name && <p className="text-xs text-red-600 px-2">{errors.name}</p>}
-                </div>
-              </div>
-              <div className="w-full lg:w-6/12 px-4">
-                <div className="relative w-full mb-3">
-                  <label  className="block uppercase text-blueGray-600 text-xs font-bold mb-2">Specialization</label>
-                  <input  type="text" name="specialization" value={profileInfo.specialization} className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                    onChange={handleInput}/>
-                    {errors.specialization && <p className="text-xs text-red-600 px-2">{errors.specialization}</p>}
-                </div>
-              </div>           
-            </div>
-            <hr className="mt-4 border-b-1 border-blueGray-300" />
-            <h6 className="text-blueGray-400 text-sm mt-3 mb-6 font-bold uppercase">Consultation Information</h6>
-            <div className="flex flex-wrap">
-            <div className="w-full lg:w-6/12 px-4">
-                <div className="relative w-full mb-3">
-                  <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2">Maximum Appointments</label>
-                  <input  type="number" name="maxAppointments" value={profileInfo.maxAppointments} className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                    onChange={handleInput}/>
-                    {errors.maxAppointments && <p className="text-xs text-red-600 px-2">{errors.maxAppointments}</p>}
-                </div>
-              </div>
-              <div className="w-full lg:w-6/12 px-4">
-                <div className="relative w-full mb-3">
-                  <label  className="block uppercase text-blueGray-600 text-xs font-bold mb-2">Consultation Fees</label>
-                  <input  type="number" name="fees" value={profileInfo.fees} className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                    onChange={handleInput}/>
-                    {errors.fees && <p className="text-xs text-red-600 px-2">{errors.fees}</p>}
-                </div>
-              </div>
-              <div className="w-full lg:w-6/12 px-4">
-              <div className="relative w-full mb-3">
-                  <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2">Start Time</label>
-                  <TimePicker setTime={handleStartTime}/>
-                  {errors.startTime && <h6 className="text-xs text-red-600 px-2">{errors.startTime}</h6>}
-                </div>
-              </div>
-              <div className="w-full lg:w-6/12 px-4">
-              <div className="relative w-full mb-3">
-                  <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2">End Time</label>
-                  <TimePicker setTime={handleEndTime}/>
-                </div>
-              </div>
-               
-              
-              <div className="w-full lg:w-6/12 px-4 mt-3">
-                <div className="relative w-full mb-3">
-                  <button  className="bg-blueGray-700 active:bg-blueGray-600 text-white font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
-                    type="submit" onClick={updateProfile}>Update</button>
-                </div>
-              </div>          
-            </div>
-            <hr className="mt-4 border-b-1 border-blueGray-300" />        
-          </form>
+          <CardSettingsForm
+            updateProfile={updateProfile}
+            profileInfo={profileInfo}
+            handleInput={handleInput}
+            errors={errors}
+            handleStartTime={handleStartTime}
+            handleEndTime={handleEndTime}
+          />
+           {successMessage &&
+            <p className="block uppercase text-xs font-bold py-2 text-green-400 ">Settings updated Successfully!</p>
+           }
         </div>
       </div>
-    </>
   );
 }

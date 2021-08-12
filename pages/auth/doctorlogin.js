@@ -1,29 +1,20 @@
-import React, { useContext } from "react";
-import {auth,provider} from '../../firebase'
+import React from "react";
+import {firebaseAuth,provider} from '../../firebase'
 import LoginLayout from "layouts/LoginLayout.js";
-import axios from "axios";
-import Router from 'next/router'
-import Settings from "pages/doctor/settings";
-import { ProfileContext } from "Context/ProfileContext";
+import { useDispatch } from 'react-redux'
+import { login } from '../../slices/doctorSlice'
+import { qBook,signInText,Google } from '../../utils/Constants';
+import {getAsyncPostData} from '../../utils/ApiRequests';
 
 export default function DoctorLogin() {
-  const {profileInfo,setProfileInfo} = useContext(ProfileContext)
+  const dispatch = useDispatch();
   const addDoctorInfo = async(user) =>{
-            setProfileInfo({ 
-              ...profileInfo,
-              name:user.firstname,
-              photoUrl:user.image,     
-            });
-           const apiUrl = 'http://ec2-52-66-15-186.ap-south-1.compute.amazonaws.com:1337/api/v1/user/login';
-          // const apiUrl = 'http://localhost:1337/api/v1/user/login';
-          const response= await axios.post(apiUrl,user);
-          console.log(response,"response")
-          Router.push("/doctor/settings")     
+      const {data}= await getAsyncPostData('/user/login',user);
+      sessionStorage.setItem("doctor_login",JSON.stringify(data));
+      dispatch(login(data)); 
   }
-  
-
   const signIn = () =>{
-    auth.signInWithPopup(provider)
+    firebaseAuth.signInWithPopup(provider)
     .then(({user})=>{
         let userInfo = {
           email:user.email,
@@ -32,7 +23,7 @@ export default function DoctorLogin() {
           lastname:user.displayName,
           image:user.photoURL, 
         }
-        addDoctorInfo(userInfo);
+        addDoctorInfo(userInfo);   
     })
     .catch(error=>alert(error.message))
   }
@@ -46,17 +37,16 @@ export default function DoctorLogin() {
               <div className="flex flex-wrap justify-center">
               <div className="w-full lg:w-12/12 px-4">
                 <p className="mb-4 text-base leading-relaxed text-white ">
-                  <span className="font-bold">QBook</span> helps to ease your consultation process by providing a track
+                  <span className="font-bold">{qBook}</span> helps to ease your consultation process by providing a track
                   of the ongoing & past consultations digitally. Easy configurations of available timings, 
                    cancelling the appointments in case of any emergencies, generating a QR code for the patients
                   to book the appointments without any hassle and a lot more...!!
                 </p>
-                
               </div>
             </div>
                 <div className="text-center mb-3 mt-2">
                   <h6 className="text-white text-sm font-bold">
-                    Sign in to get started..!
+                    {signInText}
                   </h6>
                 </div>
                 <div className="btn-wrapper text-center">                 
@@ -66,16 +56,11 @@ export default function DoctorLogin() {
                     onClick={signIn}
                   >
                     <img alt="..." className="w-5 mr-1" src="/img/google.svg" />
-                    Google
+                    {Google}
                   </button>
-                  {/* <button onClick={askForPermissioToReceiveNotifications} >
-      click to receive notifications
-    </button> */}
                 </div>
-               
-                <div className="mt-10 py-10 border-t border-blueGray-200 text-center">
-            
-          </div>
+                <div className="mt-10 py-10 border-t border-blueGray-200 text-center">           
+                </div>
               </div>          
             </div>          
           </div>
@@ -84,5 +69,4 @@ export default function DoctorLogin() {
     </>
   );
 }
-
 DoctorLogin.layout = LoginLayout;

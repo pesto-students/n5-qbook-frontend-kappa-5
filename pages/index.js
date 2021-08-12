@@ -4,8 +4,22 @@ import Link from "next/link";
 import LoginLayout from "../layouts/LoginLayout.js";
 
 export default function Index() {
- 
-  
+
+  const dispatch = useDispatch();
+  const userLogin = useSelector(selectUser)
+  useEffect(()=>{
+    firebaseAuth.onAuthStateChanged((user)=>{
+      if(user){
+        //user is logged in
+        const userInfo = JSON.parse(sessionStorage.getItem("doctor_login"));
+        dispatch(login(userInfo))
+      }
+      else{
+        //user is logged out
+        dispatch(logout())
+      }
+    })
+},[])
   return (
     <div className="container mx-auto px-4 h-full">
         <div className="flex content-center items-center justify-center h-full">

@@ -1,5 +1,5 @@
 import React,{useState,useRef} from "react";
-import firebase from '../../firebase'
+import firebase from '../firebase'
 import LoginLayout from "layouts/LoginLayout.js";
 import { useRouter } from 'next/router'
 
@@ -41,10 +41,8 @@ export default function PatientLogin() {
     }    
     window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('sign-in-button', {
       'size': 'invisible',
-      'callback': (response) => {
-        console.log("captha verified");         
-      },
-      defaultCountry:"IN",
+      'callback': (response) => {        
+      }
     })}
     const signInPatient = () =>{
       configureCaptha();    
@@ -54,7 +52,6 @@ export default function PatientLogin() {
           .then((confirmationResult) => {
             window.confirmationResult = confirmationResult;
           }).catch((error) => {
-            console.log("sms not sent",error.message);
             window.recaptchaVerifier.reset();
           });
     }
@@ -69,6 +66,7 @@ export default function PatientLogin() {
       //   window.recaptchaVerifier.reset();
       //   window.recaptchaVerifier.clear();
       // });
+
       displayRazorpay();
     }
 
@@ -114,6 +112,7 @@ export default function PatientLogin() {
         }
        
       }
+      
   return (
     <>
       <div className="container mx-auto px-4 h-full">

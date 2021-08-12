@@ -1,11 +1,11 @@
 
 import Time from "./Time"
 
-function TimePicker({setTime}) {
+function TimePicker({nested,id,setTime,selectedHours,selectedMins}) {
 
     const optionsHours = [];
     const optionsMinutes = [];
-    for (let i=1;i<=12;i++){
+    for (let i=1;i<=24;i++){
         let min = i < 10 ? '0'+i : i;
         optionsHours.push(min)
     }
@@ -16,15 +16,9 @@ function TimePicker({setTime}) {
     return (
        <div>
             <div className="inline-flex text-lg border rounded-md shadow-lg p-2">
-                <Time options={optionsHours} setTime={setTime} name="hours" />               
+                <Time options={optionsHours} setTime={setTime} nested={nested} id={id}  name="hours" selected={selectedHours}/>               
                 <span className="px-3">:</span>
-                <Time options={optionsMinutes} setTime={setTime} name="minutes"/>              
-                <select name="period" className="pl-2 pr-9 outline-none appearance-none bg-transparent border-none"
-                onChange={(e)=>setTime(e)}
-                >
-                <option value="AM">AM</option>
-                <option value="PM">PM</option>
-                </select>
+                <Time options={optionsMinutes} setTime={setTime} nested={nested} id={id} name="minutes" selected={selectedMins}/>              
             </div>
         </div>
     )
