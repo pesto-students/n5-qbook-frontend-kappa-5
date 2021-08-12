@@ -1,9 +1,7 @@
-import React,{useEffect} from "react";
+import React from "react";
 import CardSettings from "components/Cards/CardSettings.js";
 import DoctorLayout from "layouts/DoctorLayout.js";
 import CardConfig from "components/Cards/CardConfig";
-import { useDispatch } from 'react-redux';
-import { updateConfig } from '../../slices/settingsSlice';
 
 export default function Settings() {
   return (

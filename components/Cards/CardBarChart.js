@@ -1,7 +1,5 @@
 import React,{useEffect, useState} from "react";
-
 import BarChart from "components/Sidebar/BarChart";
-
 export default function CardBarChart() {
   const [chartData,setChartData] = useState({});
   let weekLabels = ["monday","tuesday","wednesday","thursday","friday"];
@@ -22,7 +20,6 @@ export default function CardBarChart() {
     }); 
     }, [selectedChart]);
     useEffect(() => {
-      //chart();
       setSelectedChart(weekLabels);
       setChartFrequency('weekly');
     }, []);
@@ -40,27 +37,8 @@ export default function CardBarChart() {
         else if(e.target.name==='yearly'){
            setSelectedChart(yearLabels);  
         } 
-    }
-  // const chart = () =>{
-  //   setChartData({
-  //     labels:["monday","tuesday","wednesday","thursday","friday"],
-  //     datasets:[
-  //       {
-  //         label:"Appointments",
-  //         data:[32,45,12,76,69],
-
-  //         borderWidth:1,
-  //         backgroundColor: "rgba(75, 192, 192, 0.6)",
-  //         borderColor: "rgba(75, 192, 192, 0.6)",
-  //         barThickness: 8,
-  //       }
-  //     ]
-  //   });
-    
-  // };
-  // useEffect(() => {
-  //   chart();
-  // }, []);
+ }
+  
   return (
     <>
       <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-lg rounded">

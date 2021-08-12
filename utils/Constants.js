@@ -1,4 +1,5 @@
 export const doctorLogin = "doctor_login";
+export const loginUrlAPI = '/user/login';
 export const qBook = 'QBook';
 export const qBookDescription = 'helps to ease your consultation process by providing a track of the ongoing & past consultations digitally. Easy configurations of available timings, cancelling the appointments in case of any emergencies, generating a QR code for the patients to book the appointments without any hassle and a lot more...!!';
 export const Google = "Google";
@@ -77,3 +78,9 @@ export const errorFees = 'fees is Required';
 export const errorDiagnosis = 'diagnosis is Required';
 export const errorPrescription = 'prescription is Required';
 export const errorTime = 'Start time should be less than End time';
+export const fcmToken = 'fcm_token';
+export const serviceWorker = 'serviceWorker';
+export const errorSWReg = 'Service worker registration failed, error:';
+export const eventSW = 'event for the service worker';
+export const fileSW = './firebase-messaging-sw.js';
+export const msgReceived = 'Message received.';

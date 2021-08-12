@@ -4,14 +4,13 @@ import Link from "next/link";
 import LoginLayout from "../layouts/LoginLayout.js";
 
 export default function Index() {
-
   const dispatch = useDispatch();
   const userLogin = useSelector(selectUser)
   useEffect(()=>{
     firebaseAuth.onAuthStateChanged((user)=>{
       if(user){
         //user is logged in
-        const userInfo = JSON.parse(sessionStorage.getItem("doctor_login"));
+        const userInfo = (sessionStorage.getItem(`${doctorLogin}`));
         dispatch(login(userInfo))
       }
       else{

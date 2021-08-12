@@ -3,15 +3,18 @@ import {firebaseAuth,provider} from '../../firebase'
 import LoginLayout from "layouts/LoginLayout.js";
 import { useDispatch } from 'react-redux'
 import { login } from '../../slices/doctorSlice'
-import { qBook,signInText,Google } from '../../utils/Constants';
+import { qBook,signInText,Google,qBookDescription,doctorLogin,loginUrlAPI } from '../../utils/Constants';
 import {getAsyncPostData} from '../../utils/ApiRequests';
 
 export default function DoctorLogin() {
   const dispatch = useDispatch();
   const addDoctorInfo = async(user) =>{
-      const {data}= await getAsyncPostData('/user/login',user);
-      sessionStorage.setItem("doctor_login",JSON.stringify(data));
-      dispatch(login(data)); 
+      const response= await getAsyncPostData(`${loginUrlAPI}`,user);
+      if(response){
+        sessionStorage.setItem(`${doctorLogin}`,JSON.stringify(response.data));
+      dispatch(login(response.data));
+      }
+       
   }
   const signIn = () =>{
     firebaseAuth.signInWithPopup(provider)
@@ -37,10 +40,7 @@ export default function DoctorLogin() {
               <div className="flex flex-wrap justify-center">
               <div className="w-full lg:w-12/12 px-4">
                 <p className="mb-4 text-base leading-relaxed text-white ">
-                  <span className="font-bold">{qBook}</span> helps to ease your consultation process by providing a track
-                  of the ongoing & past consultations digitally. Easy configurations of available timings, 
-                   cancelling the appointments in case of any emergencies, generating a QR code for the patients
-                  to book the appointments without any hassle and a lot more...!!
+                  <span className="font-bold">{qBook}</span> {qBookDescription}
                 </p>
               </div>
             </div>

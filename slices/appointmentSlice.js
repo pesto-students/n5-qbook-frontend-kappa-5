@@ -18,13 +18,13 @@ export const appointmentSlice = createSlice({
       state.searchTerm = action.payload
     },
     updateSelectedDate : (state,action) =>{
+      debugger;
       state.selectedDate = action.payload
     },
     updateAppointment : (state,action) =>{
       let index = state.appointmentList.findIndex((patient)=>patient.name===action.payload.name)
       let newAppointmentList = [...state.appointmentList];
       newAppointmentList[index].phoneNumber=action.payload.phoneNumber;
-      console.log(newAppointmentList,"patientInfo")
       state.appointmentList = newAppointmentList;
   },
   updateAppointmentsHistoryList : (state,action) =>{
