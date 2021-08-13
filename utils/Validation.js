@@ -1,5 +1,5 @@
 //import {errorName,errorSpecialization,errorBio,errorFees} from './Constants'
-function validation(values) {
+function Validation(values) {
     let errors={};
     if(!values?.firstname.trim()){
         errors.firstname="Name is Required"
@@ -28,4 +28,4 @@ function validation(values) {
     return errors;
 }
 
-export default validation
+export default Validation
