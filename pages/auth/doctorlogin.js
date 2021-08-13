@@ -1,13 +1,35 @@
 import React from "react";
-import {auth,provider} from '../../firebase'
+import {firebaseAuth,provider} from '../../firebase'
 import LoginLayout from "layouts/LoginLayout.js";
+import { useDispatch } from 'react-redux'
+import { login } from '../../slices/doctorSlice'
+import { qBook,signInText,Google,qBookDescription,doctorLogin,loginUrlAPI } from '../../utils/Constants';
+import {getAsyncPostData} from '../../utils/ApiRequests';
+import { useRouter } from 'next/router'
 
 export default function DoctorLogin() {
-  
+  const dispatch = useDispatch();
+  const router = useRouter();
+  const addDoctorInfo = async(user) =>{
+      const response= await getAsyncPostData(`${loginUrlAPI}`,user);
+      if(response){
+        sessionStorage.setItem(`${doctorLogin}`,JSON.stringify(response.data));
+        dispatch(login(response.data));
+        router.push('/doctor/appointments')
+      }
+       
+  }
   const signIn = () =>{
-    auth.signInWithPopup(provider)
-    .then(({userInfo})=>{
-        console.log(userInfo)        
+    firebaseAuth.signInWithPopup(provider)
+    .then(({user})=>{
+        let userInfo = {
+          email:user.email,
+          googleAuthId: user.uid,
+          firstname:user.displayName,
+          lastname:user.displayName,
+          image:user.photoURL, 
+        }
+        addDoctorInfo(userInfo);   
     })
     .catch(error=>alert(error.message))
   }
@@ -16,11 +38,18 @@ export default function DoctorLogin() {
       <div className="container mx-auto px-4 h-full">
         <div className="flex content-center items-center justify-center h-full">
           <div className="w-full lg:w-4/12 px-4">
-            <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-blueGray-200 border-0">
+            <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-blueGray-600 border-0">
               <div className="rounded-t mb-0 px-6 py-6">
-                <div className="text-center mb-3">
-                  <h6 className="text-blueGray-500 text-sm font-bold">
-                    Sign in with
+              <div className="flex flex-wrap justify-center">
+              <div className="w-full lg:w-12/12 px-4">
+                <p className="mb-4 text-base leading-relaxed text-white ">
+                  <span className="font-bold">{qBook}</span> {qBookDescription}
+                </p>
+              </div>
+            </div>
+                <div className="text-center mb-3 mt-2">
+                  <h6 className="text-white text-sm font-bold">
+                    {signInText}
                   </h6>
                 </div>
                 <div className="btn-wrapper text-center">                 
@@ -30,10 +59,11 @@ export default function DoctorLogin() {
                     onClick={signIn}
                   >
                     <img alt="..." className="w-5 mr-1" src="/img/google.svg" />
-                    Google
+                    {Google}
                   </button>
                 </div>
-                <hr className="mt-6 border-b-1 border-blueGray-300" />
+                <div className="mt-10 py-10 border-t border-blueGray-200 text-center">           
+                </div>
               </div>          
             </div>          
           </div>
@@ -42,5 +72,4 @@ export default function DoctorLogin() {
     </>
   );
 }
-
 DoctorLogin.layout = LoginLayout;
