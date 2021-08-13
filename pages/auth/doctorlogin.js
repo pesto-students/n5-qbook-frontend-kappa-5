@@ -5,14 +5,17 @@ import { useDispatch } from 'react-redux'
 import { login } from '../../slices/doctorSlice'
 import { qBook,signInText,Google,qBookDescription,doctorLogin,loginUrlAPI } from '../../utils/Constants';
 import {getAsyncPostData} from '../../utils/ApiRequests';
+import { useRouter } from 'next/router'
 
 export default function DoctorLogin() {
   const dispatch = useDispatch();
+  const router = useRouter();
   const addDoctorInfo = async(user) =>{
       const response= await getAsyncPostData(`${loginUrlAPI}`,user);
       if(response){
         sessionStorage.setItem(`${doctorLogin}`,JSON.stringify(response.data));
-      dispatch(login(response.data));
+        dispatch(login(response.data));
+        router.push('/doctor/appointments')
       }
        
   }

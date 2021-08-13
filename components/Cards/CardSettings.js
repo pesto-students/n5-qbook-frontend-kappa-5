@@ -1,5 +1,5 @@
 import React,{useState,useEffect} from "react";
-import validation from "../../utils/Validation";
+// import {validation} from "../../utils/Validation";
 import { updateConfig } from '../../slices/settingsSlice'
 import { useDispatch } from 'react-redux';
 import CardSettingsForm from "./CardSettingsForm";
@@ -63,7 +63,7 @@ export default function CardSettings() {
   }, [errors])
   const updateProfile = (e) =>{
     e.preventDefault();
-    setErrors(validation(profileInfo));
+    // setErrors(validation(profileInfo));
   }
   const handleStartTime = (e) =>{
     let valueProp = e.target.name
