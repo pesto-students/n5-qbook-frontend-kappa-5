@@ -3,8 +3,8 @@ import Validation from "../../utils/Validation";
 import { updateConfig } from '../../slices/settingsSlice'
 import { useDispatch } from 'react-redux';
 import CardSettingsForm from "./CardSettingsForm";
-import {getAsyncData,getAsyncPostData} from '../../utils/ApiRequests';
-import {selectConfigData} from '../../slices/settingsSlice'
+import {getAsyncPostData} from '../../utils/ApiRequests';
+import {doctorLogin} from '../../utils/Constants';
 export default function CardSettings() {
   const dispatch = useDispatch();
   const [profileInfo,setProfileInfo] = useState({firstname:"",title: "",brief: "",fees: 0,});
@@ -12,20 +12,21 @@ export default function CardSettings() {
   const [errors,setErrors] = useState();
   const [configUpdated,setConfigUpdated] = useState(false);
   const getDashboardInfo = async() =>{
-    const response = await getAsyncData('/user/dashboard');
-    if(response && response?.data?.setting && response?.data?.setting?.slots){
+    const settingInfo = JSON.parse(sessionStorage.getItem('settings'));
+    const userInfo = JSON.parse(sessionStorage.getItem(`${doctorLogin}`));
+    if(settingInfo){
       let array=[];
-      array.push(response?.data?.setting?.slots[0]);
+      array.push(settingInfo?.slots[0]);
       if(array.length===0)
       return;
       const {end,start} = array[0];
       let endTimeValues= end?.split(':');
       let startTimeValues= start?.split(':');
       const userConfig = {
-        firstname:response?.data?.record?.firstname,
-        title:response?.data?.setting?.title,
-        brief:response?.data?.setting?.brief,
-        fees:response?.data?.setting?.fees,
+        firstname:userInfo?.result?.firstname,
+        title:settingInfo?.title,
+        brief:settingInfo?.brief,
+        fees:settingInfo?.fees,
         startTime:{hours:startTimeValues[0],minutes:startTimeValues[1]},
         endTime:{hours:endTimeValues[0],minutes:endTimeValues[1]},
       }
@@ -42,6 +43,7 @@ export default function CardSettings() {
     setSuccessMessage(true);
     setConfigUpdated(true);
     setErrors({});
+    sessionStorage.setItem('settings',JSON.stringify(response.data));
    }
   }
   useEffect(() => {

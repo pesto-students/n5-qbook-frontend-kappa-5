@@ -1,18 +1,18 @@
 import React,{useState,useEffect} from "react";
 import Toggle from 'components/Sidebar/Toggle';
-import { updateConfig,selectConfigData } from '../../slices/settingsSlice'
-import { useDispatch, useSelector } from 'react-redux';
-import {getAsyncData,getAsyncPostData} from '../../utils/ApiRequests';
+import { updateConfig } from '../../slices/settingsSlice'
+import { useDispatch } from 'react-redux';
+import {getAsyncPostData} from '../../utils/ApiRequests';
 export default function CardConfig() {
-const configData = useSelector(selectConfigData)
+
 const dispatch = useDispatch();
-const [configInfo,setConfigInfo] = useState({});
+const [configInfo,setConfigInfo] = useState({is_duty:false,is_notification:false});
 const getDashboardInfo = async() =>{
-  const response = await getAsyncData('/user/dashboard');
-  if(response){
+  const settingInfo = JSON.parse(sessionStorage.getItem('settings'));
+  if(settingInfo){
     const userConfig = {
-      is_duty: response?.data?.setting?.is_duty===undefined?false:response?.data?.setting?.is_duty,
-      is_notification: response?.data?.setting?.is_notification===undefined?false:response?.data?.setting?.is_notification,
+      is_duty: settingInfo?.is_duty===undefined?false:settingInfo?.is_duty,
+      is_notification: settingInfo?.is_notification===undefined?false:settingInfo?.is_notification,
     }
     setConfigInfo(userConfig);
     dispatch(updateConfig(userConfig));
@@ -23,6 +23,9 @@ useEffect( () => {
 }, [])
 const updateConfigAPI = async(data) =>{
   const response = await getAsyncPostData('/user/updateConfig',data); 
+  if(response){
+    sessionStorage.setItem('settings',JSON.stringify(response.data));
+  }
  }
 const setDutyEnabled =(e) =>{
   setConfigInfo(values=>({
@@ -48,12 +51,12 @@ const cancelAppointments =() =>{
       <div className="relative flex flex-col  min-w-0 break-words bg-white w-full mb-6 shadow-xl rounded-lg">        
         <div className="flex flex-wrap flex-col  m-20 space-y-2">
           <div className="w-full lg:w-12/12 px-1 mt-5 flex flex-row items-center">        
-          <Toggle value="ON/OFF Duty (Adhoc)"  enabled={configData?.is_duty} 
+          <Toggle value="ON/OFF Duty (Adhoc)"  enabled={configInfo?.is_duty} 
               setEnabled={setDutyEnabled} name="is_duty"
               />
               </div>
               <div className="w-full lg:w-12/12 px-1 mt-5 flex flex-row items-center">
-               <Toggle value="ON/OFF Notifications" enabled={configData?.is_notification} 
+               <Toggle value="ON/OFF Notifications" enabled={configInfo?.is_notification} 
                  setEnabled={setNotificationEnabled} name="is_notification"
                />
               </div>
