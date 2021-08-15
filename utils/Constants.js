@@ -67,6 +67,7 @@ export const qBookFooter = ' QBook';
 export const contact = 'Contact';
 export const doctorPortal = 'Doctor Portal';
 export const hrefSettings = '/doctor/settings';
+export const hrefQrCode = '/doctor/qrcode';
 export const hrefAppointments = '/doctor/appointments';
 export const hrefHistory = '/doctor/history';
 export const hrefReports = '/doctor/reports';
