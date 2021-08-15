@@ -2,9 +2,10 @@ import React,{useState,useEffect} from "react";
 import Toggle from 'components/Sidebar/Toggle';
 import { updateConfig } from '../../slices/settingsSlice'
 import { useDispatch } from 'react-redux';
-import {getAsyncPostData} from '../../utils/ApiRequests';
-export default function CardConfig() {
+import {getAsyncPostData,getAsyncData} from '../../utils/ApiRequests';
 
+export default function CardConfig() {
+  const [successMessage,setSuccessMessage] = useState(false);
 const dispatch = useDispatch();
 const [configInfo,setConfigInfo] = useState({is_duty:false,is_notification:false});
 const getDashboardInfo = async() =>{
@@ -25,6 +26,13 @@ const updateConfigAPI = async(data) =>{
   const response = await getAsyncPostData('/user/updateConfig',data); 
   if(response){
     sessionStorage.setItem('settings',JSON.stringify(response.data));
+    setSuccessMessage(false);
+  }
+ }
+ const cancelAppointments = async() =>{
+  const response = await getAsyncData('/booking/cancelAllBooking'); 
+  if(response){
+    setSuccessMessage(true);
   }
  }
 const setDutyEnabled =(e) =>{
@@ -43,9 +51,7 @@ const setNotificationEnabled =(e) =>{
   dispatch(updateConfig(configInfo));
   updateConfigAPI({is_notification:e});
 }
-const cancelAppointments =() =>{
-  //api call
-}
+
   return (
     <>
       <div className="relative flex flex-col  min-w-0 break-words bg-white w-full mb-6 shadow-xl rounded-lg">        
@@ -64,7 +70,10 @@ const cancelAppointments =() =>{
                 <button
               className="bg-blueGray-700 active:bg-blueGray-600 text-white font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
               type="button" onClick={cancelAppointments}>Cancel All Appointments</button>
-              </div>         
+              </div> 
+              {successMessage &&
+            <p className="block uppercase text-xs font-bold py-2 text-teal-600 px-2 ">Bookings cancelled Successfully!</p>
+           }        
         </div>
       </div>
     </>

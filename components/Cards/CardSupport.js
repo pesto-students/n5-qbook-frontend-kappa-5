@@ -1,13 +1,18 @@
 import React,{useState} from "react";
 import { useForm } from "react-hook-form";
-
+import {getAsyncPostData} from '../../utils/ApiRequests';
 export default function CardSupport() {
   const[queries,setQueries] = useState({});
   const [successMessage,setSuccessMessage] = useState(false);
   const { register, handleSubmit, formState: { errors } } = useForm();
-  const sendQuery = (data,e) =>{
+  const sendQuery = async(data,e) =>{
     e.preventDefault();
-    console.log(data)
+    const queryData = {
+      subject:data?.question,
+      query:data?.queryDescription,
+    }
+    const response = await getAsyncPostData('/user/support',queryData);
+    if(response)
     setSuccessMessage(true);
   }
   const handleInput = (e) =>{
