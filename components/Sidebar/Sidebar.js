@@ -1,6 +1,6 @@
 import React,{useState} from "react";
 import Link from "next/link";
-import { qBook,hrefSettings,hrefAppointments,hrefHistory,hrefReports,hrefSupport } from '../../utils/Constants';
+import { qBook,hrefSettings,hrefAppointments,hrefHistory,hrefReports,hrefSupport,hrefQrCode } from '../../utils/Constants';
 import NavLink from "./NavLink";
 export default function Sidebar() {
   const [collapseShow, setCollapseShow] = useState("hidden");
@@ -43,6 +43,7 @@ export default function Sidebar() {
                 <NavLink hrefLink={hrefAppointments} hrefText="Appointments" icon="fa-calendar"/>
                 <NavLink hrefLink={hrefHistory} hrefText="Appointments History" icon="fa-id-card-alt"/>
                 <NavLink hrefLink={hrefSettings} hrefText="Settings" icon="fa-tools"/>
+                <NavLink hrefLink={hrefQrCode} hrefText="My QR Code" icon="fa-tools"/>
                 <NavLink hrefLink={hrefReports} hrefText="Reports" icon="fa-chart-bar"/>
                 <NavLink hrefLink={hrefSupport} hrefText="Support" icon="fa-question-circle"/>   
             </ul>
