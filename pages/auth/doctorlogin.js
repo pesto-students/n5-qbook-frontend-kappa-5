@@ -34,7 +34,7 @@ export default function DoctorLogin() {
           firstname:user.displayName,
           lastname:user.displayName,
           image:user.photoURL,
-          token:sessionStorage.getItem(`${fcmToken}`)
+          token:sessionStorage.getItem(`${fcmToken}`)||''
         }
         addDoctorInfo(userInfo);   
     })
