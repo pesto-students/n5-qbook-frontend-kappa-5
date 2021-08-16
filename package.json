@@ -63,6 +63,7 @@
     "cypress": "^8.1.0",
     "istanbul-lib-coverage": "^3.0.0",
     "jest": "^26.6.0",
+    "moment": "^2.29.1",
     "nyc": "^15.1.0",
     "postcss": "8.2.8",
     "react": "^17.0.1",

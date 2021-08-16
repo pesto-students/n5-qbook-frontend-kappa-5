@@ -33,6 +33,9 @@ export default function Booking() {
   const [checkAvailable,setCheckAvailable] = useState('');
   const [isCheckAvailable,setIsCheckAvailable] = useState('');
   const [otp,setOtp] = useState('');
+  const [isMobileNumVerified,setIsMobileNumVerified] = useState('');
+  const [isOtpNumVerified,setIsOtpNumVerified] = useState('');
+  
   const capthaRef = useRef();
   const configureCaptha = () =>{    
       if(window.recaptchaVerifier) {       
@@ -49,40 +52,83 @@ export default function Booking() {
     setPaymnetMode(e.target.value);
   }
     const signInPatient = () =>{
-      configureCaptha();    
-      const appVerifier = window.recaptchaVerifier;    
-      const phoneNum = "+91" +phoneNumber;
-      firebase.auth().signInWithPhoneNumber(phoneNum, appVerifier)
-          .then((confirmationResult) => {
-            window.confirmationResult = confirmationResult;
-          }).catch((error) => {
-            window.recaptchaVerifier.reset();
-          });
+      if(!isMobileNumVerified) {
+        if(phoneNumber){
+          configureCaptha();    
+          const appVerifier = window.recaptchaVerifier;    
+          const phoneNum = "+91" +phoneNumber;
+          firebase.auth().signInWithPhoneNumber(phoneNum, appVerifier)
+              .then((confirmationResult) => {
+                setIsOtpNumVerified(true);
+                window.confirmationResult = confirmationResult;
+                setErrorMessage('');
+              }).catch((error) => {
+                setIsOtpNumVerified(false);
+                window.recaptchaVerifier.reset();
+                setErrorMessage(error.message);
+              });
+        }else {
+          setErrorMessage(' PHONE NUMBER is required for genrating the OTP !');
+        }
+        
+      } else {
+        setErrorMessage(' Pateint Mobile number already verified !');
+      }
     }
     const onSubmitOtp =() =>{
-        const code = otp;
-        window.confirmationResult.confirm(code).then((result) => {
-          const user = result.user;
-          console.log(JSON.stringify(user));
-        }).catch((error) => {
-          setErrorMessage('otp invalid');
-          console.log("otp invalid",error.message);
-          window.recaptchaVerifier.reset();
-          window.recaptchaVerifier.clear();
-        });
+      if(!isMobileNumVerified) {
+          if(isOtpNumVerified) {
+            const code = otp;
+            window.confirmationResult.confirm(code).then((result) => {
+              const user = result.user;
+              setIsMobileNumVerified(true);
+              setErrorMessage('');
+            }).catch((error) => {
+              setIsMobileNumVerified(false);
+              window.recaptchaVerifier.reset();
+              window.recaptchaVerifier.clear();
+              setErrorMessage(error.message);
+            });
+          } else{
+            setErrorMessage('OTP Genration is Pending  !');
+          }
+      }else {
+          setErrorMessage(' Pateint Mobile number already verified !');
+      }
     }
     const onBookAppoinment =() =>{
-      if(fullName && phoneNumber && otp){
-        displayRazorpay();
+      if(fullName && phoneNumber && otp && isMobileNumVerified) {
+        if(paymnetMode === 'online'){
+          displayRazorpay();
+          setErrorMessage('');
+        } else if(paymnetMode === 'cash'){
+          cashCreateBooking();
+          setErrorMessage('');
+        }else{
+          setErrorMessage('Payment Mode is required !');
+        }
       }else{
-        setErrorMessage('please fill all required Fields !');
+        setErrorMessage('Please fill all required Fields or Mobile number is not verified !');
       }
+    }
+    const cashCreateBooking= async () =>{
+      const casheWebtoken = await firebaseCloudMessaging.init();
+      
+      let cashCreateData ={
+        "name": fullName,
+        "mobileNum": phoneNumber,
+        "isMobileNumVerified": isMobileNumVerified?true:false,
+        "paymentMode": paymnetMode,
+        "uuid": uuid,
+        "order_id": checkAvailable.data.orderId,
+        "token":casheWebtoken || ''
+      }
+      bookingCreateApi(cashCreateData);
     }
     let checkAvailability= async () =>{
       const dataQrCode = await fetch(config.BASE_API_URL+'/booking/checkAvailability?uuid='+uuid, { method: 'GET' }).then((t) =>
           t.json()
         );
-        console.log('dataQrCode',dataQrCode, uuid);
         setCheckAvailable(dataQrCode);
     }
     let displayRazorpay = async () => {
@@ -92,7 +138,6 @@ export default function Booking() {
         alert('Razorpay SDK failed to load. Are you online?')
         return
       }
-      console.log('checkAvailable', checkAvailable, webtoken);
       if(checkAvailable && checkAvailable.data){
         
           const options = {
@@ -104,14 +149,10 @@ export default function Booking() {
             description: 'Please go ahead for payemnt !!',
             image: 'https://www.newzealand.com/assets/Operator-Database/f59158f2b6/img-1536060335-6557-12242-p-6F1EB578-C4BC-BE00-91796DF7718B39A2-2544003__aWxvdmVrZWxseQo_CropResizeWzk0MCw1MzAsNzUsImpwZyJd.jpg',
             handler: function (response) {
-              // alert(response.razorpay_payment_id)
-              // alert(response.razorpay_order_id)
-              // alert(response.razorpay_signature)
-              console.log('response',response);
               let createData ={
                 "name": fullName,
                 "mobileNum": phoneNumber,
-                "isMobileNumVerified": otp?true:false,
+                "isMobileNumVerified": isMobileNumVerified?true:false,
                 "paymentMode": paymnetMode,
                 "uuid": uuid,
                 "order_id": checkAvailable.data.orderId,
@@ -133,12 +174,11 @@ export default function Booking() {
     }
     const bookingCreateApi = async(data) =>{
       const bookingResponse = await getAsyncPostData('/booking/create',data); 
-      if(bookingResponse && bookingResponse.data && bookingResponse.data.searchToken){
-        router.push('/confirmation?searchToken'+bookingResponse.data.searchToken)
+      if(bookingResponse && bookingResponse.data && bookingResponse.data.booking && bookingResponse.data.booking.searchToken){
+        router.push('/confirmation?searchToken='+encodeURIComponent(bookingResponse.data.booking.searchToken))
       }else{
         setErrorMessage('Some issue in Book an appoinmnet please try again !');
       }
-      console.log('bookingResponse',bookingResponse);
     }
     useEffect(() => {
       if(uuid){
@@ -162,7 +202,7 @@ export default function Booking() {
               </div>:
                 <div className="rounded-t mb-0 px-6 py-6">
                 <div className="text-center mb-3">
-                  <h6 className="text-blueGray-500 text-sm font-bold">Book Appointment is not available for now !!. </h6>
+                  <h6 className="text-blueGray-500 text-sm font-bold">Doctor Appointment is not available for now !!. </h6>
                 </div>
               </div>
                 }

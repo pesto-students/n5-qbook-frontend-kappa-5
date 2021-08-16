@@ -3,6 +3,7 @@ import React,{useState,useRef, useEffect} from "react";
 import LoginLayout from "layouts/LoginLayout.js";
 import config from "../config/config";
 import { useRouter } from 'next/router'
+import moment from 'moment'
 
 export default function Confirmation() {
   const router = useRouter();
@@ -83,7 +84,7 @@ export default function Confirmation() {
                           Booking date
                         </span>
                         <span className="text-sm text-blueGray-400">
-                        {appoinmentData.data.booking.bookingDateTime}
+                        {appoinmentData.data.booking.bookingDateTime?moment(appoinmentData.data.booking.bookingDateTime).format('YYYY-MM-DD hh:ss A'):'--'}
                         </span>
                       </div>
                     </div>
@@ -107,7 +108,7 @@ export default function Confirmation() {
                           Consulatation Fees
                         </span>
                         <span className="text-sm text-blueGray-400">
-                        --
+                        {appoinmentData.data.booking.fees}
                         </span>
                       </div>
                     </div>
