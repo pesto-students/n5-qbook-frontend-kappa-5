@@ -43,7 +43,7 @@ export default function Sidebar() {
                 <NavLink hrefLink={hrefAppointments} hrefText="Appointments" icon="fa-calendar"/>
                 <NavLink hrefLink={hrefHistory} hrefText="Appointments History" icon="fa-id-card-alt"/>
                 <NavLink hrefLink={hrefSettings} hrefText="Settings" icon="fa-tools"/>
-                <NavLink hrefLink={hrefQrCode} hrefText="My QR Code" icon="fa-tools"/>
+                <NavLink hrefLink={hrefQrCode} hrefText="My QR Code" icon="fa fa-qrcode"/>
                 <NavLink hrefLink={hrefReports} hrefText="Reports" icon="fa-chart-bar"/>
                 <NavLink hrefLink={hrefSupport} hrefText="Support" icon="fa-question-circle"/>   
             </ul>
