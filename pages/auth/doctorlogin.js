@@ -47,13 +47,7 @@ export default function DoctorLogin() {
           <div className="w-full lg:w-4/12 px-4">
             <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-blueGray-600 border-0">
               <div className="rounded-t mb-0 px-6 py-6">
-              <div className="flex flex-wrap justify-center">
-              <div className="w-full lg:w-12/12 px-4">
-                <p className="mb-4 text-base leading-relaxed text-white ">
-                  <span className="font-bold">{qBook}</span> {qBookDescription}
-                </p>
-              </div>
-            </div>
+             
                 <div className="text-center mb-3 mt-2">
                   <h6 className="text-white text-sm font-bold">
                     {signInText}
@@ -69,8 +63,15 @@ export default function DoctorLogin() {
                     {Google}
                   </button>
                 </div>
-                <div className="mt-10 py-10 border-t border-blueGray-200 text-center">           
+                <div className="mt-5 pt-5 pb-2 border-t border-blueGray-200 text-center">           
                 </div>
+                <div className="flex flex-wrap justify-center">
+              <div className="w-full lg:w-12/12 px-4">
+                <p className="mb-4 text-base leading-relaxed text-white ">
+                  <span className="font-bold">{qBook}</span> {qBookDescription}
+                </p>
+              </div>
+            </div>
               </div>          
             </div>          
           </div>
