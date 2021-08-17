@@ -6,16 +6,23 @@ import { useForm } from "react-hook-form";
 import {getAsyncData,getAsyncPostData} from '../../utils/ApiRequests';
 export default function CardPatientInfo({searchToken}) {
   const dispatch = useDispatch();
-   const router = useRouter();
+  const router = useRouter();
   const [patientDetails,setPatientDetails] = useState({});
+  const [errorMessage,setErrorMessage] = useState(false);
   const getPatientInfo = async() =>{
     const params={
       searchToken: searchToken,
     }
-    const response = await getAsyncData('/booking/detail',params);
-    if(response){
-      setPatientDetails(response.data);
-    } 
+    try{
+      const response = await getAsyncData('/booking/detail',params);
+      if(response){
+        setPatientDetails(response.data);
+      } 
+    }
+    catch{
+      setErrorMessage(true);
+    }
+    
     }
   useEffect( () => {
     getPatientInfo();
@@ -27,16 +34,20 @@ export default function CardPatientInfo({searchToken}) {
     setPatientDetails({...patientDetails,[propName]:propValue})
   }
   const updatePatientInfoAPI = async(data) =>{
-    const response = await getAsyncPostData('/booking/addPrescription',data); 
-    if(response){
-      dispatch(updateAppointmentsHistoryList(response.data))
-      router.push({
-          pathname: '/doctor/appointments'
-      })
+    try {
+      const response = await getAsyncPostData('/booking/addPrescription',data); 
+      if(response){
+        dispatch(updateAppointmentsHistoryList(response.data))
+        router.push({
+            pathname: '/doctor/appointments'
+        })
+      }
+    }
+    catch{
+      setErrorMessage(true);
     }
    }
   const updateProfile = (data,e) =>{
-    debugger;
     e.preventDefault();
     const prescriptionData = {
       searchToken:searchToken,
@@ -102,7 +113,12 @@ export default function CardPatientInfo({searchToken}) {
                 </div>
               </div>          
             </div>
-            <hr className="mt-4 border-b-1 border-blueGray-300" />        
+            <hr className="mt-4 border-b-1 border-blueGray-300" />  
+            <div>
+           {errorMessage &&
+            <p className="block uppercase text-xs font-bold text-red-500 px-2">Unable to update the prescription details..</p>
+           }
+           </div>    
           </form>
         </div>
       </div>

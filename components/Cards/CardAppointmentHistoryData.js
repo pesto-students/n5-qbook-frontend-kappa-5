@@ -1,4 +1,4 @@
-import React,{useEffect} from "react";
+import React,{useEffect,useState} from "react";
 import { selectSearchTerm,selectAppointmentHistoryList, updateAppointmentsHistoryList } from '../../slices/appointmentSlice'
 import { useSelector,useDispatch } from 'react-redux';
 import {getAsyncData} from '../../utils/ApiRequests';
@@ -6,12 +6,19 @@ export default function CardAppointmentHistoryData() {
       const appointmentHistoryList = useSelector(selectAppointmentHistoryList)
       const searchText = useSelector(selectSearchTerm)
       const dispatch = useDispatch();
+      const [errorMessage,setErrorMessage] = useState(false);
       const getAppointmentHistoryList = async() =>{
             const params={
               status: '2',
           }
-          const response = await getAsyncData('/booking/list',params);
-          dispatch(updateAppointmentsHistoryList(response.data));
+          try{
+            const response = await getAsyncData('/booking/list',params);
+            if(response)
+            dispatch(updateAppointmentsHistoryList(response?.data));
+          }
+          catch{
+            setErrorMessage(true)
+          }
        }
        useEffect( () => {
          //get the appointment history list data from api for todays date
@@ -80,6 +87,9 @@ export default function CardAppointmentHistoryData() {
             </tbody>
           </table>
         </div>
+        {errorMessage &&
+            <p className="block uppercase text-xs font-bold text-red-500 px-2">Unable to get the appointments..</p>
+           }
       </div>
     </>
   );

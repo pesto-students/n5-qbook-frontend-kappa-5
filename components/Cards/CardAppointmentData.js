@@ -7,13 +7,19 @@ export default function CardAppointmentData() {
         const searchText = useSelector(selectSearchTerm)
         const dispatch = useDispatch();
         const [appointmentList,setAppointmentList] = useState();
-        const getAppointmentList = async() =>{
+        const [errorMessage,setErrorMessage] = useState(false);
+      const getAppointmentList = async() =>{
         const params={
           status: '1',
         }
-        const response = await getAsyncData('/booking/list',params);
-        setAppointmentList(response.data);
-        dispatch(updateAppointmentsList(response.data)); 
+        try{
+          const response = await getAsyncData('/booking/list',params);
+          setAppointmentList(response.data);
+          dispatch(updateAppointmentsList(response.data)); 
+        }
+        catch{
+          setErrorMessage(true)
+        } 
       }
       useEffect( () => {
         //get the dashboard data from api
@@ -41,9 +47,6 @@ export default function CardAppointmentData() {
                 <th className="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-blueGray-50 text-blueGray-500 border-blueGray-100">
                   Phone Number
                 </th>
-                <th className="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-blueGray-50 text-blueGray-500 border-blueGray-100">
-                  Date
-                </th>
                 <th className="hidden md:block lg:table-cell px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-blueGray-50 text-blueGray-500 border-blueGray-100">
                   Payment Mode
                 </th>
@@ -65,16 +68,13 @@ export default function CardAppointmentData() {
             })
             .map((patient=>(
               <tr key={patient?.id}>
-                <th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left flex items-center">                 
+                <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">                 
                   <span className="ml-3 font-bold text-blueGray-600">{patient?.customerInfo?.name}</span>
-                </th>
-                <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                  {patient?.customerInfo?.mobile}
                 </td>
                 <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                <span>{patient?.bookingDateTime?.split("T")[0]}</span>
-                </td>              
-                <td className="hidden md:block border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                  {patient?.customerInfo?.mobile}
+                </td>           
+                <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
                 <span>{patient?.paymentMode}</span>
                 </td>
 				        <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
@@ -92,6 +92,9 @@ export default function CardAppointmentData() {
             </tbody>
           </table>
         </div>
+        {errorMessage &&
+            <p className="block uppercase text-xs font-bold text-red-500 px-2">Unable to get the appointments..</p>
+           }
       </div>
     </>
   );
