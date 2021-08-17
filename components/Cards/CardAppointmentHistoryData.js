@@ -1,21 +1,24 @@
 import React,{useEffect,useState} from "react";
-import { selectSearchTerm,selectAppointmentHistoryList, updateAppointmentsHistoryList } from '../../slices/appointmentSlice'
+import { selectSearchTerm, updateAppointmentsHistoryList } from '../../slices/appointmentSlice'
 import { useSelector,useDispatch } from 'react-redux';
 import {getAsyncData} from '../../utils/ApiRequests';
 import CardLoader from "./CardLoader";
 export default function CardAppointmentHistoryData() {
-      const appointmentHistoryList = useSelector(selectAppointmentHistoryList)
+
       const searchText = useSelector(selectSearchTerm)
       const dispatch = useDispatch();
       const [errorMessage,setErrorMessage] = useState(false);
+      const [appointmentHistoryList,setAppointmentHistoryList] = useState();
       const getAppointmentHistoryList = async() =>{
             const params={
               status: '2',
           }
           try{
             const response = await getAsyncData('/booking/list',params);
-            if(response)
-            dispatch(updateAppointmentsHistoryList(response?.data));
+            if(response){
+              dispatch(updateAppointmentsHistoryList(response?.data));
+              setAppointmentHistoryList(response?.data);
+            } 
           }
           catch{
             setErrorMessage(true)
