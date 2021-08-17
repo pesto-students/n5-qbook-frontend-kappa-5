@@ -6,21 +6,26 @@ import { login } from '../../slices/doctorSlice'
 import { fcmToken, qBook, signInText, Google, qBookDescription, doctorLogin, loginUrlAPI } from '../../utils/Constants';
 import {getAsyncPostData} from '../../utils/ApiRequests';
 import { useRouter } from 'next/router'
-
+import CardLoader from '../../components/Cards/CardLoader'
 export default function DoctorLogin() {
   const dispatch = useDispatch();
   const router = useRouter();
   const [tokenFCM,setTokenFCM] = useState('');
+  const [loading,setLoading] = useState(false);
+  const [errorMessage,setErrorMessage] = useState(false);
   const addDoctorInfo = async(user) =>{
+    try{
       const response= await getAsyncPostData(`${loginUrlAPI}`,user);
       if(response){
         sessionStorage.setItem(`${doctorLogin}`,JSON.stringify(response.data));
         dispatch(login(response.data));
         router.push('/doctor/appointments')
       }
-       
+    }
+    catch{
+      setErrorMessage(true);
+    }  
   }
-
   useEffect(() => {
     setTokenFCM(sessionStorage.getItem(`${fcmToken}`))
   },[]);
@@ -42,6 +47,9 @@ export default function DoctorLogin() {
   }
   return (
     <>
+    {loading?(
+      <CardLoader/>
+    ):(
       <div className="container mx-auto px-4 h-full">
         <div className="flex content-center items-center justify-center h-full">
           <div className="w-full lg:w-4/12 px-4">
@@ -71,12 +79,16 @@ export default function DoctorLogin() {
                   <span className="font-bold">{qBook}</span> {qBookDescription}
                 </p>
               </div>
+              {errorMessage &&
+            <p className="block uppercase text-xs font-bold text-red-500 px-2">Unable to Login..!!</p>
+             }  
             </div>
               </div>          
             </div>          
           </div>
         </div>
       </div>
+    )}
     </>
   );
 }

@@ -3,9 +3,11 @@ import Toggle from 'components/Sidebar/Toggle';
 import { updateConfig } from '../../slices/settingsSlice'
 import { useDispatch } from 'react-redux';
 import {getAsyncPostData,getAsyncData} from '../../utils/ApiRequests';
-
+import CardLoader from "./CardLoader";
 export default function CardConfig() {
-  const [successMessage,setSuccessMessage] = useState(false);
+const [successMessage,setSuccessMessage] = useState(false);
+const [errorMessage,setErrorMessage] = useState(false);
+const [loading,setLoading] = useState(false);
 const dispatch = useDispatch();
 const [configInfo,setConfigInfo] = useState({is_duty:false,is_notification:false});
 const getDashboardInfo = async() =>{
@@ -23,17 +25,32 @@ useEffect( () => {
   getDashboardInfo();
 }, [])
 const updateConfigAPI = async(data) =>{
-  const response = await getAsyncPostData('/user/updateConfig',data); 
-  if(response){
-    sessionStorage.setItem('settings',JSON.stringify(response.data));
-    setSuccessMessage(false);
+  setLoading(true);
+  try{
+    const response = await getAsyncPostData('/user/updateConfig',data); 
+    if(response){
+      sessionStorage.setItem('settings',JSON.stringify(response.data));
+      setSuccessMessage(false);
+      setLoading(false);
+    }
+  }
+  catch{
+    setErrorMessage(true);
   }
  }
  const cancelAppointments = async() =>{
-  const response = await getAsyncData('/booking/cancelAllBooking'); 
-  if(response){
-    setSuccessMessage(true);
+  setLoading(true);
+  try{
+    const response = await getAsyncData('/booking/cancelAllBooking'); 
+    if(response){
+      setSuccessMessage(true);
+      setLoading(false);
+    }
   }
+  catch{
+    setErrorMessage(true);
+  }
+  
  }
 const setDutyEnabled =(e) =>{
   setConfigInfo(values=>({
@@ -54,6 +71,9 @@ const setNotificationEnabled =(e) =>{
 
   return (
     <>
+    {loading?(
+      <CardLoader/>
+    ):(
       <div className="relative flex flex-col  min-w-0 break-words bg-white w-full mb-6 shadow-xl rounded-lg">        
         <div className="flex flex-wrap flex-col  m-20 space-y-2">
           <div className="w-full lg:w-12/12 px-1 mt-5 flex flex-row items-center">        
@@ -73,9 +93,14 @@ const setNotificationEnabled =(e) =>{
               </div> 
               {successMessage &&
             <p className="block uppercase text-xs font-bold py-2 text-teal-600 px-2 ">Bookings cancelled Successfully!</p>
-           }        
+           }   
+           {errorMessage &&
+            <p className="block uppercase text-xs font-bold text-red-500 px-2">Unable to update the settings..</p>
+           }     
         </div>
       </div>
+    )}
+      
     </>
   );
 }

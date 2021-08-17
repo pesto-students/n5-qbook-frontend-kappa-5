@@ -4,12 +4,15 @@ import { updateAppointmentsHistoryList } from '../../slices/appointmentSlice'
 import { useDispatch } from 'react-redux';
 import { useForm } from "react-hook-form";
 import {getAsyncData,getAsyncPostData} from '../../utils/ApiRequests';
+import CardLoader from "./CardLoader";
 export default function CardPatientInfo({searchToken}) {
   const dispatch = useDispatch();
   const router = useRouter();
   const [patientDetails,setPatientDetails] = useState({});
   const [errorMessage,setErrorMessage] = useState(false);
+  const [loading,setLoading] = useState(false);
   const getPatientInfo = async() =>{
+    setLoading(true);
     const params={
       searchToken: searchToken,
     }
@@ -17,6 +20,7 @@ export default function CardPatientInfo({searchToken}) {
       const response = await getAsyncData('/booking/detail',params);
       if(response){
         setPatientDetails(response.data);
+        setLoading(false);
       } 
     }
     catch{
@@ -34,10 +38,12 @@ export default function CardPatientInfo({searchToken}) {
     setPatientDetails({...patientDetails,[propName]:propValue})
   }
   const updatePatientInfoAPI = async(data) =>{
+    setLoading(true);
     try {
       const response = await getAsyncPostData('/booking/addPrescription',data); 
       if(response){
         dispatch(updateAppointmentsHistoryList(response.data))
+        setLoading(false);
         router.push({
             pathname: '/doctor/appointments'
         })
@@ -59,6 +65,9 @@ export default function CardPatientInfo({searchToken}) {
 
   return (
     <>
+    {loading?(
+      <CardLoader/>
+    ):(
       <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-blueGray-100 border-0">
         <div className="rounded-t bg-white mb-0 px-6 py-6">
           <div className="text-center flex justify-between">
@@ -122,6 +131,8 @@ export default function CardPatientInfo({searchToken}) {
           </form>
         </div>
       </div>
+    )}
+      
     </>
   );
 }

@@ -5,12 +5,15 @@ import { useDispatch } from 'react-redux';
 import CardSettingsForm from "./CardSettingsForm";
 import {getAsyncPostData} from '../../utils/ApiRequests';
 import {doctorLogin} from '../../utils/Constants';
+import CardLoader from "./CardLoader";
 export default function CardSettings() {
   const dispatch = useDispatch();
   const [profileInfo,setProfileInfo] = useState({firstname:"",title: "",brief: "",fees: 0,});
   const [successMessage,setSuccessMessage] = useState(false);
   const [errors,setErrors] = useState();
   const [configUpdated,setConfigUpdated] = useState(false);
+  const [errorMessage,setErrorMessage] = useState(false);
+  const [loading,setLoading] = useState(false);
   const getDashboardInfo = async() =>{
     const settingInfo = JSON.parse(sessionStorage.getItem('settings'));
     const userInfo = JSON.parse(sessionStorage.getItem(`${doctorLogin}`));
@@ -38,13 +41,20 @@ export default function CardSettings() {
     getDashboardInfo();
   }, [])
   const updateConfigAPI = async(data) =>{
-   const response = await getAsyncPostData('/user/updateConfig',data); 
-   if(response){
-    setSuccessMessage(true);
-    setConfigUpdated(true);
-    setErrors({});
-    sessionStorage.setItem('settings',JSON.stringify(response.data));
-   }
+    setLoading(true);
+    try{
+      const response = await getAsyncPostData('/user/updateConfig',data); 
+      if(response){
+       setSuccessMessage(true);
+       setConfigUpdated(true);
+       setErrors({});
+       sessionStorage.setItem('settings',JSON.stringify(response.data));
+       setLoading(false);
+      }
+    }
+    catch{
+      setErrorMessage(true);
+    }
   }
   useEffect(() => {
     if(errors===undefined){
@@ -111,7 +121,11 @@ const handleInput = (e) =>{
     setProfileInfo({...profileInfo,[propName]:propValue})
 }
   return (
-      <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-blueGray-100 border-0">
+    <>
+    {loading?(
+      <CardLoader/>
+    ):(
+        <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-blueGray-100 border-0">
         <div className="rounded-t bg-white mb-0 px-6 py-6">
           <div className="text-center flex justify-between">
             <h6 className="text-blueGray-700 text-xl font-bold">Profile Settings</h6> 
@@ -130,8 +144,13 @@ const handleInput = (e) =>{
            {successMessage &&
             <p className="block uppercase text-xs font-bold py-2 text-teal-200">Settings updated Successfully!</p>
            }
+           {errorMessage &&
+            <p className="block uppercase text-xs font-bold text-red-500 px-2">Unable to update the settings..</p>
+           }  
            </div>
         </div>
       </div>
+    )}
+     </> 
   );
 }

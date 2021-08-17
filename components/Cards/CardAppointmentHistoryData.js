@@ -2,6 +2,7 @@ import React,{useEffect,useState} from "react";
 import { selectSearchTerm,selectAppointmentHistoryList, updateAppointmentsHistoryList } from '../../slices/appointmentSlice'
 import { useSelector,useDispatch } from 'react-redux';
 import {getAsyncData} from '../../utils/ApiRequests';
+import CardLoader from "./CardLoader";
 export default function CardAppointmentHistoryData() {
       const appointmentHistoryList = useSelector(selectAppointmentHistoryList)
       const searchText = useSelector(selectSearchTerm)
@@ -26,6 +27,7 @@ export default function CardAppointmentHistoryData() {
        }, [])
   return (
     <>
+    {appointmentHistoryList?(
       <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded bg-white">
         <div className="rounded-t mb-0 px-4 py-3 border-0">
           <div className="flex flex-wrap items-center">
@@ -91,6 +93,9 @@ export default function CardAppointmentHistoryData() {
             <p className="block uppercase text-xs font-bold text-red-500 px-2">Unable to get the appointments..</p>
            }
       </div>
+    ):(
+      <CardLoader/>
+    )}
     </>
   );
 }

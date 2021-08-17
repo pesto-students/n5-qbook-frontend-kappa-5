@@ -1,19 +1,30 @@
 import React,{useState} from "react";
 import { useForm } from "react-hook-form";
 import {getAsyncPostData} from '../../utils/ApiRequests';
+import CardLoader from "./CardLoader";
 export default function CardSupport() {
   const[queries,setQueries] = useState({});
   const [successMessage,setSuccessMessage] = useState(false);
+  const [loading,setLoading] = useState(false);
+  const [errorMessage,setErrorMessage] = useState(false);
   const { register, handleSubmit, formState: { errors } } = useForm();
   const sendQuery = async(data,e) =>{
     e.preventDefault();
+    setLoading(true);
     const queryData = {
       subject:data?.question,
       query:data?.queryDescription,
     }
-    const response = await getAsyncPostData('/user/support',queryData);
-    if(response)
-    setSuccessMessage(true);
+    try{
+      const response = await getAsyncPostData('/user/support',queryData);
+      if(response){
+        setSuccessMessage(true);
+        setLoading(false);
+      }
+    }
+    catch{
+      setErrorMessage(true);
+    }
   }
   const handleInput = (e) =>{
     let propName = e.target.name;
@@ -22,6 +33,9 @@ export default function CardSupport() {
   }
   return (
     <>
+    {loading?(
+      <CardLoader/>
+    ):(
       <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-blueGray-100 border-0">
         <div className="rounded-t bg-white mb-0 px-6 py-6">
           <div className="text-center flex justify-between">
@@ -66,10 +80,14 @@ export default function CardSupport() {
               </div>
             </div> 
            }
-                 
+           {errorMessage &&
+            <p className="block uppercase text-xs font-bold text-red-500 px-2">Unable to send the query</p>
+           }    
           </form>
         </div>
       </div>
+    )}
+      
     </>
   );
 }
