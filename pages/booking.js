@@ -2,10 +2,10 @@ import React,{useState,useRef, useEffect} from "react";
 import firebase from '../firebase'
 import LoginLayout from "layouts/LoginLayout.js";
 import config from "../config/config";
-import {getAsyncData, getAsyncPostData} from '../utils/ApiRequests';
+import { getAsyncPostData} from '../utils/ApiRequests';
 import { useRouter } from 'next/router'
 import { firebaseCloudMessaging } from '../components/Service/webPush';
-
+import CardLoader from '../components/Cards/CardLoader'
 //import DeviceInfo from 'react-native-device-info';
 //import {isMobile,getUA} from "react-device-detect";
 function loadScript(src) {
@@ -35,7 +35,7 @@ export default function Booking() {
   const [otp,setOtp] = useState('');
   const [isMobileNumVerified,setIsMobileNumVerified] = useState('');
   const [isOtpNumVerified,setIsOtpNumVerified] = useState('');
-  
+  const [loading,setLoading] = useState(false);
   const capthaRef = useRef();
   const configureCaptha = () =>{    
       if(window.recaptchaVerifier) {       
@@ -90,13 +90,13 @@ export default function Booking() {
               setErrorMessage(error.message);
             });
           } else{
-            setErrorMessage('OTP Genration is Pending  !');
+            setErrorMessage('OTP Generation is Pending  !');
           }
       }else {
-          setErrorMessage(' Pateint Mobile number already verified !');
+          setErrorMessage(' Patient Mobile number already verified !');
       }
     }
-    const onBookAppoinment =() =>{
+    const onBookAppointment =() =>{
       if(fullName && phoneNumber && otp && isMobileNumVerified) {
         if(paymnetMode === 'online'){
           displayRazorpay();
@@ -126,10 +126,19 @@ export default function Booking() {
       bookingCreateApi(cashCreateData);
     }
     let checkAvailability= async () =>{
-      const dataQrCode = await fetch(config.BASE_API_URL+'/booking/checkAvailability?uuid='+uuid, { method: 'GET' }).then((t) =>
-          t.json()
-        );
+      setLoading(true);
+      try{
+        const dataQrCode = await fetch(config.BASE_API_URL+'/booking/checkAvailability?uuid='+uuid, { method: 'GET' }).then((t) =>
+        t.json()
+      );
+      if(dataQrCode){
         setCheckAvailable(dataQrCode);
+        setLoading(false);
+      }
+      }
+      catch{
+        setErrorMessage('Unable to check te doctor availability');
+      }
     }
     let displayRazorpay = async () => {
       const res = await loadScript('https://checkout.razorpay.com/v1/checkout.js')
@@ -146,7 +155,7 @@ export default function Booking() {
             amount: checkAvailable.data.fee || 500,//data.amount.toString(),
             order_id: checkAvailable.data.orderId,
             name: 'Doctor Payment',
-            description: 'Please go ahead for payemnt !!',
+            description: 'Please go ahead for payment !!',
             image: 'https://www.newzealand.com/assets/Operator-Database/f59158f2b6/img-1536060335-6557-12242-p-6F1EB578-C4BC-BE00-91796DF7718B39A2-2544003__aWxvdmVrZWxseQo_CropResizeWzk0MCw1MzAsNzUsImpwZyJd.jpg',
             handler: function (response) {
               let createData ={
@@ -173,12 +182,18 @@ export default function Booking() {
       
     }
     const bookingCreateApi = async(data) =>{
-      const bookingResponse = await getAsyncPostData('/booking/create',data); 
-      if(bookingResponse && bookingResponse.data && bookingResponse.data.booking && bookingResponse.data.booking.searchToken){
-        router.push('/confirmation?searchToken='+encodeURIComponent(bookingResponse.data.booking.searchToken))
-      }else{
-        setErrorMessage('Some issue in Book an appoinmnet please try again !');
+      try{
+        const bookingResponse = await getAsyncPostData('/booking/create',data); 
+        if(bookingResponse && bookingResponse.data && bookingResponse.data.booking && bookingResponse.data.booking.searchToken){
+          router.push('/confirmation?searchToken='+encodeURIComponent(bookingResponse.data.booking.searchToken))
+        }else{
+          setErrorMessage('Some issue in Book an appointment please try again !');
+        }
       }
+      catch{
+        setErrorMessage('Some issue in Book an appointment please try again !');
+      }
+      
     }
     useEffect(() => {
       if(uuid){
@@ -187,6 +202,9 @@ export default function Booking() {
     },[uuid]);
   return (
     <>
+    {loading?(
+      <CardLoader/>
+    ):(
       <div className="container mx-auto px-4 h-full">
         <div className="flex content-center items-center justify-center h-full">
           <div className="w-full lg:w-6/12 px-4">
@@ -261,7 +279,7 @@ export default function Booking() {
                   <div className="text-center mt-6">
                     <button
                       className="bg-blueGray-800 text-white active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150 "
-                      type="button"  onClick={onBookAppoinment}>Book Appointment</button>
+                      type="button"  onClick={onBookAppointment}>Book Appointment</button>
                   </div>
                 </form>
               </div>:''}
@@ -269,6 +287,7 @@ export default function Booking() {
           </div>
         </div>
       </div>
+    )} 
     </>
   );}
   Booking.layout = LoginLayout;
