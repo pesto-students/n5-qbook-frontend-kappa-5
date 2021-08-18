@@ -3,20 +3,31 @@ import Validation from "../../utils/Validation";
 import { updateConfig } from '../../slices/settingsSlice'
 import { useDispatch } from 'react-redux';
 import CardSettingsForm from "./CardSettingsForm";
-import {getAsyncPostData} from '../../utils/ApiRequests';
-import {doctorLogin} from '../../utils/Constants';
+import {getAsyncPostData,getAsyncData} from '../../utils/ApiRequests';
+
 import CardLoader from "./CardLoader";
+import { ToastContainer, toast } from 'react-toastify';
+
 export default function CardSettings() {
   const dispatch = useDispatch();
-  const [profileInfo,setProfileInfo] = useState({firstname:"",title: "",brief: "",fees: 0,});
-  const [successMessage,setSuccessMessage] = useState(false);
+  const [profileInfo,setProfileInfo] = useState({firstname:"",title: "",brief: "",fees: 0,startTime:{hours:'08',minutes:30},
+  endTime:{hours:17,minutes:30}});
   const [errors,setErrors] = useState();
-  const [configUpdated,setConfigUpdated] = useState(false);
-  const [errorMessage,setErrorMessage] = useState(false);
   const [loading,setLoading] = useState(false);
   const getDashboardInfo = async() =>{
     const settingInfo = JSON.parse(sessionStorage.getItem('settings'));
-    const userInfo = JSON.parse(sessionStorage.getItem(`${doctorLogin}`));
+    if(!settingInfo){
+      const response = await getAsyncData('/user/dashboard');
+      if(response && response?.data?.setting){
+        sessionStorage.setItem('settings',JSON.stringify(response?.data?.setting));
+      } 
+  }
+  setInfo(settingInfo);
+    }
+  useEffect( () => {
+    getDashboardInfo();
+  }, [])
+  const setInfo = (settingInfo) =>{
     if(settingInfo){
       let array=[];
       array.push(settingInfo?.slots[0]);
@@ -26,7 +37,7 @@ export default function CardSettings() {
       let endTimeValues= end?.split(':');
       let startTimeValues= start?.split(':');
       const userConfig = {
-        firstname:userInfo?.result?.firstname,
+        firstname:settingInfo?.firstname,
         title:settingInfo?.title,
         brief:settingInfo?.brief,
         fees:settingInfo?.fees,
@@ -35,43 +46,30 @@ export default function CardSettings() {
       }
       setProfileInfo(userConfig);
       dispatch(updateConfig(userConfig));
-    } 
-    }
-  useEffect( () => {
-    getDashboardInfo();
-  }, [])
+  }
+}
   const updateConfigAPI = async(data) =>{
-    setLoading(true);
     try{
       const response = await getAsyncPostData('/user/updateConfig',data); 
       if(response){
-       setSuccessMessage(true);
-       setConfigUpdated(true);
-       setErrors({});
        sessionStorage.setItem('settings',JSON.stringify(response.data));
        setLoading(false);
+       return toast("Settings updated successfully!!",{type:"success"})
+      }
+      if(!response){
+        return toast("Unable to update the settings",{type:"error"})
       }
     }
     catch{
-      setErrorMessage(true);
+      return toast("Unable to update the settings",{type:"error"})
     }
   }
   useEffect(() => {
-    if(errors===undefined){
-      setSuccessMessage(false);
-    }
-    else if(errors!==undefined && Object.keys(errors).length>0){
-      setSuccessMessage(false);
-      return;
-     } 
-     else if(Object.keys(errors).length===0 && !configUpdated){
+   if(!errors) return;
+ if(Object.keys(errors).length===0){
       dispatch(updateConfig(profileInfo));
       formatInput();
-      setSuccessMessage(true);
      }
-     else if(Object.keys(errors).length===0){
-      setSuccessMessage(true);
-    }
   }, [errors])
   const updateProfile = (e) =>{
     e.preventDefault();
@@ -82,7 +80,7 @@ export default function CardSettings() {
     setProfileInfo({ 
         ...profileInfo,
         startTime: {
-            ...profileInfo.startTime, // Spread the startTime object to preserve all values
+            ...profileInfo.startTime, 
             [valueProp]: e.target.value
         }
     });  
@@ -92,7 +90,7 @@ const handleEndTime = (e) =>{
     setProfileInfo({ 
         ...profileInfo,
         endTime: {
-            ...profileInfo.endTime, // Spread the endTime object to preserve all values
+            ...profileInfo.endTime, 
             [valueProp]: e.target.value
         }
     });   
@@ -125,6 +123,8 @@ const handleInput = (e) =>{
     {loading?(
       <CardLoader/>
     ):(
+      <>
+      <ToastContainer position="bottom-center" />
         <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-blueGray-100 border-0">
         <div className="rounded-t bg-white mb-0 px-6 py-6">
           <div className="text-center flex justify-between">
@@ -141,15 +141,10 @@ const handleInput = (e) =>{
             handleEndTime={handleEndTime}
           />
           <div>
-           {successMessage &&
-            <p className="block uppercase text-xs font-bold py-2 text-teal-200">Settings updated Successfully!</p>
-           }
-           {errorMessage &&
-            <p className="block uppercase text-xs font-bold text-red-500 px-2">Unable to update the settings..</p>
-           }  
            </div>
         </div>
       </div>
+      </>
     )}
      </> 
   );

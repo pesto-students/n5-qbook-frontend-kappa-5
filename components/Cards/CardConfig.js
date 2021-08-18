@@ -1,18 +1,18 @@
 import React,{useState,useEffect} from "react";
 import Toggle from 'components/Sidebar/Toggle';
 import { updateConfig } from '../../slices/settingsSlice'
-
 import { selectAppointmentList } from '../../slices/appointmentSlice'
 import { useSelector,useDispatch } from 'react-redux';
 import {getAsyncPostData,getAsyncData} from '../../utils/ApiRequests';
 import CardLoader from "./CardLoader";
+import { ToastContainer, toast } from 'react-toastify';
+
 export default function CardConfig() {
-const [successMessage,setSuccessMessage] = useState(false);
-const [errorMessage,setErrorMessage] = useState(false);
 const [loading,setLoading] = useState(false);
 const dispatch = useDispatch();
 const [configInfo,setConfigInfo] = useState({is_duty:false,is_notification:false});
 const patientList = useSelector(selectAppointmentList);
+
 const getDashboardInfo = async() =>{
   const settingInfo = JSON.parse(sessionStorage.getItem('settings'));
   if(settingInfo){
@@ -33,12 +33,14 @@ const updateConfigAPI = async(data) =>{
     const response = await getAsyncPostData('/user/updateConfig',data); 
     if(response){
       sessionStorage.setItem('settings',JSON.stringify(response.data));
-      setSuccessMessage(false);
       setLoading(false);
+    }
+    if(!response){
+      return toast("Unable to update the settings",{type:"error"})
     }
   }
   catch{
-    setErrorMessage(true);
+    return toast("Unable to update the settings",{type:"error"})
   }
  }
  const cancelAppointments = async() =>{
@@ -47,12 +49,15 @@ const updateConfigAPI = async(data) =>{
   try{
     const response = await getAsyncData('/booking/cancelAllBooking'); 
     if(response){
-      setSuccessMessage(true);
       setLoading(false);
+      return toast("Bookings cancelled successfully!!",{type:"success"})
+    }
+    if(!response){
+      return toast("Unable to cancel the appointments",{type:"error"})
     }
   }
   catch{
-    setErrorMessage(true);
+    return toast("Unable to cancel the appointments",{type:"error"})
   }
   
  }
@@ -78,6 +83,8 @@ const setNotificationEnabled =(e) =>{
     {loading?(
       <CardLoader/>
     ):(
+      <>
+      <ToastContainer position="bottom-center" />
       <div className="relative flex flex-col  min-w-0 break-words bg-white w-full mb-6 shadow-xl rounded-lg">        
         <div className="flex flex-wrap flex-col  m-20 space-y-2">
           <div className="w-full lg:w-12/12 px-1 mt-5 flex flex-row items-center">        
@@ -96,15 +103,10 @@ const setNotificationEnabled =(e) =>{
               type="button" onClick={cancelAppointments}
               disabled={patientList?.length===0}
               >Cancel All Appointments</button>
-              </div> 
-              {successMessage &&
-            <p className="block uppercase text-xs font-bold py-2 text-teal-600 px-2 ">Bookings cancelled Successfully!</p>
-           }   
-           {errorMessage &&
-            <p className="block uppercase text-xs font-bold text-red-500 px-2">Unable to update the settings..</p>
-           }     
+              </div>    
         </div>
       </div>
+      </>
     )}
       
     </>

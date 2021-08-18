@@ -6,6 +6,7 @@ import firebase from "firebase/app";
 import 'firebase/messaging';
 import { firebaseCloudMessaging } from '../components/Service/webPush';
 import 'react-datepicker/dist/react-datepicker.css';
+import 'react-toastify/dist/ReactToastify.css';
 import { Provider } from "react-redux";
 import { store } from '../app/store'
 import {fcmToken,serviceWorker,errorSWReg,eventSW,fileSW,qBook,msgReceived} from 'utils/Constants'

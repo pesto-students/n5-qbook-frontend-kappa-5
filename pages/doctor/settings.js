@@ -1,9 +1,28 @@
-import React from "react";
+import React,{useEffect} from "react";
 import CardSettings from "components/Cards/CardSettings.js";
 import DoctorLayout from "layouts/DoctorLayout.js";
 import CardConfig from "components/Cards/CardConfig";
+import { firebaseAuth } from "../../firebase";
+import { useRouter } from 'next/router'
 
+import {  useDispatch, } from 'react-redux';
+import {   logout } from "slices/doctorSlice";
 export default function Settings() {
+  const router = useRouter();
+  const dispatch = useDispatch();
+  const getLoginInfo = async() =>{
+    const userInfo = JSON.parse(sessionStorage.getItem('doctor_login'));
+    if(!userInfo){
+      firebaseAuth.signOut().then(()=>{
+        router.push('/')
+        dispatch(logout());
+        sessionStorage.clear();
+    });
+    }
+    }
+    useEffect(() => {
+      getLoginInfo()
+    }, [])
   return (
     <>   
       <div className="flex flex-wrap">
