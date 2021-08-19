@@ -33,7 +33,6 @@ export default function CardAppointmentHistoryData() {
        }, [])
   return (
     <>
-
       <LoadingOverlay active={loading} spinner text="">
       <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded bg-white">
         <div className="rounded-t mb-0 px-4 py-3 border-0">

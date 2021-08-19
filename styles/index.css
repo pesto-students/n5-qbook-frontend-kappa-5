@@ -8,6 +8,11 @@
 
 @tailwind utilities;
 
+@layer components {
+  #toggle:checked ~ label div.toggle-dot{
+    @apply translate-x-3;
+}
+}
 
 /* @layer components {
     .toggle-checkbox:checked {

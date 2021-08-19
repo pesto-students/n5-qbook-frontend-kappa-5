@@ -3,20 +3,25 @@ import Link from "next/link";
 import { selectSearchTerm,updateAppointmentsList } from '../../slices/appointmentSlice'
 import { useSelector,useDispatch } from 'react-redux';
 import {getAsyncData} from '../../utils/ApiRequests';
-import CardLoader from "./CardLoader";
+import LoadingOverlay from "react-loading-overlay";
 export default function CardAppointmentData() {
         const searchText = useSelector(selectSearchTerm)
         const dispatch = useDispatch();
         const [appointmentList,setAppointmentList] = useState();
         const [errorMessage,setErrorMessage] = useState(false);
+        const [loading,setLoading] = useState(false);
       const getAppointmentList = async() =>{
         const params={
           status: '1',
         }
         try{
+          setLoading(true);
           const response = await getAsyncData('/booking/list',params);
-          setAppointmentList(response.data);
-          dispatch(updateAppointmentsList(response.data)); 
+          if(response){
+            setAppointmentList(response.data);
+            dispatch(updateAppointmentsList(response.data)); 
+            setLoading(false);
+          } 
         }
         catch{
           setErrorMessage(true)
@@ -28,7 +33,7 @@ export default function CardAppointmentData() {
       }, [])
   return (
     <>
-    {appointmentList?(
+    <LoadingOverlay active={loading} spinner text="">
       <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded bg-white">
         <div className="rounded-t mb-0 px-4 py-3 border-0">
           <div className="flex flex-wrap items-center">
@@ -94,13 +99,17 @@ export default function CardAppointmentData() {
             </tbody>
           </table>
         </div>
-        {errorMessage &&
-            <p className="block uppercase text-xs font-bold text-red-500 px-2">Unable to get the appointments..</p>
+        {appointmentList?.length===0 &&
+          <div className="rounded-t mb-0 px-4 py-3 border-0">
+          <div className="flex flex-wrap items-center">
+            <div className="relative w-full px-4 max-w-full flex-grow flex-1">
+              <p className="block uppercase text-xs font-bold text-red-500 px-5 py-5 justify-center ml-7 items-center">{"   "}No active appointments..</p>
+            </div>
+          </div>
+        </div> 
            }
       </div>
-    ):(
-      <CardLoader/>
-    )}  
+      </LoadingOverlay>
     </>
   );
 }
