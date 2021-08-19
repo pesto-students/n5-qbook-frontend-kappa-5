@@ -1,13 +1,11 @@
 import React,{useState,useRef, useEffect} from "react";
-import firebase from '../firebase'
+import firebase from '../firebase';
 import LoginLayout from "layouts/LoginLayout.js";
-import config from "../config/config";
+import config from "../config/config";  
 import { getAsyncPostData} from '../utils/ApiRequests';
 import { useRouter } from 'next/router'
 import { firebaseCloudMessaging } from '../components/Service/webPush';
-import CardLoader from '../components/Cards/CardLoader'
-//import DeviceInfo from 'react-native-device-info';
-//import {isMobile,getUA} from "react-device-detect";
+import LoadingOverlay from "react-loading-overlay";
 function loadScript(src) {
 	return new Promise((resolve) => {
 		const script = document.createElement('script')
@@ -57,13 +55,16 @@ export default function Booking() {
           configureCaptha();    
           const appVerifier = window.recaptchaVerifier;    
           const phoneNum = "+91" +phoneNumber;
+          setLoading(true);
           firebase.auth().signInWithPhoneNumber(phoneNum, appVerifier)
               .then((confirmationResult) => {
                 setIsOtpNumVerified(true);
                 window.confirmationResult = confirmationResult;
                 setErrorMessage('');
+                setLoading(false);
               }).catch((error) => {
                 setIsOtpNumVerified(false);
+                setLoading(false);
                 window.recaptchaVerifier.reset();
                 setErrorMessage(error.message);
               });
@@ -77,20 +78,24 @@ export default function Booking() {
     }
     const onSubmitOtp =() =>{
       if(!isMobileNumVerified) {
-          if(isOtpNumVerified) {
+          if(isOtpNumVerified && otp) {
             const code = otp;
+            setLoading(true);
             window.confirmationResult.confirm(code).then((result) => {
               const user = result.user;
               setIsMobileNumVerified(true);
               setErrorMessage('');
+              setLoading(false);
             }).catch((error) => {
+              setLoading(false);
+              setErrorMessage(error.message);
               setIsMobileNumVerified(false);
               window.recaptchaVerifier.reset();
               window.recaptchaVerifier.clear();
-              setErrorMessage(error.message);
+              
             });
           } else{
-            setErrorMessage('OTP Generation is Pending  !');
+            setErrorMessage('OTP Generation is Pending or Please enter Mobile !');
           }
       }else {
           setErrorMessage(' Patient Mobile number already verified !');
@@ -152,7 +157,7 @@ export default function Booking() {
           const options = {
             key: 'rzp_test_Mj02y5458xshqx',
             currency: 'INR',
-            amount: checkAvailable.data.fee || 500,//data.amount.toString(),
+            amount: checkAvailable.data.fees || 500,//data.amount.toString(),
             order_id: checkAvailable.data.orderId,
             name: 'Doctor Payment',
             description: 'Please go ahead for payment !!',
@@ -182,15 +187,19 @@ export default function Booking() {
       
     }
     const bookingCreateApi = async(data) =>{
+      setLoading(true);
       try{
         const bookingResponse = await getAsyncPostData('/booking/create',data); 
         if(bookingResponse && bookingResponse.data && bookingResponse.data.booking && bookingResponse.data.booking.searchToken){
+          setLoading(false);
           router.push('/confirmation?searchToken='+encodeURIComponent(bookingResponse.data.booking.searchToken))
         }else{
+          setLoading(false);
           setErrorMessage('Some issue in Book an appointment please try again !');
         }
       }
       catch{
+        setLoading(false);
         setErrorMessage('Some issue in Book an appointment please try again !');
       }
       
@@ -202,9 +211,8 @@ export default function Booking() {
     },[uuid]);
   return (
     <>
-    {loading?(
-      <CardLoader/>
-    ):(
+    
+      <LoadingOverlay active={loading} spinner text="Loading">
       <div className="container mx-auto px-4 h-full">
         <div className="flex content-center items-center justify-center h-full">
           <div className="w-full lg:w-6/12 px-4">
@@ -220,7 +228,7 @@ export default function Booking() {
               </div>:
                 <div className="rounded-t mb-0 px-6 py-6">
                 <div className="text-center mb-3">
-                  <h6 className="text-blueGray-500 text-sm font-bold">Doctor Appointment is not available for now !!. </h6>
+                  <h6 className="text-blueGray-500 text-sm font-bold"> {!loading && 'Doctor Appointment is not available for now !!.'} </h6>
                 </div>
               </div>
                 }
@@ -229,17 +237,26 @@ export default function Booking() {
                 <form>
                 <div ref={capthaRef}><div id="sign-in-button" ></div></div>
                   <div className="relative w-full mb-3">
-                    <label  className="block uppercase text-blueGray-600 text-xs font-bold mb-2">Full Name</label>         
-                    <input  type="text" value = {fullName} onChange={(e)=>setFullName(e.target.value)}
+                    <label  className="block uppercase text-blueGray-600 text-xs font-bold mb-2">Full Name  { !isMobileNumVerified &&<span className="text-xs text-red-500 px-1">*</span>}</label>         
+                    {!isMobileNumVerified ?<input  type="text" value = {fullName} onChange={(e)=>setFullName(e.target.value)}
                       className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                       placeholder="Name" />
+                      :<span className="ml-2 text-sm font-semibold text-blueGray-600">{fullName}</span> }  
+                      {errorMessage && !fullName && <label  className="block uppercase text-red-500 mt-2 text-xs font-bold mb-2"> ! Required</label>}
                   </div>
                   <div className="relative w-full mb-3">
-                    <label  className="block uppercase text-blueGray-600 text-xs font-bold mb-2">Phone Number</label>
-                    <input  type="number" value = {phoneNumber} onChange={(e)=>setPhoneNumber(e.target.value)}
-                      className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                      placeholder="Phone Number"/>
+                  <label  className="block uppercase text-blueGray-600 text-xs font-bold mb-2">Mobile Number { !isMobileNumVerified &&<span className="text-xs text-red-500 px-1">*</span>}</label>  
+                    {!isMobileNumVerified ?
+                    <div>
+                      <input  type="number" value = {phoneNumber} onChange={(e)=>setPhoneNumber(e.target.value)}
+                          className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
+                          placeholder="Mobile Number"/> 
+                          </div>
+                      :<span className="ml-2 text-sm font-semibold text-blueGray-600">{phoneNumber} (Mobile Number Verified)</span> }   
+                      {errorMessage && !phoneNumber && <label  className="block uppercase text-red-500 mt-2 text-xs font-bold mb-2"> ! Required</label>}
+                      
                   </div>
+                  {!isMobileNumVerified ?<div>
                   <div className="text-center mt-6">
                     <button
                       className="bg-blueGray-800 text-white active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150"
@@ -252,17 +269,20 @@ export default function Booking() {
                       </span>
                     </label>                 
                   </div>
-                  <div className="relative w-full mb-3">
-                    <label  className="block uppercase text-blueGray-600 text-xs font-bold mb-2">Enter OTP</label>
+                  {isOtpNumVerified && <div className="relative w-full mb-3">
+                    <label  className="block uppercase text-blueGray-600 text-xs font-bold mb-2">Enter OTP <span className="text-xs text-red-500 px-1">*</span></label>
                     <input  type="number" value = {otp} onChange={(e)=>setOtp(e.target.value)}
                       className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                       placeholder="OTP"/>
-                  </div>
-                  <div className="text-center mt-6">
+                      {errorMessage && !otp && <label  className="block uppercase text-red-500 mt-2 text-xs font-bold mb-2"> ! Required</label>}
+                  </div>}
+                  {isOtpNumVerified &&<div className="text-center mt-6">
                     <button
                       className="bg-blueGray-800 text-white active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150"
                       type="button"  onClick={onSubmitOtp}>Verify OTP</button>
-                  </div>
+                  </div>}</div>
+                  :''
+                  }
                   <div className="mt-6">
                     <span className="text-gray-700">Payment Mode</span>
                     <div className="mt-2">
@@ -277,9 +297,12 @@ export default function Booking() {
                     </div>
                   </div>
                   <div className="text-center mt-6">
-                    <button
-                      className="bg-blueGray-800 text-white active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150 "
-                      type="button"  onClick={onBookAppointment}>Book Appointment</button>
+                   { isOtpNumVerified && otp && phoneNumber && fullName? <button
+                      className="bg-blueGray-800 text-white active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150"
+                      type="button"  onClick={onBookAppointment}>Book Appointment</button>:<button
+                      className="bg-blueGray-800 text-white active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150 cursor-not-allowed opacity-50"
+                      type="button" >Book Appointment</button>
+                      }
                   </div>
                 </form>
               </div>:''}
@@ -287,7 +310,7 @@ export default function Booking() {
           </div>
         </div>
       </div>
-    )} 
+      </LoadingOverlay> 
     </>
   );}
   Booking.layout = LoginLayout;
