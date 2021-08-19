@@ -2,7 +2,15 @@ import { useState } from 'react'
 import { Switch } from '@headlessui/react'
 
 export default function Toggle({value,enabled,setEnabled,name}) {
-  //const [enabled, setEnabled] = useState(false)
+ // const [enabled, setEnabled] = useState(false)
+
+  const switchStyle = {
+    backgroundColor: enabled ? 'red' :'gray'
+  }
+
+  const spanStyle = {
+    '--tw-translate-x': enabled ? '25px':'0',
+  }
 
   return (
     <div className="flex items-center justify-center p-12">
@@ -14,15 +22,13 @@ export default function Toggle({value,enabled,setEnabled,name}) {
           checked={enabled}
           onChange={setEnabled}
           name={name}
-          className={`${
-            enabled ? "bg-green-400" : "bg-gray-200"
-          } relative inline-flex flex-shrink-0 h-6 w-12 transition-colors duration-200 ease-in-out border-2 border-transparent rounded-full cursor-pointer focus:outline-none focus:shadow-outline`}
+          style={switchStyle}
+          className={`relative inline-flex flex-shrink-0 h-6 w-12 transition-colors duration-200 ease-in-out border-2 border-transparent rounded-full cursor-pointer focus:outline-none focus:shadow-outline`}
         >
           {({ checked }) => (
             <span
-              className={`${
-                checked ? "translate-x-6" : "translate-x-0"
-              } inline-block w-5 h-5 transition duration-200 ease-in-out transform bg-white rounded-full`}
+              className={`inline-block w-5 h-5 transition duration-200 ease-in-out transform bg-white rounded-full`}
+              style={spanStyle}
             />
           )}
         </Switch>
