@@ -62,6 +62,11 @@ export default function CardPatientInfo({searchToken}) {
     }
     updatePatientInfoAPI(prescriptionData);
   }
+  const cancel = () =>{
+    router.push({
+      pathname: '/doctor/appointments'
+    });
+  }
 
   return (
     <>
@@ -118,7 +123,9 @@ export default function CardPatientInfo({searchToken}) {
               <div className="w-full lg:w-6/12 px-4 mt-3">
                 <div className="relative w-full mb-3">
                   <button  className="bg-blueGray-700 active:bg-blueGray-600 text-white font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
-                    type="submit">Close Examination</button>
+                    onClick={cancel}>Cancel</button>
+                    <button  className="bg-blueGray-700 active:bg-blueGray-600 text-white font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
+                    type="submit">Submit</button>
                 </div>
               </div>          
             </div>
