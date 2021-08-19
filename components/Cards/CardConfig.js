@@ -4,9 +4,8 @@ import { updateConfig } from '../../slices/settingsSlice'
 import { selectAppointmentList } from '../../slices/appointmentSlice'
 import { useSelector,useDispatch } from 'react-redux';
 import {getAsyncPostData,getAsyncData} from '../../utils/ApiRequests';
-import CardLoader from "./CardLoader";
 import { ToastContainer, toast } from 'react-toastify';
-
+import LoadingOverlay from "react-loading-overlay";
 export default function CardConfig() {
 const [loading,setLoading] = useState(false);
 const dispatch = useDispatch();
@@ -28,12 +27,10 @@ useEffect( () => {
   getDashboardInfo();
 }, [])
 const updateConfigAPI = async(data) =>{
-  setLoading(true);
   try{
     const response = await getAsyncPostData('/user/updateConfig',data); 
     if(response){
       sessionStorage.setItem('settings',JSON.stringify(response.data));
-      setLoading(false);
     }
     if(!response){
       return toast("Unable to update the settings",{type:"error"})
@@ -48,8 +45,8 @@ const updateConfigAPI = async(data) =>{
   setLoading(true);
   try{
     const response = await getAsyncData('/booking/cancelAllBooking'); 
+    setLoading(false);
     if(response){
-      setLoading(false);
       return toast("Bookings cancelled successfully!!",{type:"success"})
     }
     if(!response){
@@ -79,12 +76,9 @@ const setNotificationEnabled =(e) =>{
 }
 
   return (
-    <>
-    {loading?(
-      <CardLoader/>
-    ):(
       <>
       <ToastContainer position="bottom-center" />
+      <LoadingOverlay active={loading} spinner text="">
       <div className="relative flex flex-col  min-w-0 break-words bg-white w-full mb-6 shadow-xl rounded-lg">        
         <div className="flex flex-wrap flex-col  m-20 space-y-2">
           <div className="w-full lg:w-12/12 px-1 mt-5 flex flex-row items-center">        
@@ -106,9 +100,7 @@ const setNotificationEnabled =(e) =>{
               </div>    
         </div>
       </div>
+      </LoadingOverlay>
       </>
-    )}
-      
-    </>
   );
 }

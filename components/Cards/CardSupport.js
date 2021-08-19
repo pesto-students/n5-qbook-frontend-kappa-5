@@ -1,12 +1,11 @@
 import React,{useState} from "react";
 import { useForm } from "react-hook-form";
 import {getAsyncPostData} from '../../utils/ApiRequests';
-import CardLoader from "./CardLoader";
+import LoadingOverlay from "react-loading-overlay";
+import { ToastContainer, toast } from 'react-toastify';
 export default function CardSupport() {
   const[queries,setQueries] = useState({});
-  const [successMessage,setSuccessMessage] = useState(false);
   const [loading,setLoading] = useState(false);
-  const [errorMessage,setErrorMessage] = useState(false);
   const { register, handleSubmit, formState: { errors } } = useForm();
   const sendQuery = async(data,e) =>{
     e.preventDefault();
@@ -17,13 +16,16 @@ export default function CardSupport() {
     }
     try{
       const response = await getAsyncPostData('/user/support',queryData);
+      setLoading(false);
       if(response){
-        setSuccessMessage(true);
-        setLoading(false);
+        return toast("Query Sent successfully!!",{type:"success"})
+      }
+      if(!response){
+        return toast("Unable to send the query..",{type:"error"})
       }
     }
     catch{
-      setErrorMessage(true);
+      return toast("Unable to send the query..",{type:"error"})
     }
   }
   const handleInput = (e) =>{
@@ -33,9 +35,8 @@ export default function CardSupport() {
   }
   return (
     <>
-    {loading?(
-      <CardLoader/>
-    ):(
+      <ToastContainer position="bottom-center" />
+      <LoadingOverlay active={loading} spinner text="">
       <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-blueGray-100 border-0">
         <div className="rounded-t bg-white mb-0 px-6 py-6">
           <div className="text-center flex justify-between">
@@ -72,22 +73,11 @@ export default function CardSupport() {
                 </div>
               </div>          
             </div>
-            <hr className="mt-4 border-b-1 border-blueGray-300" />  
-            {successMessage &&
-              <div className="text-center py-4 lg:px-4">
-              <div className="p-2 items-center text-indigo-100 leading-none lg:rounded-full flex lg:inline-flex" role="alert">
-                <span className="flex rounded-full uppercase px-2 py-1 text-xs font-bold mr-3 text-green-800 ">Query Sent Successfully!</span>
-              </div>
-            </div> 
-           }
-           {errorMessage &&
-            <p className="block uppercase text-xs font-bold text-red-500 px-2">Unable to send the query</p>
-           }    
+            <hr className="mt-4 border-b-1 border-blueGray-300" />     
           </form>
         </div>
       </div>
-    )}
-      
-    </>
+      </LoadingOverlay>
+      </>
   );
 }

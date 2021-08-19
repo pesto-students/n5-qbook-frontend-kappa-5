@@ -4,8 +4,7 @@ import { updateConfig } from '../../slices/settingsSlice'
 import { useDispatch } from 'react-redux';
 import CardSettingsForm from "./CardSettingsForm";
 import {getAsyncPostData,getAsyncData} from '../../utils/ApiRequests';
-
-import CardLoader from "./CardLoader";
+import LoadingOverlay from "react-loading-overlay";
 import { ToastContainer, toast } from 'react-toastify';
 
 export default function CardSettings() {
@@ -17,7 +16,9 @@ export default function CardSettings() {
   const getDashboardInfo = async() =>{
     const settingInfo = JSON.parse(sessionStorage.getItem('settings'));
     if(!settingInfo){
+      setLoading(true);
       const response = await getAsyncData('/user/dashboard');
+      setLoading(false);
       if(response && response?.data?.setting){
         sessionStorage.setItem('settings',JSON.stringify(response?.data?.setting));
       } 
@@ -50,6 +51,7 @@ export default function CardSettings() {
 }
   const updateConfigAPI = async(data) =>{
     try{
+      setLoading(true);
       const response = await getAsyncPostData('/user/updateConfig',data); 
       if(response){
        sessionStorage.setItem('settings',JSON.stringify(response.data));
@@ -57,6 +59,7 @@ export default function CardSettings() {
        return toast("Settings updated successfully!!",{type:"success"})
       }
       if(!response){
+        setLoading(false);
         return toast("Unable to update the settings",{type:"error"})
       }
     }
@@ -120,11 +123,8 @@ const handleInput = (e) =>{
 }
   return (
     <>
-    {loading?(
-      <CardLoader/>
-    ):(
-      <>
       <ToastContainer position="bottom-center" />
+      <LoadingOverlay active={loading} spinner text="">
         <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-blueGray-100 border-0">
         <div className="rounded-t bg-white mb-0 px-6 py-6">
           <div className="text-center flex justify-between">
@@ -144,8 +144,7 @@ const handleInput = (e) =>{
            </div>
         </div>
       </div>
-      </>
-    )}
-     </> 
-  );
+      </LoadingOverlay>
+      </> 
+    )
 }
