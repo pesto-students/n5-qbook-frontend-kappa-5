@@ -84,7 +84,7 @@ export default function Confirmation() {
                           Booking date
                         </span>
                         <span className="text-sm text-blueGray-400">
-                        {appoinmentData.data.booking.bookingDateTime?moment(appoinmentData.data.booking.bookingDateTime).format('YYYY-MM-DD hh:ss A'):'--'}
+                        {appoinmentData.data.booking.bookingDateTime?moment(appoinmentData.data.booking.bookingDateTime).format('YYYY-MM-DD hh:mm A'):'--'}
                         </span>
                       </div>
                     </div>
@@ -96,7 +96,7 @@ export default function Confirmation() {
                         Expected Date Time
                         </span>
                         <span className="text-sm text-blueGray-400">
-                        {appoinmentData.data.expectedDateTime}
+                        {appoinmentData.data.expectedDateTime?moment(appoinmentData.data.expectedDateTime).format('YYYY-MM-DD hh:mm A'):'--'}
                         </span>
                       </div>
                     </div>
@@ -114,6 +114,7 @@ export default function Confirmation() {
                     </div>
                   </div>
                 </div>
+                {appoinmentData && appoinmentData.data && appoinmentData.data.booking && appoinmentData.data.booking.paymentMode && appoinmentData.data.booking.paymentMode === 'online' && 
                 <div className="mt-10 py-10 border-t border-blueGray-200 text-center">
                   <div className="flex flex-wrap justify-center">
                     <div className="w-full lg:w-9/12 px-4">
@@ -122,7 +123,7 @@ export default function Confirmation() {
                       </p>
                     </div>
                   </div>
-                </div>
+                </div>}
               </div>
             </div>
           </div>
@@ -132,7 +133,7 @@ export default function Confirmation() {
       <section className="relative py-16 ">
         <div className="container mx-auto px-4">
           <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-xl rounded-lg ">
-            <div className="px-6"><div className="flex flex-wrap justify-center">No Appoinmnet Available !!</div></div>
+            <div className="px-6"><div className="flex flex-wrap justify-center">{appoinmentData && appoinmentData.data && appoinmentData.data.booking && appoinmentData.data.booking.paymentMode?'No Appoinmnet Available !!':''}</div></div>
             </div>
           </div>
         </section>
