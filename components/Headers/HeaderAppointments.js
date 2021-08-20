@@ -26,8 +26,8 @@ export default function HeaderAppointments() {
         date:dateString,
         name:'',
       }
-     const response = await getAsyncData('/booking/list',params); 
-     dispatch(updateAppointmentsList(response.data));
+     //const response = await getAsyncData('/booking/list',params); 
+     //dispatch(updateAppointmentsList(response.data));
      dispatch(updateSelectedDate(dateString))
     } else 
     dispatch(updateSelectedDate(date))

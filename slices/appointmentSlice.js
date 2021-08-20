@@ -18,7 +18,6 @@ export const appointmentSlice = createSlice({
       state.searchTerm = action.payload
     },
     updateSelectedDate : (state,action) =>{
-      debugger;
       state.selectedDate = action.payload
     },
     updateAppointment : (state,action) =>{

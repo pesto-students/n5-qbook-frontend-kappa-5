@@ -1,12 +1,12 @@
 import React,{useEffect,useState} from "react";
-import { selectSearchTerm, updateAppointmentsHistoryList } from '../../slices/appointmentSlice'
+import { selectSearchTerm, updateAppointmentsHistoryList,selectedDate } from '../../slices/appointmentSlice'
 import { useSelector,useDispatch } from 'react-redux';
 import {getAsyncData} from '../../utils/ApiRequests';
-import CardLoader from "./CardLoader";
 import LoadingOverlay from "react-loading-overlay";
 export default function CardAppointmentHistoryData() {
   const [loading,setLoading] = useState(false);
       const searchText = useSelector(selectSearchTerm)
+      const searchDate = useSelector(selectedDate)
       const dispatch = useDispatch();
       const [errorMessage,setErrorMessage] = useState(false);
       const [appointmentHistoryList,setAppointmentHistoryList] = useState();
@@ -57,21 +57,32 @@ export default function CardAppointmentHistoryData() {
                 <th className="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-blueGray-50 text-blueGray-500 border-blueGray-100">
                   Date
                 </th>
+                <th className="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-blueGray-50 text-blueGray-500 border-blueGray-100">
+                Status
+                </th>
                 <th className="hidden md:block px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-blueGray-50 text-blueGray-500 border-blueGray-100">
                   Payment Mode
                 </th>
               </tr>
             </thead>
             <tbody className="overflow-y-scroll h-56">
+            
             {appointmentHistoryList?.filter((val)=>{
               let patientName = val?.customerInfo?.name;
-              let phoneNumber = val?.customerInfo?.mobile
-              if(searchText===""){
+              let phoneNumber = val?.customerInfo?.mobile;
+              let dateString = val?.bookingDateTime?.split("T")[0];
+              let patientBookingDate = new Date(dateString);
+              let filteredDate = new Date(searchDate);
+              if(searchText==="" && searchDate===null){
+                return val;
+              }
+              else if(searchText==="" && patientBookingDate-filteredDate===0){
                 return val;
               }
              else if((searchText!=="") && 
                 (patientName?.toString()?.toLowerCase().includes(searchText?.toLowerCase())||
-                phoneNumber?.toString()?.toLowerCase().includes(searchText)
+                phoneNumber?.toString()?.toLowerCase().includes(searchText)||
+                (patientBookingDate-filteredDate===0) 
                 )){                    
                     return val;                           
                 }
@@ -86,7 +97,10 @@ export default function CardAppointmentHistoryData() {
                 </td>
                 <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
                 <span>{patient?.bookingDateTime?.split("T")[0]}</span>
-                </td>              
+                </td>  
+                <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                  <span className="p-1" style={{'backgroundColor': patient?.status === 2 ? 'green' : patient?.status  === 1 ? 'yellow' : 'red'}}>{patient?.status===3?"Cancelled":patient?.status===2?"Completed":"Ongoing"}</span>
+                </td>            
                 <td className="hidden md:block border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
                 <span>{patient.paymentMode}</span>
                 </td>
