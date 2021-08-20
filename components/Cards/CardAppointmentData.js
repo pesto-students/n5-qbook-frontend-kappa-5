@@ -4,11 +4,11 @@ import { selectSearchTerm,updateAppointmentsList } from '../../slices/appointmen
 import { useSelector,useDispatch } from 'react-redux';
 import {getAsyncData} from '../../utils/ApiRequests';
 import LoadingOverlay from "react-loading-overlay";
+import { ToastContainer, toast } from 'react-toastify';
 export default function CardAppointmentData() {
         const searchText = useSelector(selectSearchTerm)
         const dispatch = useDispatch();
         const [appointmentList,setAppointmentList] = useState();
-        const [errorMessage,setErrorMessage] = useState(false);
         const [loading,setLoading] = useState(false);
       const getAppointmentList = async() =>{
         const params={
@@ -22,9 +22,13 @@ export default function CardAppointmentData() {
             dispatch(updateAppointmentsList(response.data)); 
             setLoading(false);
           } 
+          if(!response){
+            setLoading(false);
+            return toast("Unable to load the appointments",{type:"error"})
+          } 
         }
         catch{
-          setErrorMessage(true)
+          return toast("Unable to load the appointments",{type:"error"})
         } 
       }
       useEffect( () => {
@@ -33,6 +37,7 @@ export default function CardAppointmentData() {
       }, [])
   return (
     <>
+    <ToastContainer position="bottom-center" />
     <LoadingOverlay active={loading} spinner text="">
       <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded bg-white">
         <div className="rounded-t mb-0 px-4 py-3 border-0">

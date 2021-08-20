@@ -3,12 +3,12 @@ import { selectSearchTerm, updateAppointmentsHistoryList,selectedDate } from '..
 import { useSelector,useDispatch } from 'react-redux';
 import {getAsyncData} from '../../utils/ApiRequests';
 import LoadingOverlay from "react-loading-overlay";
+import { ToastContainer, toast } from 'react-toastify';
 export default function CardAppointmentHistoryData() {
   const [loading,setLoading] = useState(false);
       const searchText = useSelector(selectSearchTerm)
       const searchDate = useSelector(selectedDate)
       const dispatch = useDispatch();
-      const [errorMessage,setErrorMessage] = useState(false);
       const [appointmentHistoryList,setAppointmentHistoryList] = useState();
       const getAppointmentHistoryList = async() =>{
             const params={
@@ -22,17 +22,42 @@ export default function CardAppointmentHistoryData() {
               setAppointmentHistoryList(response?.data);
               setLoading(false);
             } 
+            if(!response){
+              setLoading(false);
+              return toast("Unable to load the appointments",{type:"error"})
+            } 
           }
           catch{
-            setErrorMessage(true)
+            return toast("Unable to load the appointments",{type:"error"})
           }
        }
        useEffect( () => {
          //get the appointment history list data from api for todays date
          getAppointmentHistoryList();
        }, [])
+       const sendPrescription = async(e,searchToken) =>{
+         e.preventDefault();
+         const params={
+          searchToken: searchToken,
+        }
+         try{
+          setLoading(true);
+          const response = await getAsyncData('/user/sendMessage',params);
+          setLoading(false);
+          if(response){
+            return toast("Sent prescription successfully!!",{type:"success"})
+          }
+          if(!response){
+            return toast("Unable to send the prescription",{type:"error"})
+          }
+         }
+         catch{
+          return toast("Unable to send the prescription",{type:"error"})
+         }
+       }
   return (
     <>
+      <ToastContainer position="bottom-center" />
       <LoadingOverlay active={loading} spinner text="">
       <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded bg-white">
         <div className="rounded-t mb-0 px-4 py-3 border-0">
@@ -104,14 +129,16 @@ export default function CardAppointmentHistoryData() {
                 <td className="hidden md:block border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
                 <span>{patient.paymentMode}</span>
                 </td>
+                {patient?.status === 2 &&
+                <td>
+                <button className="bg-blueGray-700 active:bg-blueGray-600 text-white font-bold uppercase text-xs px-2 md:px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
+                    type="button" onClick={(e)=>sendPrescription(e,patient?.searchToken)}>Send Prescription</button>
+                </td>}
               </tr>
             )))} 
             </tbody>
           </table>
         </div>
-        {errorMessage &&
-            <p className="block uppercase text-xs font-bold text-red-500 px-2">Unable to get the appointments..</p>
-           }
       </div>
       </LoadingOverlay>
 
