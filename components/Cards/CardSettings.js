@@ -38,7 +38,7 @@ export default function CardSettings() {
       let endTimeValues= end?.split(':');
       let startTimeValues= start?.split(':');
       const userConfig = {
-        firstname:settingInfo?.firstname,
+        firstname:settingInfo?.firstname + " " +settingInfo?.lastname,
         title:settingInfo?.title,
         brief:settingInfo?.brief,
         fees:settingInfo?.fees,
@@ -122,6 +122,7 @@ const handleInput = (e) =>{
     let propValue = e.target.value;
     setProfileInfo({...profileInfo,[propName]:propValue})
 }
+
   return (
     <>
       <ToastContainer position="bottom-center" />
