@@ -52,7 +52,7 @@ export default function CardSupport() {
                   <input  type="text" name="question" className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                     onChange={handleInput} {...register('question', { required: true })}  value={queries?.question}
                   />
-                  {errors?.question && <p className="text-xs text-red-500 pt-2 font-semibold">Query is Required!</p>} 
+                  {errors?.question && <p className="text-xs text-red-500 pt-1 font-semibold">Query is Required!</p>} 
                 </div>
               </div>
               <div className="w-full lg:w-12/12 px-4">
@@ -61,7 +61,7 @@ export default function CardSupport() {
                   <textarea rows={5} cols={5} name="queryDescription" className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                     onChange={handleInput} {...register('queryDescription', { required: true })}  value={queries?.queryDescription}
                   />  
-                  {errors?.queryDescription && <p className="text-xs text-red-500 pt-2 font-semibold">Query Description is Required!</p>}                  
+                  {errors?.queryDescription && <p className="text-xs text-red-500 pt-1 font-semibold">Query Description is Required!</p>}                  
                 </div>
               </div>           
             </div>           
