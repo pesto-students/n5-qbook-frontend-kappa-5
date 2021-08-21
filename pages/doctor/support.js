@@ -1,4 +1,4 @@
-import React,{useEffect} from "react";
+import React,{useEffect,useState} from "react";
 import CardSupport from "components/Cards/CardSupport";
 import { firebaseAuth } from "../../firebase";
 import DoctorLayout from "layouts/DoctorLayout";
@@ -9,8 +9,11 @@ import {   logout } from "slices/doctorSlice";
 export default function Support() {
   const router = useRouter();
   const dispatch = useDispatch();
-  const userInfo = JSON.parse(sessionStorage.getItem('doctor_login'));
+  const [user, setUser] = useState();
+  
   const getLoginInfo = async() =>{
+    const userInfo = JSON.parse(sessionStorage.getItem('doctor_login'));
+    setUser(userInfo);
     if(!userInfo){
       firebaseAuth.signOut().then(()=>{
         router.push('/')
@@ -22,7 +25,7 @@ export default function Support() {
     useEffect(() => {
       getLoginInfo()
     }, [])
-    if(!userInfo){
+    if(!user){
       return(
         <>
         <LoadingOverlay active={true} spinner text=""></LoadingOverlay>

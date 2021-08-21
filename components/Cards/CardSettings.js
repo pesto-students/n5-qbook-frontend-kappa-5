@@ -109,7 +109,8 @@ const formatInput = () =>{
   setProfileInfo({...profileInfo, ...options})
   const updatedConfigData = {
     title: profileInfo.title,
-    firstname:profileInfo.firstname,
+    firstname:profileInfo.firstname?.split(' ')[0],
+    lastname:profileInfo.firstname?.split(' ')[1],
     brief: profileInfo.brief,
     fees: profileInfo.fees,
     slots: array,

@@ -1,4 +1,4 @@
-import React,{useEffect} from "react";
+import React,{useEffect,useState} from "react";
 import DoctorLayout from "layouts/DoctorLayout.js";
 import CardQrCode from "components/Cards/CardQrCode";
 import {getAsyncData} from '../../utils/ApiRequests';
@@ -10,8 +10,11 @@ import LoadingOverlay from "react-loading-overlay";
 export default function QrCode() {
     const router = useRouter();
     const dispatch = useDispatch();
-    const userInfo = JSON.parse(sessionStorage.getItem('doctor_login'));
+    const [user, setUser] = useState();
+    
     const getDashboardInfo = async() =>{ 
+      const userInfo = JSON.parse(sessionStorage.getItem('doctor_login'));
+      setUser(userInfo)
         if(!userInfo){
           firebaseAuth.signOut().then(()=>{
             router.push('/')
@@ -32,7 +35,7 @@ export default function QrCode() {
         useEffect(() => {
           getDashboardInfo()
         }, [])
-        if(!userInfo){
+        if(!user){
           return(
             <>
             <LoadingOverlay active={true} spinner text=""></LoadingOverlay>

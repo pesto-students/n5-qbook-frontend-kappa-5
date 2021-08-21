@@ -1,4 +1,4 @@
-import React,{useEffect} from "react";
+import React,{useEffect,useState} from "react";
 import CardConfig from "components/Cards/CardConfig";
 import AppointmentsLayout from "layouts/AppointmentsLayout";
 import CardAppointmentData from "components/Cards/CardAppointmentData";
@@ -11,8 +11,10 @@ import LoadingOverlay from "react-loading-overlay";
 export default function Appointments() {
   const router = useRouter();
   const dispatch = useDispatch();
-  const userInfo = JSON.parse(sessionStorage.getItem('doctor_login'));
-  const getDashboardInfo = async() =>{ 
+  const [user, setUser] = useState();
+  const getDashboardInfo = async() =>{
+    const userInfo = JSON.parse(sessionStorage.getItem('doctor_login')); 
+    setUser(userInfo)
     if(!userInfo){
       firebaseAuth.signOut().then(()=>{
         router.push('/')
@@ -33,7 +35,7 @@ export default function Appointments() {
     useEffect(() => {
       getDashboardInfo()
     }, [])
-    if(!userInfo){
+    if(!user){
       return(
         <>
         <LoadingOverlay active={true} spinner text=""></LoadingOverlay>
