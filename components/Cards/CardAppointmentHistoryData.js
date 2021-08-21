@@ -45,7 +45,7 @@ export default function CardAppointmentHistoryData() {
           const response = await getAsyncData('/user/sendMessage',params);
           setLoading(false);
           if(response){
-            return toast("Sent prescription successfully!!",{type:"success"})
+            return toast("Prescription sent successfully!!",{type:"success"})
           }
           if(!response){
             return toast("Unable to send the prescription",{type:"error"})
@@ -112,7 +112,7 @@ export default function CardAppointmentHistoryData() {
                     return val;                           
                 }
             })
-            .map((patient=>(
+            .map((patient=>( 
               <tr key={patient?.id}>
                 <th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left flex items-center">                 
                   <span className="ml-3 font-bold text-blueGray-600">{patient?.customerInfo?.name}</span>

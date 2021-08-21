@@ -12,7 +12,7 @@ function CardSettingsForm({updateProfile,profileInfo,handleInput,errors,handleSt
                   <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2">Preferred Name<span className="text-xs text-red-500 px-1">*</span></label>
                   <input  type="text" data-id="record" name="firstname" value={profileInfo?.firstname} required className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150 " 
                      onChange={handleInput}/>
-                     {errors?.firstname && <p className="text-xs text-red-500 px-2">{errors?.firstname}</p>}
+                     {errors?.firstname && <p className="text-xs text-red-500 pt-2 font-semibold">{errors?.firstname}</p>}
                 </div>
               </div>
               <div className="w-full lg:w-6/12 px-4">
@@ -20,7 +20,7 @@ function CardSettingsForm({updateProfile,profileInfo,handleInput,errors,handleSt
                   <label  className="block uppercase text-blueGray-600 text-xs font-bold mb-2">Specialization<span className="text-xs text-red-500 px-1">*</span></label>
                   <input  type="text" data-id="setting"  name="title" value={profileInfo?.title} className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                     onChange={handleInput}/>
-                    {errors?.title && <p className="text-xs text-red-500 px-2">{errors?.title}</p>}
+                    {errors?.title && <p className="text-xs text-red-500 pt-2 font-semibold">{errors?.title}</p>}
                 </div>
               </div>   
               <div className="w-full lg:w-12/12 px-4">
@@ -28,7 +28,7 @@ function CardSettingsForm({updateProfile,profileInfo,handleInput,errors,handleSt
                   <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2">Short Bio<span className="text-xs text-red-500 px-1">*</span></label>
                   <input  type="text" data-id="setting" name="brief" value={profileInfo?.brief} className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                     onChange={handleInput}/>
-                    {errors?.brief && <p className="text-xs text-red-500 px-2">{errors?.brief}</p>}
+                    {errors?.brief && <p className="text-xs text-red-500 pt-2 font-semibold">{errors?.brief}</p>}
                 </div>
               </div>         
             </div>
@@ -38,16 +38,16 @@ function CardSettingsForm({updateProfile,profileInfo,handleInput,errors,handleSt
               <div className="w-full lg:w-12/12 px-4">
                 <div className="relative w-full mb-3">
                   <label  className="block uppercase text-blueGray-600 text-xs font-bold mb-2">Consultation Fees<span className="text-xs text-red-500 px-1">*</span></label>
-                  <input  type="number" data-id="setting" name="fees" value={profileInfo?.fees} className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
+                  <input  type="number" min={0} data-id="setting" name="fees" value={profileInfo?.fees} className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                     onChange={handleInput}/>
-                    {errors?.fees && <p className="text-xs px-2 text-red-500 ">{errors?.fees}</p>}
+                    {errors?.fees && <p className="text-xs pt-2 font-semibold text-red-500 ">{errors?.fees}</p>}
                 </div>
               </div>
               <div className="w-full lg:w-6/12 px-4">
               <div className="relative w-full mb-3">
                   <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2">Start Time<span className="text-xs text-red-500 px-1">*</span></label>
                   <TimePicker  name="startTime" nested="nested" id="startTime" setTime={handleStartTime} selectedHours={profileInfo?.startTime?.hours} selectedMins={profileInfo?.startTime?.minutes}/>
-                  {errors?.startTime && <h6 className="text-xs  px-2 text-red-500 ">{errors?.startTime}</h6>}
+                  {errors?.startTime && <h6 className="text-xs  pt-2 font-semibold text-red-500 ">{errors?.startTime}</h6>}
                 </div>
               </div>
               <div className="w-full lg:w-6/12 px-4">

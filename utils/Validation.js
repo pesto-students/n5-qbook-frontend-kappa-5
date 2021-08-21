@@ -23,7 +23,7 @@ function Validation(values) {
         (values?.startTime?.hours===values?.endTime?.hours && values?.startTime?.minutes===values?.endTime?.minutes) ||
         (values?.startTime?.hours===values?.endTime?.hours && values?.startTime?.minutes>values?.endTime?.minutes)
         ){
-        errors.startTime="start time should be less than end time"
+        errors.startTime="Start Time should be less than End Time"
     }
     return errors;
 }

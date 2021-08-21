@@ -108,7 +108,7 @@ export default function CardAppointmentData() {
           <div className="rounded-t mb-0 px-4 py-3 border-0">
           <div className="flex flex-wrap items-center">
             <div className="relative w-full px-4 max-w-full flex-grow flex-1">
-              <p className="block uppercase text-xs font-bold text-red-500 px-5 py-5 justify-center ml-7 items-center">{"   "}No active appointments..</p>
+              <p className="block uppercase text-xs font-bold text-red-500 px-5 py-5 justify-center ml-7 items-center">{"   "}No active appointments.</p>
             </div>
           </div>
         </div> 
