@@ -16,14 +16,14 @@ export default function CardLineChart(props) {
         let labelsFW=[];
         let arrayFM=[];
         let labelsFM=[];
-        props?.appointment?.map((item)=>{
-          arrayFW.push(item.appointment);
-          labelsFW.push(item.date)
-        })
-        props?.appointmentM?.map((item)=>{
-          arrayFM.push(item.appointment);
-          labelsFM.push(item.month)
-        })
+        for (const [key, value] of Object.entries(props.appointment)) {
+          arrayFW.push(value);
+          labelsFW.push(key)
+        }
+        for (const [key, value] of Object.entries(props.appointmentM)) {
+          arrayFM.push(value);
+          labelsFM.push(key)
+        }
         setChartData({
           labels:labelsFW,
           datasets:[

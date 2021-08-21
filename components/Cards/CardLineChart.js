@@ -17,14 +17,14 @@ export default function CardLineChart(props) {
         let labelsFW=[];
         let arrayFM=[];
         let labelsFM=[];
-        props.finance?.map((item)=>{
-          arrayFW.push(item.payment);
-          labelsFW.push(item.date)
-        })
-        props?.financeM?.map((item)=>{
-          arrayFM.push(item.payment);
-          labelsFM.push(item.month)
-        })
+        for (const [key, value] of Object.entries(props.finance)) {
+          arrayFW.push(value);
+          labelsFW.push(key)
+        }
+        for (const [key, value] of Object.entries(props.financeM)) {
+          arrayFM.push(value);
+          labelsFM.push(key)
+        }
         setChartData({
           labels:labelsFW,
           datasets:[
