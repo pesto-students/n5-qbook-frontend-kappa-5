@@ -5,26 +5,48 @@ import { useDispatch } from 'react-redux';
 import { useForm } from "react-hook-form";
 import {getAsyncData,getAsyncPostData} from '../../utils/ApiRequests';
 import CardLoader from "./CardLoader";
+import LoadingOverlay from "react-loading-overlay";
+import { ToastContainer, toast } from 'react-toastify';
 export default function CardPatientInfo({searchToken}) {
+  
+  const { query } = useRouter();
+
   const dispatch = useDispatch();
   const router = useRouter();
   const [patientDetails,setPatientDetails] = useState({});
   const [errorMessage,setErrorMessage] = useState(false);
   const [loading,setLoading] = useState(false);
   const getPatientInfo = async() =>{
-    setLoading(true);
+    if(query.name!==undefined){
+    const customerInfo={
+      customer:{
+      name:query.name,
+      mobileNum:query.mobile
+      }
+    } 
+    setPatientDetails(customerInfo)
+  }
+    if(query.name===undefined){
+   
     const params={
       searchToken: searchToken,
     }
     try{
+      setLoading(true);
       const response = await getAsyncData('/booking/detail',params);
+      setLoading(false);
       if(response){
-        setPatientDetails(response.data);
-        setLoading(false);
+        setPatientDetails(response.data); 
       } 
+      if(!response){
+        setLoading(false);
+        return toast("Unable to send the prescription. Please try again",{type:"error"})
+      }
     }
     catch{
       setErrorMessage(true);
+      return toast("Unable to send the prescription. Please try again",{type:"error"})
+    }
     }
     
     }
@@ -70,9 +92,8 @@ export default function CardPatientInfo({searchToken}) {
 
   return (
     <>
-    {loading?(
-      <CardLoader/>
-    ):(
+    <ToastContainer position="top-right" />
+    <LoadingOverlay active={loading} spinner text="">
       <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-blueGray-100 border-0">
         <div className="rounded-t bg-white mb-0 px-6 py-6">
           <div className="text-center flex justify-between">
@@ -138,8 +159,8 @@ export default function CardPatientInfo({searchToken}) {
           </form>
         </div>
       </div>
-    )}
-      
+   
+      </LoadingOverlay>
     </>
   );
 }

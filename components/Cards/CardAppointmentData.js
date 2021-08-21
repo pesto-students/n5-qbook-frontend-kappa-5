@@ -93,7 +93,7 @@ export default function CardAppointmentData() {
                 <Link 
                 href={{
                   pathname:`/doctor/consultation/${patient?.searchToken}`,
-                  query:{searchToken:`${patient.searchToken}`}
+                  query:{searchToken:`${patient.searchToken}`,name:`${patient?.customerInfo?.name}`,mobile:`${patient?.customerInfo?.mobile}`}
                   }}
                   as={`/doctor/consultation/${patient?.searchToken}`} >
                 <button className="bg-blueGray-700 active:bg-blueGray-600 text-white font-bold uppercase text-xs px-2 md:px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
