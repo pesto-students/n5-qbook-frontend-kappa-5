@@ -12,7 +12,7 @@ import { store } from '../app/store'
 import {fcmToken,serviceWorker,errorSWReg,eventSW,fileSW,qBook,msgReceived} from 'utils/Constants'
 const MyApp =(props)=> {
    useEffect(() => {
-    const tokenFCM = (sessionStorage.getItem(`${fcmToken}`));
+    const tokenFCM = (localStorage.getItem(`${fcmToken}`));
     if(!tokenFCM){
       setToken()
       if(`${serviceWorker}` in navigator){
@@ -29,7 +29,7 @@ const MyApp =(props)=> {
       try{
         const token = await firebaseCloudMessaging.init();
         if(token){
-          sessionStorage.setItem(`${fcmToken}`, token)
+          localStorage.setItem(`${fcmToken}`, token)
           getMessage();
         }
       }catch(err){

@@ -13,7 +13,7 @@ const [configInfo,setConfigInfo] = useState({is_duty:false,is_notification:false
 const patientList = useSelector(selectAppointmentList);
 
 const getDashboardInfo = async() =>{
-  const settingInfo = JSON.parse(sessionStorage.getItem('settings'));
+  const settingInfo = JSON.parse(localStorage.getItem('settings'));
   if(settingInfo){
     const userConfig = {
       is_duty: settingInfo?.is_duty===undefined?true:settingInfo?.is_duty,
@@ -30,7 +30,7 @@ const updateConfigAPI = async(data) =>{
   try{
     const response = await getAsyncPostData('/user/updateConfig',data); 
     if(response){
-      sessionStorage.setItem('settings',JSON.stringify(response.data));
+      localStorage.setItem('settings',JSON.stringify(response.data));
     }
     if(!response){
       return toast("Unable to update the settings",{type:"error"})

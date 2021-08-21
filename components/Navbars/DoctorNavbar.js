@@ -23,7 +23,7 @@ export default function DoctorNavbar() {
   const dispatch = useDispatch()
   useEffect(() => {
     if (process.browser) {
-      const loginInfo = JSON.parse(sessionStorage.getItem("doctor_login"));
+      const loginInfo = JSON.parse(localStorage.getItem("doctor_login"));
       dispatch(login(loginInfo)); 
       }
   }, [])
@@ -32,7 +32,7 @@ export default function DoctorNavbar() {
     firebaseAuth.signOut().then(()=>{
           router.push('/')
           dispatch(logout());
-          sessionStorage.clear();
+          localStorage.clear();
       });
   };
   const handlePopOver = (e) =>{

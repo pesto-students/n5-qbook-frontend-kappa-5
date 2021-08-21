@@ -14,13 +14,13 @@ export default function CardSettings() {
   const [errors,setErrors] = useState();
   const [loading,setLoading] = useState(false);
   const getDashboardInfo = async() =>{
-    const settingInfo = JSON.parse(sessionStorage.getItem('settings'));
+    const settingInfo = JSON.parse(localStorage.getItem('settings'));
     if(!settingInfo){
       setLoading(true);
       const response = await getAsyncData('/user/dashboard');
       setLoading(false);
       if(response && response?.data?.setting){
-        sessionStorage.setItem('settings',JSON.stringify(response?.data?.setting));
+        localStorage.setItem('settings',JSON.stringify(response?.data?.setting));
       } 
   }
   setInfo(settingInfo);
@@ -54,7 +54,7 @@ export default function CardSettings() {
       setLoading(true);
       const response = await getAsyncPostData('/user/updateConfig',data); 
       if(response){
-       sessionStorage.setItem('settings',JSON.stringify(response.data));
+        localStorage.setItem('settings',JSON.stringify(response.data));
        setLoading(false);
        return toast("Settings updated successfully!!",{type:"success"})
       }

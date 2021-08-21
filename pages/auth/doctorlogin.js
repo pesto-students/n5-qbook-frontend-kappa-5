@@ -17,7 +17,7 @@ export default function DoctorLogin() {
     try{
       const response= await getAsyncPostData(`${loginUrlAPI}`,user);
       if(response){
-        sessionStorage.setItem(`${doctorLogin}`,JSON.stringify(response.data));
+        localStorage.setItem(`${doctorLogin}`,JSON.stringify(response.data));
         dispatch(login(response.data));
         router.push('/doctor/appointments')
       }
@@ -27,7 +27,7 @@ export default function DoctorLogin() {
     }  
   }
   useEffect(() => {
-    setTokenFCM(sessionStorage.getItem(`${fcmToken}`))
+    setTokenFCM(localStorage.getItem(`${fcmToken}`))
   },[]);
 
   const signIn = () =>{
@@ -39,7 +39,7 @@ export default function DoctorLogin() {
           firstname:user.displayName,
           lastname:user.displayName,
           image:user.photoURL,
-          token:sessionStorage.getItem(`${fcmToken}`)||''
+          token:localStorage.getItem(`${fcmToken}`)||''
         }
         addDoctorInfo(userInfo);   
     })

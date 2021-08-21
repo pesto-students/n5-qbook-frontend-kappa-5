@@ -12,13 +12,13 @@ export default function History() {
   const [user, setUser] = useState();
 
   const getLoginInfo = async() =>{
-    const userInfo = JSON.parse(sessionStorage.getItem('doctor_login'));
+    const userInfo = JSON.parse(localStorage.getItem('doctor_login'));
     setUser(userInfo)
     if(!userInfo){
       firebaseAuth.signOut().then(()=>{
         router.push('/')
         dispatch(logout());
-        sessionStorage.clear();
+        localStorage.clear();
     });
     }
     }
