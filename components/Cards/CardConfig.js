@@ -92,11 +92,17 @@ const setNotificationEnabled =(e) =>{
                />
               </div>
               <div className="w-full lg:w-12/12 px-4 mt-5 mb-5 ml-5">
-                <button
-              className="bg-blueGray-700 active:bg-blueGray-600 text-white font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed"
+              {patientList?.length===0?
+              <button
+              className="bg-blueGray-700 active:bg-blueGray-600 text-white font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150 opacity-50 cursor-not-allowed"
               type="button" onClick={cancelAppointments}
-              disabled={patientList?.length===0}
               >Cancel All Appointments</button>
+              :
+              <button
+              className="bg-blueGray-700 active:bg-blueGray-600 text-white font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
+              type="button" onClick={cancelAppointments}
+              >Cancel All Appointments</button>
+              }
               </div>    
         </div>
       </div>
