@@ -1,18 +1,26 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  weekly:null,
-  monthly:null,
-  yearly:null,
+  weeklyFinancesLabels:null,
+  weeklyFinancesDataset:null,
+  weeklyAppointmentsLabels:null,
+  weeklyAppointmentsDataset:null,
+  monthlyFinancesLabels:null,
+  monthlyFinancesDataset:null,
+  monthlyAppointmentsLabels:null,
+  monthlyAppointmentsDataset:null,
 };
 
 export const reportSlice = createSlice({
   name: "reports",
   initialState,
   reducers: {
-    weeklyData : (state,action) =>{
-        state.weekly = action.payload 
+    weeklyFLData : (state,action) =>{
+        state.weeklyFinancesLabels = action.payload 
     },
+    weeklyFData : (state,action) =>{
+      state.weeklyFinancesDataset = action.payload 
+  },
     monthlyData : (state,action) =>{
       state.monthly = action.payload
     },
@@ -22,8 +30,9 @@ export const reportSlice = createSlice({
   },
 });
 
-export const  {weeklyData,monthlyData,yearlyData}  = reportSlice.actions;
-export const selectWeeklyData = (state) => state.reports.weekly;
+export const  {weeklyFLData,weeklyFData,yearlyData}  = reportSlice.actions;
+export const selectWeeklyFL = (state) => state.reports.weeklyFinancesLabels;
+export const selectWeeklyFD = (state) => state.reports.weeklyFinancesDataset;
 export const selectMonthlyData = (state) => state.reports.monthly;
 export const selectYearlyData = (state) => state.reports.yearly;
 

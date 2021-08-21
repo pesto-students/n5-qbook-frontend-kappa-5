@@ -1,42 +1,83 @@
 import LineChart from "components/Sidebar/LineChart";
 import React,{useEffect, useState} from "react";
-export default function CardLineChart() {
+
+export default function CardLineChart(props) {
   const [chartData,setChartData] = useState({});
-  let weekLabels = ["monday","tuesday","wednesday","thursday","friday"];
-  const [selectedChart,setSelectedChart] = useState(weekLabels);
   const [chartFrequency,setChartFrequency] = useState("");
+  const [weeklyDataSet,setWeeklyDataSet] = useState();
+  const [weeklyLabels,setWeeklyLabels] = useState();
+  const [monthlyDataSet,setMonthlyDataSet] = useState();
+  const [monthlyLabels,setMonthlyLabels] = useState();
   useEffect(() => {
-    setSelectedChart(weekLabels);
+    getChartData();
+  }, [props])
+  const getChartData=()=>{
+      if(props.finance){
+        let arrayFW=[];
+        let labelsFW=[];
+        let arrayFM=[];
+        let labelsFM=[];
+        props.finance?.map((item)=>{
+          arrayFW.push(item.payment);
+          labelsFW.push(item.date)
+        })
+        props?.financeM?.map((item)=>{
+          arrayFM.push(item.payment);
+          labelsFM.push(item.month)
+        })
+        setChartData({
+          labels:labelsFW,
+          datasets:[
+            {
+              data:arrayFW,
+              borderWidth:1,
+              backgroundColor: "#ffffff",
+              borderColor: "#ffffff",
+              barThickness: 8,
+            },      
+          ]
+        }); 
+        setWeeklyDataSet(arrayFW);
+        setWeeklyLabels(labelsFW);
+        setMonthlyDataSet(arrayFM);
+        setMonthlyLabels(labelsFM);
+      }
+  }
+  useEffect(() => {
     setChartFrequency('weekly');
+    getChartData();
   }, []);
-useEffect(() => {
-  setChartData({
-    labels:selectedChart,
-    datasets:[
-      {
-        data:[3200,4500,1200,760,690],
-        borderWidth:1,
-        backgroundColor: "#ffffff",
-        borderColor: "#ffffff",
-        barThickness: 8,
-      },      
-    ]
-  }); 
-  }, [selectedChart]);
+
   const handleChartData =(e) =>{
-    let weekLabels = ["monday","tuesday","wednesday","thursday","friday"];
-    let monthLabels = ["Jan","Feb","Mar","Apr","May"];
-    const yearLabels=["2000","2001","2002","2003","2004"];
     setChartFrequency(e.target.name)
     if(e.target.name==='weekly'){
-         setSelectedChart(weekLabels);        
+         setChartData({
+          labels:weeklyLabels,
+          datasets:[
+            {
+              data:weeklyDataSet,
+              borderWidth:1,
+              backgroundColor: "#ffffff",
+              borderColor: "#ffffff",
+              barThickness: 8,
+            },      
+          ]
+        }); 
     }
       else if(e.target.name==='monthly'){
-         setSelectedChart(monthLabels);
+         setChartData({
+          labels:monthlyLabels,
+          datasets:[
+            {
+              data:monthlyDataSet,
+              borderWidth:1,
+              backgroundColor: "#ffffff",
+              borderColor: "#ffffff",
+              barThickness: 8,
+            },      
+          ]
+        }); 
       }
-      else if(e.target.name==='yearly'){
-         setSelectedChart(yearLabels);  
-      } 
   }
   return (
     <>
@@ -66,13 +107,6 @@ useEffect(() => {
                         : "text-white hover:text-white")
                     }
          onClick={handleChartData}>Monthly</button>
-        <button name="yearly" 
-        className={"text-xs uppercase py-3 font-bold block focus:outline-none " +
-                      (chartFrequency === "yearly"
-                        ? "text-lightBlue-500 hover:text-lightBlue-600"
-                        : "text-white hover:text-white")
-                    }
-         onClick={handleChartData}>Yearly</button>
         </div>
           {/* Chart */}
           <div className="relative h-350-px">

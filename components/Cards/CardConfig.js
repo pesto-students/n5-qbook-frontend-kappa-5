@@ -16,7 +16,7 @@ const getDashboardInfo = async() =>{
   const settingInfo = JSON.parse(sessionStorage.getItem('settings'));
   if(settingInfo){
     const userConfig = {
-      is_duty: settingInfo?.is_duty===undefined?false:settingInfo?.is_duty,
+      is_duty: settingInfo?.is_duty===undefined?true:settingInfo?.is_duty,
       is_notification: settingInfo?.is_notification===undefined?false:settingInfo?.is_notification,
     }
     setConfigInfo(userConfig);

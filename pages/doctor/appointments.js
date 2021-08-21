@@ -2,7 +2,7 @@ import React,{useEffect} from "react";
 import CardConfig from "components/Cards/CardConfig";
 import AppointmentsLayout from "layouts/AppointmentsLayout";
 import CardAppointmentData from "components/Cards/CardAppointmentData";
-import {getAsyncData,getAsyncPostData} from '../../utils/ApiRequests';
+import {getAsyncData} from '../../utils/ApiRequests';
 import { useRouter } from 'next/router'
 import { firebaseAuth } from "../../firebase";
 import {  useDispatch, } from 'react-redux';
@@ -19,11 +19,14 @@ export default function Appointments() {
         sessionStorage.clear();
     });
     }
-    const response = await getAsyncData('/user/dashboard');
-    if(response && response?.data?.setting){
-      sessionStorage.setItem('settings',JSON.stringify(response?.data?.setting));
-    } else{
-      router.push('/doctor/settings')
+    const settingInfo = JSON.parse(sessionStorage.getItem('settings'));
+    if(!settingInfo){
+      const response = await getAsyncData('/user/dashboard');
+      if(response && response?.data?.setting){
+        sessionStorage.setItem('settings',JSON.stringify(response?.data?.setting));
+      } else{
+        router.push('/doctor/settings')
+      }
     }
     }
     useEffect(() => {

@@ -1,51 +1,92 @@
 import React,{useEffect, useState} from "react";
-import BarChart from "components/Sidebar/BarChart";
-export default function CardBarChart() {
+import BarChart from "../Sidebar/BarChart";
+export default function CardLineChart(props) {
   const [chartData,setChartData] = useState({});
-  let weekLabels = ["monday","tuesday","wednesday","thursday","friday"];
-  const [selectedChart,setSelectedChart] = useState(weekLabels);
   const [chartFrequency,setChartFrequency] = useState("");
+  const [weeklyDataSet,setWeeklyDataSet] = useState();
+  const [weeklyLabels,setWeeklyLabels] = useState();
+  const [monthlyDataSet,setMonthlyDataSet] = useState();
+  const [monthlyLabels,setMonthlyLabels] = useState();
   useEffect(() => {
-    setChartData({
-      labels:selectedChart,
-      datasets:[
-        {
-          data:[32,45,12,76,69],
-          borderWidth:1,
-          backgroundColor:  "rgba(75, 192, 192, 0.6)",
-          borderColor:  "rgba(75, 192, 192, 0.6)",
-          barThickness: 8,
-        },      
-      ]
-    }); 
-    }, [selectedChart]);
-    useEffect(() => {
-      setSelectedChart(weekLabels);
-      setChartFrequency('weekly');
-    }, []);
-    const handleChartData =(e) =>{
-      let weekLabels = ["monday","tuesday","wednesday","thursday","friday"];
-      let monthLabels = ["Jan","Feb","Mar","Apr","May"];
-      const yearLabels=["2000","2001","2002","2003","2004"];
-      setChartFrequency(e.target.name)
-      if(e.target.name==='weekly'){
-           setSelectedChart(weekLabels);        
+    getChartData();
+  }, [props])
+  const getChartData=async()=>{
+      if(props.appointment){
+        let arrayFW=[];
+        let labelsFW=[];
+        let arrayFM=[];
+        let labelsFM=[];
+        props?.appointment?.map((item)=>{
+          arrayFW.push(item.appointment);
+          labelsFW.push(item.date)
+        })
+        props?.appointmentM?.map((item)=>{
+          arrayFM.push(item.appointment);
+          labelsFM.push(item.month)
+        })
+        setChartData({
+          labels:labelsFW,
+          datasets:[
+            {
+              data:arrayFW,
+              borderWidth:1,
+              backgroundColor: "rgba(75, 192, 192, 0.6)",
+              borderColor: "rgba(75, 192, 192, 0.6)",
+              barThickness: 8,
+            },      
+          ]
+        }); 
+        setWeeklyDataSet(arrayFW);
+        setWeeklyLabels(labelsFW);
+        setMonthlyDataSet(arrayFM);
+        setMonthlyLabels(labelsFM);
       }
-        else if(e.target.name==='monthly'){
-           setSelectedChart(monthLabels);
-        }
-        else if(e.target.name==='yearly'){
-           setSelectedChart(yearLabels);  
-        } 
- }
+     
   
+  }
+  useEffect(() => {
+    setChartFrequency('weekly');
+    getChartData();
+  }, []);
+
+  const handleChartData =(e) =>{
+    setChartFrequency(e.target.name)
+    if(e.target.name==='weekly'){
+         setChartData({
+          labels:weeklyLabels,
+          datasets:[
+            {
+              data:weeklyDataSet,
+              borderWidth:1,
+              backgroundColor: "rgba(75, 192, 192, 0.6)",
+              borderColor: "rgba(75, 192, 192, 0.6)",
+              barThickness: 8,
+            },      
+          ]
+        }); 
+    }
+      else if(e.target.name==='monthly'){
+         setChartData({
+          labels:monthlyLabels,
+          datasets:[
+            {
+              data:monthlyDataSet,
+              borderWidth:1,
+              backgroundColor: "rgba(75, 192, 192, 0.6)",
+              borderColor: "rgba(75, 192, 192, 0.6)",
+              barThickness: 8,
+            },      
+          ]
+        }); 
+      }
+  }
   return (
     <>
       <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-lg rounded">
         <div className="rounded-t mb-0 px-4 py-3 bg-transparent">
           <div className="flex flex-wrap items-center">
             <div className="relative w-full max-w-full flex-grow flex-1">
-              <h2 className="text-blueGray-700 text-xl font-semibold">
+            <h2 className="text-blueGray-700 text-xl font-semibold">
                 Appointments
               </h2>
             </div>
@@ -67,17 +108,10 @@ export default function CardBarChart() {
                         : "text-blueGray-700 hover:text-blueGray-700")
                     }
          onClick={handleChartData}>Monthly</button>
-        <button name="yearly" 
-        className={"text-xs uppercase py-3 font-bold block focus:outline-none " +
-                      (chartFrequency === "yearly"
-                        ? "text-lightBlue-500 hover:text-lightBlue-600"
-                        : "text-blueGray-700 hover:text-blueGray-700")
-                    }
-         onClick={handleChartData}>Yearly</button>
         </div>
           {/* Chart */}
           <div className="relative h-350-px">
-            <BarChart chartData={chartData}/>
+          <BarChart chartData={chartData}/>        
           </div>
         </div>
       </div>

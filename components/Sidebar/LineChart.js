@@ -20,9 +20,9 @@ function LineChart({chartData}) {
                 ticks: {
                   color: "white",
                   beginAtZero: true,
-                  stepSize: 300,
+                  stepSize: 500,
                   callback: function(value, index, values) {
-                        return '$' + value;
+                        return 'Rs.' + value;
                     }
                 },
                 display: true,                  
