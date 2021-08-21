@@ -6,6 +6,8 @@ import { useSelector,useDispatch } from 'react-redux';
 import {getAsyncPostData,getAsyncData} from '../../utils/ApiRequests';
 import { ToastContainer, toast } from 'react-toastify';
 import LoadingOverlay from "react-loading-overlay";
+import { updateAppointmentsList } from '../../slices/appointmentSlice'
+import router from "next/router";
 export default function CardConfig() {
 const [loading,setLoading] = useState(false);
 const dispatch = useDispatch();
@@ -47,6 +49,7 @@ const updateConfigAPI = async(data) =>{
     const response = await getAsyncData('/booking/cancelAllBooking'); 
     setLoading(false);
     if(response){
+      window.location.reload(); 
       return toast("Bookings cancelled successfully!!",{type:"success"})
     }
     if(!response){
@@ -77,7 +80,7 @@ const setNotificationEnabled =(e) =>{
 
   return (
       <>
-      <ToastContainer position="bottom-center" />
+      <ToastContainer position="top-right" />
       <LoadingOverlay active={loading} spinner text="">
       <div className="relative flex flex-col  min-w-0 break-words bg-white w-full mb-6 shadow-xl rounded-lg">        
         <div className="flex flex-wrap flex-col  m-20 space-y-2">

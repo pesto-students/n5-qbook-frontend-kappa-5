@@ -5,7 +5,7 @@ export default function Toggle({value,enabled,setEnabled,name}) {
  // const [enabled, setEnabled] = useState(false)
 
   const switchStyle = {
-    backgroundColor: enabled ? 'red' :'gray'
+    backgroundColor: enabled ? 'green' :'gray'
   }
 
   const spanStyle = {
