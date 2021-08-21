@@ -4,7 +4,6 @@ import { updateAppointmentsHistoryList } from '../../slices/appointmentSlice'
 import { useDispatch } from 'react-redux';
 import { useForm } from "react-hook-form";
 import {getAsyncData,getAsyncPostData} from '../../utils/ApiRequests';
-import CardLoader from "./CardLoader";
 import LoadingOverlay from "react-loading-overlay";
 import { ToastContainer, toast } from 'react-toastify';
 export default function CardPatientInfo({searchToken}) {
@@ -40,12 +39,12 @@ export default function CardPatientInfo({searchToken}) {
       } 
       if(!response){
         setLoading(false);
-        return toast("Unable to send the prescription. Please try again",{type:"error"})
+        return toast("Unable to get the patient details. Please try again",{type:"error"})
       }
     }
     catch{
       setErrorMessage(true);
-      return toast("Unable to send the prescription. Please try again",{type:"error"})
+      return toast("Unable to get the patient details. Please try again",{type:"error"})
     }
     }
     
@@ -69,6 +68,10 @@ export default function CardPatientInfo({searchToken}) {
         router.push({
             pathname: '/doctor/appointments'
         })
+      }
+      if(!response){
+        setLoading(false);
+        return toast("Unable to submit the Prescription. Please try again",{type:"error"})
       }
     }
     catch{
