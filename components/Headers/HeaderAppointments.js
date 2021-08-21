@@ -82,7 +82,7 @@ export default function HeaderAppointments() {
           {!(router.pathname.indexOf("/doctor/history")===0 && (router.pathname.indexOf("/")!==0||
               router.pathname.indexOf("/doctor/appointments")!==0))
           ?(
-            <div className="relative flex lg:w-full flex-wrap items-stretch xl:w-6/12">
+            <div className="relative flex lg:w-full flex-wrap items-stretch xl:w-5/12 lg:ml-16">
           <CardStats
                   statSubtitle="Appointments"
                   statTitle={appointmentListData?.length}

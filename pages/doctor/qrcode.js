@@ -1,4 +1,4 @@
-import React,{useEffect} from "react";
+import React,{useEffect,useState} from "react";
 import DoctorLayout from "layouts/DoctorLayout.js";
 import CardQrCode from "components/Cards/CardQrCode";
 import {getAsyncData} from '../../utils/ApiRequests';
@@ -6,12 +6,15 @@ import { useRouter } from 'next/router'
 import { firebaseAuth } from "../../firebase";
 import {  useDispatch, } from 'react-redux';
 import {   logout } from "slices/doctorSlice";
-
+import LoadingOverlay from "react-loading-overlay";
 export default function QrCode() {
     const router = useRouter();
     const dispatch = useDispatch();
-    const getDashboardInfo = async() =>{
-        const userInfo = JSON.parse(sessionStorage.getItem('doctor_login'));
+    const [user, setUser] = useState();
+    
+    const getDashboardInfo = async() =>{ 
+      const userInfo = JSON.parse(sessionStorage.getItem('doctor_login'));
+      setUser(userInfo)
         if(!userInfo){
           firebaseAuth.signOut().then(()=>{
             router.push('/')
@@ -32,7 +35,13 @@ export default function QrCode() {
         useEffect(() => {
           getDashboardInfo()
         }, [])
-    
+        if(!user){
+          return(
+            <>
+            <LoadingOverlay active={true} spinner text=""></LoadingOverlay>
+            </>
+          )
+        }
   return (
     <>   
       <div className="flex flex-wrap"> 
