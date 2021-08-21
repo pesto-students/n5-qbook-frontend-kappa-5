@@ -4155,7 +4155,15 @@ select {
   }
 }
 
-@media (min-width: 1536px) {
+@media (min-width: 1280px) {
+  .py-40 {
+    padding-bottom: 0rem;
+  }
+}
+@media (min-width: 1024px) {
+  .py-40 {
+    padding-bottom: 0rem;
+  }
 }
 /* .toggle-checkbox:checked {
   right:0;

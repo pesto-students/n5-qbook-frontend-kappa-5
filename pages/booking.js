@@ -69,7 +69,7 @@ export default function Booking() {
                 setErrorMessage(error.message);
               });
         }else {
-          setErrorMessage(' PHONE NUMBER is required for genrating the OTP !');
+          setErrorMessage(' MOBILE NUMBER is required for genrating the OTP !');
         }
         
       } else {
@@ -212,24 +212,29 @@ export default function Booking() {
   return (
     <>
     
-      <LoadingOverlay active={loading} spinner text="Loading">
+      
       <div className="container mx-auto px-4 h-full">
         <div className="flex content-center items-center justify-center h-full">
           <div className="w-full lg:w-6/12 px-4">
+          <LoadingOverlay active={loading} spinner text="Loading">
             <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-blueGray-200 border-0">
             {checkAvailable && checkAvailable.data && checkAvailable.data.orderId? <div className="rounded-t mb-0 px-6 py-6">
                 <div className="text-center mb-3">
-                  <h6 className="text-blueGray-500 text-sm font-bold">Book an Appointment</h6>
+                  <h6 className="text-blueGray-500 text-sm font-bold uppercase">Book an Appointment</h6>
                 </div>  
                 {errorMessage?<div className="text-center mb-3">
                   <h6 className="text-red-500 text-sm font-bold">! Error : {errorMessage}</h6>
                 </div>:''}           
                 <hr className="mt-6 border-b-1 border-blueGray-300" />
               </div>:
-                <div className="rounded-t mb-0 px-6 py-6">
-                <div className="text-center mb-3">
-                  <h6 className="text-blueGray-500 text-sm font-bold"> {!loading && 'Doctor Appointment is not available for now !!.'} </h6>
-                </div>
+              <div>
+                {!loading &&
+                  <div className="rounded-t mb-0 px-6 py-6">
+                    
+                  <div className="text-center mb-3">
+                    <h6 className="text-blueGray-500 text-sm font-bold">  'Doctor Appointment is not available for now !!.' </h6>
+                  </div>
+                </div>}
               </div>
                 }
               {checkAvailable && checkAvailable.data && checkAvailable.data.orderId? 
@@ -252,25 +257,25 @@ export default function Booking() {
                           className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                           placeholder="Mobile Number"/> 
                           </div>
-                      :<span className="ml-2 text-sm font-semibold text-blueGray-600">{phoneNumber} (Mobile Number Verified)</span> }   
-                      {errorMessage && !phoneNumber && <label  className="block uppercase text-red-500 mt-2 text-xs font-bold mb-2"> ! Required</label>}
+                      :<span className="ml-2 text-sm font-semibold text-blueGray-600 uppercase">{phoneNumber} (Mobile Number Verified)</span> }   
+                      {errorMessage && !phoneNumber && <label  className="block uppercase text-red-500 mt-2 text-xs font-bold mb-2 uppercase"> ! Required</label>}
                       
                   </div>
                   {!isMobileNumVerified ?<div>
                   <div className="text-center mt-6">
                     <button
-                      className="bg-blueGray-800 text-white active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150"
+                      className="bg-blueGray-800 text-white active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 uppercase rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150"
                       type="button" onClick={signInPatient}>Generate OTP</button>
                   </div>
                   <div>
                     <label className="flex items-center cursor-pointer justify-center">                     
-                      <span className="ml-2 text-sm font-semibold text-blueGray-600">Not received OTP ? {" "}
-                        <span  className="text-lightBlue-500"  onClick={signInPatient}>Resend OTP</span>
+                      <span className="ml-2 text-sm font-semibold text-blueGray-600 uppercase">Not received OTP ? {" "}
+                        <span  className="text-lightBlue-500 uppercase"  onClick={signInPatient}>Resend OTP</span>
                       </span>
                     </label>                 
                   </div>
                   {isOtpNumVerified && <div className="relative w-full mb-3">
-                    <label  className="block uppercase text-blueGray-600 text-xs font-bold mb-2">Enter OTP <span className="text-xs text-red-500 px-1">*</span></label>
+                    <label  className="block uppercase text-blueGray-600 text-xs font-bold mb-2 uppercase">Enter OTP <span className="text-xs text-red-500 px-1">*</span></label>
                     <input  type="number" value = {otp} onChange={(e)=>setOtp(e.target.value)}
                       className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                       placeholder="OTP"/>
@@ -278,13 +283,13 @@ export default function Booking() {
                   </div>}
                   {isOtpNumVerified &&<div className="text-center mt-6">
                     <button
-                      className="bg-blueGray-800 text-white active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150"
+                      className="bg-blueGray-800 text-white active:bg-blueGray-600 uppercase text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150"
                       type="button"  onClick={onSubmitOtp}>Verify OTP</button>
                   </div>}</div>
                   :''
                   }
                   <div className="mt-6">
-                    <span className="text-gray-700">Payment Mode</span>
+                    <span className="text-gray-700 uppercase">Payment Mode</span>
                     <div className="mt-2">
                       <label className="inline-flex items-center px-2 py-2 block uppercase text-blueGray-600 text-xs font-bold mb-2">
                         <input type="radio" className="form-radio" name="accountType" value="cash" checked={paymnetMode === 'cash'?true:false} onChange={getSetPaymnetMode} />
@@ -307,10 +312,11 @@ export default function Booking() {
                 </form>
               </div>:''}
             </div>
+            </LoadingOverlay> 
           </div>
         </div>
       </div>
-      </LoadingOverlay> 
+      
     </>
   );}
   Booking.layout = LoginLayout;
