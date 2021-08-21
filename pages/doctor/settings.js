@@ -4,14 +4,15 @@ import DoctorLayout from "layouts/DoctorLayout.js";
 import CardConfig from "components/Cards/CardConfig";
 import { firebaseAuth } from "../../firebase";
 import { useRouter } from 'next/router'
-
+import LoadingOverlay from "react-loading-overlay";
 import {  useDispatch, } from 'react-redux';
 import {   logout } from "slices/doctorSlice";
 export default function Settings() {
   const router = useRouter();
   const dispatch = useDispatch();
+  const userInfo = JSON.parse(sessionStorage.getItem('doctor_login'));
   const getLoginInfo = async() =>{
-    const userInfo = JSON.parse(sessionStorage.getItem('doctor_login'));
+    
     if(!userInfo){
       firebaseAuth.signOut().then(()=>{
         router.push('/')
@@ -23,6 +24,13 @@ export default function Settings() {
     useEffect(() => {
       getLoginInfo()
     }, [])
+    if(!userInfo){
+      return(
+        <>
+        <LoadingOverlay active={true} spinner text=""></LoadingOverlay>
+        </>
+      )
+    }
   return (
     <>   
       <div className="flex flex-wrap">

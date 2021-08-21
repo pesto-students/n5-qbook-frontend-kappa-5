@@ -14,8 +14,9 @@ export default function Reports() {
   const dispatch = useDispatch();
   const [loading,setLoading] = useState(false);
   const [response,setResponse] = useState({});
+  const userInfo = JSON.parse(sessionStorage.getItem('doctor_login'));
   const getLoginInfo = async() =>{
-    const userInfo = JSON.parse(sessionStorage.getItem('doctor_login'));
+    
     if(!userInfo){
       firebaseAuth.signOut().then(()=>{
         router.push('/')
@@ -39,6 +40,13 @@ export default function Reports() {
     getLoginInfo();
     getChartData();
   }, []);
+  if(!userInfo){
+    return(
+      <>
+      <LoadingOverlay active={true} spinner text=""></LoadingOverlay>
+      </>
+    )
+  }
     return (
         <>
         <ToastContainer position="bottom-center" />

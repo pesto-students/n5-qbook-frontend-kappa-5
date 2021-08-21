@@ -6,12 +6,12 @@ import { useRouter } from 'next/router'
 import { firebaseAuth } from "../../firebase";
 import {  useDispatch, } from 'react-redux';
 import {   logout } from "slices/doctorSlice";
-
+import LoadingOverlay from "react-loading-overlay";
 export default function QrCode() {
     const router = useRouter();
     const dispatch = useDispatch();
-    const getDashboardInfo = async() =>{
-        const userInfo = JSON.parse(sessionStorage.getItem('doctor_login'));
+    const userInfo = JSON.parse(sessionStorage.getItem('doctor_login'));
+    const getDashboardInfo = async() =>{ 
         if(!userInfo){
           firebaseAuth.signOut().then(()=>{
             router.push('/')
@@ -32,7 +32,13 @@ export default function QrCode() {
         useEffect(() => {
           getDashboardInfo()
         }, [])
-    
+        if(!userInfo){
+          return(
+            <>
+            <LoadingOverlay active={true} spinner text=""></LoadingOverlay>
+            </>
+          )
+        }
   return (
     <>   
       <div className="flex flex-wrap"> 

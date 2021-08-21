@@ -4,12 +4,13 @@ import CardAppointmentHistoryData from "components/Cards/CardAppointmentHistoryD
 import { firebaseAuth } from "../../firebase";
 import {  useDispatch, } from 'react-redux';
 import {   logout } from "slices/doctorSlice";
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/router';
+import LoadingOverlay from "react-loading-overlay";
 export default function History() {
   const router = useRouter();
   const dispatch = useDispatch();
+  const userInfo = JSON.parse(sessionStorage.getItem('doctor_login'));
   const getLoginInfo = async() =>{
-    const userInfo = JSON.parse(sessionStorage.getItem('doctor_login'));
     if(!userInfo){
       firebaseAuth.signOut().then(()=>{
         router.push('/')
@@ -21,6 +22,13 @@ export default function History() {
     useEffect(() => {
       getLoginInfo()
     }, [])
+    if(!userInfo){
+      return(
+        <>
+        <LoadingOverlay active={true} spinner text=""></LoadingOverlay>
+        </>
+      )
+    }
   return (
     <>
       <div className="flex flex-wrap mt-4">
