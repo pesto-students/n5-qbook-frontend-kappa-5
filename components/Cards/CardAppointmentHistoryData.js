@@ -6,10 +6,42 @@ import LoadingOverlay from "react-loading-overlay";
 import { ToastContainer, toast } from 'react-toastify';
 export default function CardAppointmentHistoryData() {
   const [loading,setLoading] = useState(false);
+  const [filtered,setFiltered] = useState(false);
       const searchText = useSelector(selectSearchTerm)
       const searchDate = useSelector(selectedDate)
       const dispatch = useDispatch();
       const [appointmentHistoryList,setAppointmentHistoryList] = useState();
+      const [filteredList,setFilteredList] = useState();
+      useEffect(() => {
+        const filteredArray =appointmentHistoryList?.filter((val)=>{
+          let patientName = val?.customerInfo?.name;
+          let phoneNumber = val?.customerInfo?.mobile;
+          let dateString = val?.bookingDateTime?.split("T")[0];
+          let patientBookingDate = new Date(dateString);
+          let filteredDate = new Date(searchDate);
+          if(searchText==="" && searchDate===null){
+            return val;
+          }
+          else if(searchText==="" && patientBookingDate-filteredDate===0){
+            return val;
+          }
+         else if((searchText!=="") && 
+            (patientName?.toString()?.toLowerCase().includes(searchText?.toLowerCase())||
+            phoneNumber?.toString()?.toLowerCase().includes(searchText)||
+            (patientBookingDate-filteredDate===0) 
+            )){                   
+                return val;                           
+            }
+        })
+        if(filteredArray?.length===0){
+          setFiltered(true);
+        }
+        else{
+          setFiltered(false);
+        }
+        setFilteredList(filteredArray)
+        console.log(filtered,"filteredOptions")
+      }, [searchText,searchDate])
       const getAppointmentHistoryList = async() =>{
             const params={
               status: '2',
@@ -20,6 +52,7 @@ export default function CardAppointmentHistoryData() {
             if(response){
               dispatch(updateAppointmentsHistoryList(response?.data));
               setAppointmentHistoryList(response?.data);
+              setFilteredList(response?.data);
               setLoading(false);
             } 
             if(!response){
@@ -92,27 +125,8 @@ export default function CardAppointmentHistoryData() {
             </thead>
             <tbody className="overflow-y-scroll h-56">
             
-            {appointmentHistoryList?.filter((val)=>{
-              let patientName = val?.customerInfo?.name;
-              let phoneNumber = val?.customerInfo?.mobile;
-              let dateString = val?.bookingDateTime?.split("T")[0];
-              let patientBookingDate = new Date(dateString);
-              let filteredDate = new Date(searchDate);
-              if(searchText==="" && searchDate===null){
-                return val;
-              }
-              else if(searchText==="" && patientBookingDate-filteredDate===0){
-                return val;
-              }
-             else if((searchText!=="") && 
-                (patientName?.toString()?.toLowerCase().includes(searchText?.toLowerCase())||
-                phoneNumber?.toString()?.toLowerCase().includes(searchText)||
-                (patientBookingDate-filteredDate===0) 
-                )){                    
-                    return val;                           
-                }
-            })
-            .map((patient=>( 
+            {filteredList!==undefined &&
+              filteredList.map((patient=>( 
               <tr key={patient?.id}>
                 <th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left flex items-center">                 
                   <span className="ml-3 font-bold text-blueGray-600">{patient?.customerInfo?.name}</span>
@@ -136,9 +150,19 @@ export default function CardAppointmentHistoryData() {
                 </td>}
               </tr>
             )))} 
+            {filtered &&
+          <div className="rounded-t mb-0 px-4 py-3 border-0">
+          <div className="flex flex-wrap items-center">
+            <div className="relative w-full px-4 max-w-full flex-grow flex-1">
+              <p className="block  text-xs font-bold text-red-500 px-5 py-5 justify-center ml-7 items-center">{"   "}No data available for this filter. Please search again.</p>
+            </div>
+          </div>
+        </div> 
+           }
             </tbody>
           </table>
         </div>
+        
       </div>
       </LoadingOverlay>
 
