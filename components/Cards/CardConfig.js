@@ -49,7 +49,9 @@ const updateConfigAPI = async(data) =>{
     const response = await getAsyncData('/booking/cancelAllBooking'); 
     setLoading(false);
     if(response){
-      window.location.reload(); 
+      router.push({
+        pathname: '/doctor/history'
+      });
       return toast("Bookings cancelled successfully!!",{type:"success"})
     }
     if(!response){
