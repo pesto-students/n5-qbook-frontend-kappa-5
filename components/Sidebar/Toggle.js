@@ -2,8 +2,6 @@ import { useState } from 'react'
 import { Switch } from '@headlessui/react'
 
 export default function Toggle({value,enabled,setEnabled,name}) {
- // const [enabled, setEnabled] = useState(false)
-
   const switchStyle = {
     backgroundColor: enabled ? 'green' :'gray'
   }

@@ -12,6 +12,7 @@ export default function Appointments() {
   const router = useRouter();
   const dispatch = useDispatch();
   const [user, setUser] = useState();
+  const [settingData, setSettingData] = useState();
   const getDashboardInfo = async() =>{
     const userInfo = JSON.parse(localStorage.getItem('doctor_login')); 
     setUser(userInfo)
@@ -23,13 +24,18 @@ export default function Appointments() {
     });
     }
     const settingInfo = JSON.parse(localStorage.getItem('settings'));
+   
     if(!settingInfo){
       const response = await getAsyncData('/user/dashboard');
       if(response && response?.data?.setting){
         localStorage.setItem('settings',JSON.stringify(response?.data?.setting));
+        setSettingData(response?.data?.setting)
       } else{
         router.push('/doctor/settings')
       }
+    }
+    else{
+      setSettingData(settingInfo)
     }
     }
     useEffect(() => {
@@ -49,7 +55,7 @@ export default function Appointments() {
           <CardAppointmentData/>
         </div>
         <div className="w-full lg:w-4/12 px-4">
-          <CardConfig />
+          <CardConfig settingData={settingData}/>
         </div>
       </div>
     </>

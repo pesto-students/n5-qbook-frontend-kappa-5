@@ -92,11 +92,9 @@ export default function CardPatientInfo({searchToken}) {
     }
    }
   const updateProfile = (data,e) =>{
-    console.log('data',data);
     if(patientDetails.diagnosis && patientDetails.prescription){
       e.preventDefault();
       setIsSubmit(true);
-      console.log('patientDetails',patientDetails,data)
       const prescriptionData = {
         searchToken:searchToken,
         diagnosis:patientDetails.diagnosis,

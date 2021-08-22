@@ -19,7 +19,6 @@ export default function DoctorLogin() {
       if(response){
         localStorage.setItem(`${doctorLogin}`,JSON.stringify(response.data));
         dispatch(login(response.data));
-        router.push('/doctor/appointments')
       }
     }
     catch{

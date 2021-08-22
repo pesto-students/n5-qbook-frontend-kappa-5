@@ -8,26 +8,27 @@ import { ToastContainer, toast } from 'react-toastify';
 import LoadingOverlay from "react-loading-overlay";
 import { updateAppointmentsList } from '../../slices/appointmentSlice'
 import router from "next/router";
-export default function CardConfig() {
+export default function CardConfig(props) {
 const [loading,setLoading] = useState(false);
 const dispatch = useDispatch();
 const [configInfo,setConfigInfo] = useState({is_duty:false,is_notification:false});
 const patientList = useSelector(selectAppointmentList);
 
-const getDashboardInfo = async() =>{
-  const settingInfo = JSON.parse(localStorage.getItem('settings'));
+useEffect(() => {
+  getDashboardInfo(props.settingData);
+}, [props.settingData])
+
+const getDashboardInfo = async(settingInfo) =>{
   if(settingInfo){
     const userConfig = {
-      is_duty: settingInfo?.is_duty===undefined?true:settingInfo?.is_duty,
+      is_duty: settingInfo?.is_duty?true:false,
       is_notification: settingInfo?.is_notification===undefined?false:settingInfo?.is_notification,
     }
     setConfigInfo(userConfig);
     dispatch(updateConfig(userConfig));
   } 
   }
-useEffect( () => {
-  getDashboardInfo();
-}, [])
+
 const updateConfigAPI = async(data) =>{
   try{
     const response = await getAsyncPostData('/user/updateConfig',data); 
