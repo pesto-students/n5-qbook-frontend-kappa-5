@@ -4,16 +4,20 @@ import LoginLayout from "layouts/LoginLayout.js";
 import config from "../config/config";
 import { useRouter } from 'next/router'
 import moment from 'moment'
+import LoadingOverlay from "react-loading-overlay";
 
 export default function Confirmation() {
   const router = useRouter();
   const { searchToken } = router.query;
   const [appoinmentData,setAppoinmentData] = useState('');
+  const [loading,setLoading] = useState(false);
 
   let checkAppoinment= async () =>{
-    const confirmationData = await fetch(config.BASE_API_URL+'/booking/confirmation?searchToken='+searchToken, { method: 'GET' }).then((t) =>
-        t.json()
-      );
+    setLoading(true);
+    const confirmationData = await fetch(config.BASE_API_URL+'/booking/confirmation?searchToken='+searchToken, { method: 'GET' }).then((t) =>{
+      setLoading(false);
+      return t.json();
+    });
       setAppoinmentData(confirmationData);
   }
 
@@ -25,6 +29,7 @@ export default function Confirmation() {
   
   return (
     <>
+    <LoadingOverlay active={loading} spinner text="Loading">
     {appoinmentData && appoinmentData.data && appoinmentData.data.booking?
       <main className="profile-page">
         <section className="relative py-16 ">
@@ -130,14 +135,17 @@ export default function Confirmation() {
         </section>
       </main>
       :<main className="profile-page">
+        {appoinmentData &&
       <section className="relative py-16 ">
         <div className="container mx-auto px-4">
           <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-xl rounded-lg ">
-            <div className="px-6"><div className="flex flex-wrap justify-center">{appoinmentData && appoinmentData.data && appoinmentData.data.booking && appoinmentData.data.booking.paymentMode?'No Appoinmnet Available !!':''}</div></div>
+            <div className="px-6"><div className="flex flex-wrap justify-center">No Appoinmnet Available !!</div></div>
             </div>
           </div>
         </section>
+          }
       </main>}
+      </LoadingOverlay>
     </>
   );
 }

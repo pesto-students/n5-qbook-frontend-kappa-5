@@ -4,6 +4,8 @@ import { useSelector,useDispatch } from 'react-redux';
 import {getAsyncData} from '../../utils/ApiRequests';
 import LoadingOverlay from "react-loading-overlay";
 import { ToastContainer, toast } from 'react-toastify';
+import Link from "next/link";
+
 export default function CardAppointmentHistoryData() {
   const [loading,setLoading] = useState(false);
   const [filtered,setFiltered] = useState(false);
@@ -90,7 +92,7 @@ export default function CardAppointmentHistoryData() {
        }
   return (
     <>
-      <ToastContainer position="top-right" />
+      <ToastContainer position="bottom-right" />
       <LoadingOverlay active={loading} spinner text="">
       <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded bg-white">
         <div className="rounded-t mb-0 px-4 py-3 border-0">
@@ -121,6 +123,9 @@ export default function CardAppointmentHistoryData() {
                 <th className="hidden md:block px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-blueGray-50 text-blueGray-500 border-blueGray-100">
                   Payment Mode
                 </th>
+                <th className="px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-blueGray-50 text-blueGray-500 border-blueGray-100">
+                Actions
+                </th>
               </tr>
             </thead>
             <tbody className="overflow-y-scroll h-56">
@@ -138,15 +143,22 @@ export default function CardAppointmentHistoryData() {
                 <span>{patient?.bookingDateTime?.split("T")[0]}</span>
                 </td>  
                 <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                  <span className="p-1" style={{'backgroundColor': patient?.status === 2 ? 'green' : patient?.status  === 1 ? 'yellow' : 'red'}}>{patient?.status===3?"Cancelled":patient?.status===2?"Completed":"Ongoing"}</span>
+                  <span className="p-2" style={{'color': 'white','backgroundColor': patient?.status === 2 ? 'green' : patient?.status  === 1 ? 'lightblue' : 'maroon'}}>{patient?.status===3?"Cancelled":patient?.status===2?"Completed":"Ongoing"}</span>
                 </td>            
                 <td className="hidden md:block border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
                 <span>{patient.paymentMode}</span>
                 </td>
                 {patient?.status === 2 &&
-                <td>
-                <button className="bg-blueGray-700 active:bg-blueGray-600 text-white font-bold uppercase text-xs px-2 md:px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
-                    type="button" onClick={(e)=>sendPrescription(e,patient?.searchToken)}>Send Prescription</button>
+                <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
+                <i className="far fa-paper-plane px-2 cursor-pointer" title="Send Prescription " onClick={(e)=>sendPrescription(e,patient?.searchToken)}></i>
+                <Link 
+                  href={{
+                    pathname:`/doctor/consultation/${patient?.searchToken}`,
+                    query:{searchToken:`${patient.searchToken}`,name:`${patient?.customerInfo?.name}`,mobile:`${patient?.customerInfo?.mobile}`, status:2}
+                    }}
+                    as={`/doctor/consultation/${patient?.searchToken}`} >
+                    <i className="fas fa-eye px-2 cursor-pointer" title="View Prescription"></i>
+                    </Link>
                 </td>}
               </tr>
             )))} 

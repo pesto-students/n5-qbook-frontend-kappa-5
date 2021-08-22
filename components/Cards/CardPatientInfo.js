@@ -11,6 +11,7 @@ export default function CardPatientInfo({searchToken}) {
   const dispatch = useDispatch();
   const router = useRouter();
   const [patientDetails,setPatientDetails] = useState({});
+  const [isSubmit,setIsSubmit] = useState();
   const [errorMessage,setErrorMessage] = useState(false);
   const [loading,setLoading] = useState(false);
   const getPatientInfo = async() =>{
@@ -19,11 +20,16 @@ export default function CardPatientInfo({searchToken}) {
       customer:{
       name:query.name,
       mobileNum:query.mobile
+      },
+      bookingDetail:{
+        status:query.status,
+        diagnosis:null,
+        prescription:null
       }
-    } 
+    }
     setPatientDetails(customerInfo)
   }
-    if(query.name===undefined){
+    if(query.name===undefined || query.status){
     const params={
       searchToken: searchToken,
     }
@@ -32,6 +38,8 @@ export default function CardPatientInfo({searchToken}) {
       const response = await getAsyncData('/booking/detail',params);
       setLoading(false);
       if(response){
+        response.data.bookingDetail.prescription =response.data.bookingDetail.userComment||null;
+        response.data.bookingDetail.diagnosis =response.data.bookingDetail.diagnosis||null;
         setPatientDetails(response.data); 
       } 
       if(!response){
@@ -53,36 +61,62 @@ export default function CardPatientInfo({searchToken}) {
   const handleInput = (e) =>{
     let propName = e.target.name;
     let propValue = e.target.value;
-    setPatientDetails({...patientDetails,[propName]:propValue})
+    let patientDetailsData = patientDetails;
+    let dataValue = {...patientDetailsData,
+      bookingDetail: {
+        ...patientDetailsData.bookingDetail, // Spread the startTime object to preserve all values
+        [propName]: propValue
+        }
+      }
+    setPatientDetails(dataValue)
+    console.log('setValue', dataValue,patientDetails);
+    
+    // let patientDetailsData = patientDetails;
+    // patientDetailsData.bookingDetail[e.target.name]=e.target.value;
+    // console.log('setValue', patientDetailsData,e.target.name, e.target.value,patientDetails);
+    // setPatientDetails(patientDetailsData);
   }
   const updatePatientInfoAPI = async(data) =>{
     setLoading(true);
     try {
       const response = await getAsyncPostData('/booking/addPrescription',data); 
       if(response){
+        toast("Prescription submited for the Appoinment",{type:"success"})
         dispatch(updateAppointmentsHistoryList(response.data))
         setLoading(false);
-        router.push({
+        if(patientDetails?.bookingDetail?.status && patientDetails.bookingDetail.status === 2){
+            router.push({
+              pathname: '/doctor/history'
+          })
+        }else{
+          router.push({
             pathname: '/doctor/appointments'
-        })
+          })
+        }
       }
       if(!response){
         setLoading(false);
-        return toast("Unable to submit the Prescription. Please try again",{type:"error"})
+        return toast("Unable to submit the Prescription. Please try again",{type:"error"});
       }
     }
     catch{
-      setErrorMessage(true);
+      setErrorMessage(false);
+      return toast("Unable to submit the Prescription. Please try again",{type:"error"});
     }
    }
   const updateProfile = (data,e) =>{
-    e.preventDefault();
-    const prescriptionData = {
-      searchToken:searchToken,
-      diagnosis:patientDetails.diagnosis,
-      prescription:patientDetails.prescription,
+    console.log('data',data);
+    if(patientDetails.bookingDetail.diagnosis && patientDetails.bookingDetail.prescription){
+      e.preventDefault();
+      setIsSubmit(true);
+      console.log('patientDetails',patientDetails,data)
+      const prescriptionData = {
+        searchToken:searchToken,
+        diagnosis:patientDetails.bookingDetail.diagnosis,
+        prescription:patientDetails.bookingDetail.prescription,
+      }
+      updatePatientInfoAPI(prescriptionData);
     }
-    updatePatientInfoAPI(prescriptionData);
   }
   const cancel = () =>{
     router.push({
@@ -92,7 +126,7 @@ export default function CardPatientInfo({searchToken}) {
 
   return (
     <>
-    <ToastContainer position="top-right" />
+    <ToastContainer position="bottom-right" />
     <LoadingOverlay active={loading} spinner text="">
       <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-blueGray-100 border-0">
         <div className="rounded-t bg-white mb-0 px-6 py-6">
@@ -126,30 +160,32 @@ export default function CardPatientInfo({searchToken}) {
             <div className="w-full lg:w-12/12 px-4">
                 <div className="relative w-full mb-3">
                   <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2">Diagnosis<span className="text-xs text-red-500 px-1">*</span></label>
-                  <textarea  rows={3} cols={3} {...register('diagnosis', { required: true })}  name="diagnosis" 
-                  value={patientDetails?.diagnosis} 
+                  <textarea  rows={3} cols={3} name="diagnosis" 
+                  value={patientDetails?.bookingDetail?.diagnosis} 
                   className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                     onChange={handleInput} />
-                    {errors?.diagnosis && <p className="text-xs text-red-500 pt-1 font-semibold">Diagnosis is Required</p>}
+                    {isSubmit && patientDetails && patientDetails.bookingDetail && !patientDetails.bookingDetail.diagnosis  && <p className="text-xs text-red-500 pt-1 font-semibold">Diagnosis is Required</p>}
                 </div>
             </div>
             <div className="w-full lg:w-12/12 px-4">
                 <div className="relative w-full mb-3">
                   <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2">Prescription<span className="text-xs text-red-500 px-1">*</span></label>
-                  <textarea  rows={5} cols={5}  name="prescription" {...register('prescription', { required: true })} value={patientDetails?.prescription} className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
+                  <textarea  rows={5} cols={5}  name="prescription"
+                    value={patientDetails?.bookingDetail?.prescription}
+                    className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                     onChange={handleInput} />
-                    {errors?.prescription && <p className="text-xs text-red-500 pt-1 font-semibold">Prescription is Required</p>}
+                    {isSubmit && patientDetails && patientDetails.bookingDetail && !patientDetails.bookingDetail.prescription && <p className="text-xs text-red-500 pt-1 font-semibold">Prescription is Required</p>}
                 </div>
             </div>
               <div className="w-full lg:w-6/12 px-4 mt-3">
                 <div className="relative w-full mb-3">
                   <button  className="bg-blueGray-700 active:bg-blueGray-600 text-white font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
                     onClick={cancel}>Cancel</button>
-                    {patientDetails?.prescription===undefined ||patientDetails?.prescription===""?
-                      <button  className="bg-blueGray-700 active:bg-blueGray-600 text-white font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150 opacity-50 cursor-not-allowed"
-                    type="submit">Submit</button>:
-                    <button  className="bg-blueGray-700 active:bg-blueGray-600 text-white font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
-                    type="submit">Submit</button>
+                    {patientDetails && patientDetails.bookingDetail && patientDetails.bookingDetail.prescription && patientDetails.bookingDetail.diagnosis ?
+                      <button  className="bg-blueGray-700 active:bg-blueGray-600 text-white font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
+                    type="submit">{patientDetails?.bookingDetail?.status && patientDetails.bookingDetail.status === 2?'Modify':'Submit'}</button>:
+                    <button  className="bg-blueGray-700 active:bg-blueGray-600 text-white font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150  opacity-50 cursor-not-allowed"
+                    type="submit">{patientDetails?.bookingDetail?.status && patientDetails.bookingDetail.status === 2?'Modify':'Submit'}</button>
                     }
                     
                 </div>

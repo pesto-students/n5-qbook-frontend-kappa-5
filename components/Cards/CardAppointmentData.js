@@ -37,7 +37,7 @@ export default function CardAppointmentData() {
       }, [])
   return (
     <>
-    <ToastContainer position="top-right" />
+    <ToastContainer position="bottom-right" />
     <LoadingOverlay active={loading} spinner text="">
       <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded bg-white">
         <div className="rounded-t mb-0 px-4 py-3 border-0">
@@ -93,7 +93,7 @@ export default function CardAppointmentData() {
                 <Link 
                 href={{
                   pathname:`/doctor/consultation/${patient?.searchToken}`,
-                  query:{searchToken:`${patient.searchToken}`,name:`${patient?.customerInfo?.name}`,mobile:`${patient?.customerInfo?.mobile}`}
+                  query:{searchToken:`${patient.searchToken}`,name:`${patient?.customerInfo?.name}`,mobile:`${patient?.customerInfo?.mobile}`, status:1}
                   }}
                   as={`/doctor/consultation/${patient?.searchToken}`} >
                 <button className="bg-blueGray-700 active:bg-blueGray-600 text-white font-bold uppercase text-xs px-2 md:px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"

@@ -82,7 +82,7 @@ const setNotificationEnabled =(e) =>{
 
   return (
       <>
-      <ToastContainer position="top-right" />
+      <ToastContainer position="bottom-right" />
       <LoadingOverlay active={loading} spinner text="">
       <div className="relative flex flex-col  min-w-0 break-words bg-white w-full mb-6 shadow-xl rounded-lg">        
         <div className="flex flex-wrap flex-col  m-20 space-y-2">
@@ -100,7 +100,7 @@ const setNotificationEnabled =(e) =>{
               {patientList?.length===0?
               <button
               className="bg-blueGray-700 active:bg-blueGray-600 text-white font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150 opacity-50 cursor-not-allowed"
-              type="button" onClick={cancelAppointments}
+              type="button"
               >Cancel All Appointments</button>
               :
               <button

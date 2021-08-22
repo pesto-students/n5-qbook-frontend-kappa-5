@@ -195,12 +195,12 @@ export default function Booking() {
           router.push('/confirmation?searchToken='+encodeURIComponent(bookingResponse.data.booking.searchToken))
         }else{
           setLoading(false);
-          setErrorMessage('Some issue in Book an appointment please try again !');
+          setErrorMessage('Some issue in Book an appointment might be due to timeout, please try again via refresh the page !');
         }
       }
       catch{
         setLoading(false);
-        setErrorMessage('Some issue in Book an appointment please try again !');
+        setErrorMessage('Some issue in Book an appointment might be due to timeout, please try again via refresh the page !');
       }
       
     }
@@ -223,7 +223,7 @@ export default function Booking() {
                   <h6 className="text-blueGray-500 text-sm font-bold uppercase">Book an Appointment</h6>
                 </div>  
                 {errorMessage?<div className="text-center mb-3">
-                  <h6 className="text-red-500 text-sm font-bold">! Error : {errorMessage}</h6>
+                  <h6 className="text-red-500 text-sm font-bold">{errorMessage}</h6>
                 </div>:''}           
                 <hr className="mt-6 border-b-1 border-blueGray-300" />
               </div>:
