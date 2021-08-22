@@ -5,13 +5,10 @@ import { useDispatch } from 'react-redux'
 import { login } from '../../slices/doctorSlice'
 import { fcmToken, qBook, signInText, Google, qBookDescription, doctorLogin, loginUrlAPI } from '../../utils/Constants';
 import {getAsyncPostData} from '../../utils/ApiRequests';
-import { useRouter } from 'next/router'
-import CardLoader from '../../components/Cards/CardLoader'
+import { ToastContainer, toast } from 'react-toastify';
 export default function DoctorLogin() {
   const dispatch = useDispatch();
-  const router = useRouter();
   const [tokenFCM,setTokenFCM] = useState('');
-  const [loading,setLoading] = useState(false);
   const [errorMessage,setErrorMessage] = useState(false);
   const addDoctorInfo = async(user) =>{
     try{
@@ -20,9 +17,13 @@ export default function DoctorLogin() {
         localStorage.setItem(`${doctorLogin}`,JSON.stringify(response.data));
         dispatch(login(response.data));
       }
+      if(!response){
+        return toast("Unable to login. Please try again.",{type:"error"})
+      } 
     }
     catch{
       setErrorMessage(true);
+      return toast("Unable to login. Please try again.",{type:"error"})
     }  
   }
   useEffect(() => {
@@ -46,9 +47,7 @@ export default function DoctorLogin() {
   }
   return (
     <>
-    {loading?(
-      <CardLoader/>
-    ):(
+    <ToastContainer position="bottom-right" /> 
       <div className="container mx-auto px-4 h-full">
         <div className="flex content-center items-center justify-center h-full">
           <div className="w-full lg:w-4/12 px-4">
@@ -87,7 +86,6 @@ export default function DoctorLogin() {
           </div>
         </div>
       </div>
-    )}
     </>
   );
 }

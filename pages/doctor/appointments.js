@@ -8,6 +8,7 @@ import { firebaseAuth } from "../../firebase";
 import {  useDispatch, } from 'react-redux';
 import {   logout } from "slices/doctorSlice";
 import LoadingOverlay from "react-loading-overlay";
+import { ToastContainer, toast } from 'react-toastify';
 export default function Appointments() {
   const router = useRouter();
   const dispatch = useDispatch();
@@ -24,14 +25,21 @@ export default function Appointments() {
     });
     }
     const settingInfo = JSON.parse(localStorage.getItem('settings'));
-   
     if(!settingInfo){
-      const response = await getAsyncData('/user/dashboard');
-      if(response && response?.data?.setting){
-        localStorage.setItem('settings',JSON.stringify(response?.data?.setting));
-        setSettingData(response?.data?.setting)
-      } else{
-        router.push('/doctor/settings')
+      try{
+        const response = await getAsyncData('/user/dashboard');
+        if(response && response?.data?.setting){
+          localStorage.setItem('settings',JSON.stringify(response?.data?.setting));
+          setSettingData(response?.data?.setting)
+        } else{
+          router.push('/doctor/settings')
+        }
+        if(!response){
+          return toast("Unable to load the appointments",{type:"error"})
+        } 
+      }
+      catch{
+        return toast("Unable to load the appointments",{type:"error"})
       }
     }
     else{
@@ -49,7 +57,8 @@ export default function Appointments() {
       )
     }
   return (
-    <>   
+    <>  
+      <ToastContainer position="bottom-right" /> 
       <div className="flex flex-wrap mt-4">
         <div className="w-full px-4 lg:w-8/12">
           <CardAppointmentData/>
