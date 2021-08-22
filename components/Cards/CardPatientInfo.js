@@ -22,14 +22,14 @@ export default function CardPatientInfo({searchToken}) {
       mobileNum:query.mobile
       },
       bookingDetail:{
-        status:query.status,
-        diagnosis:null,
-        prescription:null
-      }
+        status:query.status
+      },
+      diagnosis:'',
+      prescription:''
     }
     setPatientDetails(customerInfo)
   }
-    if(query.name===undefined || query.status){
+  if( (query.name===undefined) || (query.status && query.status === '2')){
     const params={
       searchToken: searchToken,
     }
@@ -38,8 +38,8 @@ export default function CardPatientInfo({searchToken}) {
       const response = await getAsyncData('/booking/detail',params);
       setLoading(false);
       if(response){
-        response.data.bookingDetail.prescription =response.data.bookingDetail.userComment||null;
-        response.data.bookingDetail.diagnosis =response.data.bookingDetail.diagnosis||null;
+        response.data.prescription =response.data.bookingDetail.userComment||'';
+        response.data.diagnosis =response.data.bookingDetail.diagnosis||'';
         setPatientDetails(response.data); 
       } 
       if(!response){
@@ -61,20 +61,7 @@ export default function CardPatientInfo({searchToken}) {
   const handleInput = (e) =>{
     let propName = e.target.name;
     let propValue = e.target.value;
-    let patientDetailsData = patientDetails;
-    let dataValue = {...patientDetailsData,
-      bookingDetail: {
-        ...patientDetailsData.bookingDetail, // Spread the startTime object to preserve all values
-        [propName]: propValue
-        }
-      }
-    setPatientDetails(dataValue)
-    console.log('setValue', dataValue,patientDetails);
-    
-    // let patientDetailsData = patientDetails;
-    // patientDetailsData.bookingDetail[e.target.name]=e.target.value;
-    // console.log('setValue', patientDetailsData,e.target.name, e.target.value,patientDetails);
-    // setPatientDetails(patientDetailsData);
+    setPatientDetails({...patientDetails,[propName]:propValue})
   }
   const updatePatientInfoAPI = async(data) =>{
     setLoading(true);
@@ -106,22 +93,28 @@ export default function CardPatientInfo({searchToken}) {
    }
   const updateProfile = (data,e) =>{
     console.log('data',data);
-    if(patientDetails.bookingDetail.diagnosis && patientDetails.bookingDetail.prescription){
+    if(patientDetails.diagnosis && patientDetails.prescription){
       e.preventDefault();
       setIsSubmit(true);
       console.log('patientDetails',patientDetails,data)
       const prescriptionData = {
         searchToken:searchToken,
-        diagnosis:patientDetails.bookingDetail.diagnosis,
-        prescription:patientDetails.bookingDetail.prescription,
+        diagnosis:patientDetails.diagnosis,
+        prescription:patientDetails.prescription,
       }
       updatePatientInfoAPI(prescriptionData);
     }
   }
   const cancel = () =>{
-    router.push({
-      pathname: '/doctor/appointments'
-    });
+    if(patientDetails?.bookingDetail?.status && patientDetails.bookingDetail.status === 2){
+      router.push({
+        pathname: '/doctor/history'
+        })
+      } else {
+        router.push({
+          pathname: '/doctor/appointments'
+        })
+      }
   }
 
   return (
@@ -161,27 +154,27 @@ export default function CardPatientInfo({searchToken}) {
                 <div className="relative w-full mb-3">
                   <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2">Diagnosis<span className="text-xs text-red-500 px-1">*</span></label>
                   <textarea  rows={3} cols={3} name="diagnosis" 
-                  value={patientDetails?.bookingDetail?.diagnosis} 
+                  value={patientDetails?.diagnosis} 
                   className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                     onChange={handleInput} />
-                    {isSubmit && patientDetails && patientDetails.bookingDetail && !patientDetails.bookingDetail.diagnosis  && <p className="text-xs text-red-500 pt-1 font-semibold">Diagnosis is Required</p>}
+                    {isSubmit && patientDetails && !patientDetails.diagnosis  && <p className="text-xs text-red-500 pt-1 font-semibold">Diagnosis is Required</p>}
                 </div>
             </div>
             <div className="w-full lg:w-12/12 px-4">
                 <div className="relative w-full mb-3">
                   <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2">Prescription<span className="text-xs text-red-500 px-1">*</span></label>
                   <textarea  rows={5} cols={5}  name="prescription"
-                    value={patientDetails?.bookingDetail?.prescription}
+                    value={patientDetails?.prescription}
                     className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                     onChange={handleInput} />
-                    {isSubmit && patientDetails && patientDetails.bookingDetail && !patientDetails.bookingDetail.prescription && <p className="text-xs text-red-500 pt-1 font-semibold">Prescription is Required</p>}
+                    {isSubmit && patientDetails  && !patientDetails.prescription && <p className="text-xs text-red-500 pt-1 font-semibold">Prescription is Required</p>}
                 </div>
             </div>
               <div className="w-full lg:w-6/12 px-4 mt-3">
                 <div className="relative w-full mb-3">
                   <button  className="bg-blueGray-700 active:bg-blueGray-600 text-white font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
                     onClick={cancel}>Cancel</button>
-                    {patientDetails && patientDetails.bookingDetail && patientDetails.bookingDetail.prescription && patientDetails.bookingDetail.diagnosis ?
+                    {patientDetails &&  patientDetails.prescription && patientDetails.diagnosis ?
                       <button  className="bg-blueGray-700 active:bg-blueGray-600 text-white font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
                     type="submit">{patientDetails?.bookingDetail?.status && patientDetails.bookingDetail.status === 2?'Modify':'Submit'}</button>:
                     <button  className="bg-blueGray-700 active:bg-blueGray-600 text-white font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150  opacity-50 cursor-not-allowed"

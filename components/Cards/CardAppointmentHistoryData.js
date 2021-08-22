@@ -42,7 +42,6 @@ export default function CardAppointmentHistoryData() {
           setFiltered(false);
         }
         setFilteredList(filteredArray)
-        console.log(filtered,"filteredOptions")
       }, [searchText,searchDate])
       const getAppointmentHistoryList = async() =>{
             const params={

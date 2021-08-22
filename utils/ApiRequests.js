@@ -17,7 +17,6 @@ export const getAsyncPostData = async (url, params, headers) => {
       }
     })
     .catch((error) => {
-      console.log("Error In Api = " + error);
       return false;
     });
   const response = responseData ? responseData.data : false;
@@ -40,8 +39,6 @@ export const getAsyncData = async (url,params, headers) => {
       }
     })
     .catch((error) => {
-      console.log(error);
-      console.log("Error In Api = " + url);
       return false;
     });
   const response = responseData ? responseData.data : false;
