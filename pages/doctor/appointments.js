@@ -9,6 +9,7 @@ import {  useDispatch, } from 'react-redux';
 import {   logout } from "slices/doctorSlice";
 import LoadingOverlay from "react-loading-overlay";
 import { ToastContainer, toast } from 'react-toastify';
+import Settings from "./settings";
 export default function Appointments() {
   const router = useRouter();
   const dispatch = useDispatch();
@@ -53,6 +54,13 @@ export default function Appointments() {
       return(
         <>
         <LoadingOverlay active={true} spinner text=""></LoadingOverlay>
+        </>
+      )
+    }
+    if(!settingData){
+      return(
+        <>
+      <LoadingOverlay active={true} spinner text=""></LoadingOverlay>
         </>
       )
     }
