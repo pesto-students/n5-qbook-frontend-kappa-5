@@ -6,13 +6,17 @@ import { login } from '../../slices/doctorSlice'
 import { fcmToken, qBook, signInText, Google, qBookDescription, doctorLogin, loginUrlAPI } from '../../utils/Constants';
 import {getAsyncPostData} from '../../utils/ApiRequests';
 import { ToastContainer, toast } from 'react-toastify';
+import LoadingOverlay from "react-loading-overlay";
 export default function DoctorLogin() {
   const dispatch = useDispatch();
   const [tokenFCM,setTokenFCM] = useState('');
   const [errorMessage,setErrorMessage] = useState(false);
+  const [loading,setLoading] = useState(false);
   const addDoctorInfo = async(user) =>{
     try{
+      setLoading(true);
       const response= await getAsyncPostData(`${loginUrlAPI}`,user);
+      setLoading(false);
       if(response){
         localStorage.setItem(`${doctorLogin}`,JSON.stringify(response.data));
         dispatch(login(response.data));
@@ -48,10 +52,12 @@ export default function DoctorLogin() {
   return (
     <>
     <ToastContainer position="bottom-right" /> 
+   
       <div className="container mx-auto px-4 h-full">
         <div className="flex content-center items-center justify-center h-full">
           <div className="w-full lg:w-4/12 px-4">
             <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-blueGray-600 border-0">
+            <LoadingOverlay active={loading} spinner text="">
               <div className="rounded-t mb-0 px-6 py-6">
              
                 <div className="text-center mb-3 mt-2">
@@ -81,11 +87,13 @@ export default function DoctorLogin() {
             <p className="block uppercase text-xs font-bold text-red-500 px-2">Unable to Login..!!</p>
              }  
             </div>
-              </div>          
+              </div> 
+            </LoadingOverlay>
             </div>          
           </div>
         </div>
       </div>
+      
     </>
   );
 }
