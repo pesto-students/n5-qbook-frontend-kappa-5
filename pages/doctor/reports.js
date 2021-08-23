@@ -51,7 +51,7 @@ export default function Reports() {
   }
     return (
         <>
-        <ToastContainer position="bottom-center" />
+        <ToastContainer position="bottom-right" />
         <LoadingOverlay active={loading} spinner text="">
       {Object.keys(response).length>0 &&
       <div className="flex flex-wrap">

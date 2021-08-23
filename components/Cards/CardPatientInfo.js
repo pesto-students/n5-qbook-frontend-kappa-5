@@ -68,7 +68,7 @@ export default function CardPatientInfo({searchToken}) {
     try {
       const response = await getAsyncPostData('/booking/addPrescription',data); 
       if(response){
-        toast("Prescription submited for the Appoinment",{type:"success"})
+        toast("Prescription submitted for the Appointment",{type:"success"})
         dispatch(updateAppointmentsHistoryList(response.data))
         setLoading(false);
         if(patientDetails?.bookingDetail?.status && patientDetails.bookingDetail.status === 2){

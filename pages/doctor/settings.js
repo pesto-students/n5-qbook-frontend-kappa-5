@@ -62,7 +62,7 @@ export default function Settings() {
     }
   return (
     <> 
-     <ToastContainer position="bottom-center" /> 
+     
     <LoadingOverlay active={loading} spinner text="">
       <div className="flex flex-wrap">
         <div className="w-full lg:w-8/12 px-4">
