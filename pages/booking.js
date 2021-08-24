@@ -157,7 +157,7 @@ export default function Booking() {
           const options = {
             key: 'rzp_test_Mj02y5458xshqx',
             currency: 'INR',
-            amount: checkAvailable.data.fees || 500,//data.amount.toString(),
+            amount: checkAvailable.data.fees*100 || 500,//data.amount.toString(),
             order_id: checkAvailable.data.orderId,
             name: 'Doctor Payment',
             description: 'Please go ahead for payment !!',
@@ -181,6 +181,7 @@ export default function Booking() {
               phone_number: phoneNumber
             }
           }
+          console.log('options',options,checkAvailable);
           const paymentObject = new window.Razorpay(options)
           paymentObject.open()
       }
@@ -232,7 +233,7 @@ export default function Booking() {
                   <div className="rounded-t mb-0 px-6 py-6">
                     
                   <div className="text-center mb-3">
-                    <h6 className="text-blueGray-500 text-sm font-bold">  'Doctor Appointment is not available for now !!.' </h6>
+                    <h6 className="text-blueGray-500 text-sm font-bold" data-testid="apoinmnetText">Doctor Appointment is not available for now !!.</h6>
                   </div>
                 </div>}
               </div>

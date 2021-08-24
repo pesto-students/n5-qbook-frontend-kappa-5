@@ -61,7 +61,7 @@ export default function DoctorLogin() {
               <div className="rounded-t mb-0 px-6 py-6">
              
                 <div className="text-center mb-3 mt-2">
-                  <h6 className="text-white text-sm font-bold">
+                  <h6 className="text-white text-sm font-bold" data-testid="signInText">
                     {signInText}
                   </h6>
                 </div>

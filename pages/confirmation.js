@@ -139,7 +139,7 @@ export default function Confirmation() {
       <section className="relative py-16 ">
         <div className="container mx-auto px-4">
           <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-xl rounded-lg ">
-            <div className="px-6"><div className="flex flex-wrap justify-center">No Appoinmnet Available !!</div></div>
+            <div className="px-6"><div className="flex flex-wrap justify-center" data-testid="confirmationText">No Appoinmnet Available !!</div></div>
             </div>
           </div>
         </section>
