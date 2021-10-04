@@ -3,7 +3,7 @@ import {firebaseAuth,provider} from '../../firebase'
 import LoginLayout from "layouts/LoginLayout.js";
 import { useDispatch } from 'react-redux'
 import { login } from '../../slices/doctorSlice'
-import { fcmToken, qBook, signInText, Google, qBookDescription, doctorLogin, loginUrlAPI } from '../../utils/Constants';
+import { fcmToken, qBook, signInText, Google, qBookDescription, doctorLogin, loginUrlAPI, guestCredential } from '../../utils/Constants';
 import {getAsyncPostData} from '../../utils/ApiRequests';
 import { ToastContainer, toast } from 'react-toastify';
 import LoadingOverlay from "react-loading-overlay";
@@ -49,6 +49,17 @@ export default function DoctorLogin() {
     })
     .catch(error=>alert(error.message))
   }
+  const guestSignIn = () =>{
+    let guestUserInfo = {
+          email:guestCredential.email,
+          googleAuthId: guestCredential.uid,
+          firstname:guestCredential.displayName,
+          lastname:guestCredential.displayName,
+          image:guestCredential.photoURL,
+          token:guestCredential.token||''
+        }
+        addDoctorInfo(guestUserInfo);
+  }
   return (
     <>
     <ToastContainer position="bottom-right" /> 
@@ -73,6 +84,14 @@ export default function DoctorLogin() {
                   >
                     <img alt="..." className="w-5 mr-1" src="/img/google.svg" />
                     {Google}
+                  </button>
+                  <button
+                    className="bg-white active:bg-blueGray-50 text-blueGray-700 font-normal px-4 py-2 rounded outline-none focus:outline-none mr-1 mb-1 uppercase shadow hover:shadow-md inline-flex items-center font-bold text-xs ease-linear transition-all duration-150"
+                    type="button"
+                    onClick={guestSignIn}
+                  >
+                    <img alt="..." className="w-5 mr-1" src="/img/google.svg" />
+                    Guest Login
                   </button>
                 </div>
                 <div className="mt-5 pt-5 pb-2 border-t border-blueGray-200 text-center">           

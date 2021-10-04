@@ -85,3 +85,4 @@ export const errorSWReg = 'Service worker registration failed, error:';
 export const eventSW = 'event for the service worker';
 export const fileSW = './firebase-messaging-sw.js';
 export const msgReceived = 'Message received.';
+export const guestCredential = {"email":"mohit.niwadunge@gmail.com","googleAuthId":"K7PvthUembdOMMwLXegSw9Da7Iy1","firstname":"Mohit Rao Niwadunge","lastname":"Mohit Rao Niwadunge","image":"https://lh3.googleusercontent.com/a-/AOh14GjIm4-_CVwMwnzXQaowywA7KBEqvbd3EbnZu2GIng=s96-c","token":"eJnXKDn5shEHk6qaOJ5-LU:APA91bFqY3Ktc3x5MARAb0ComsUeXZ3iPCf-ta9M75Wnco4du7uEds3OEEflvDErGvxKNV5hV7Dap3qRYVCaNEcbqDNWYEWUudpBUn_dg4O-ePUHlLO4GyAKn4GMSWAj5QJdZRL40r3e"}
