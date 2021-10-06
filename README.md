@@ -36,13 +36,16 @@ npm install npm@latest -g
 ### Installation
 
 Clone the repo
-git clone https://github.com/pesto-students/n5-qbook-frontend-kappa-5/
+- git clone https://github.com/pesto-students/n5-qbook-frontend-kappa-5/
 
 Install NPM packages 
-npm install
+- npm install
 
 Run the frontend app
-npm run start
+- npm run start
+
+Run the backend app
+sails lift
 
 ## Tech Stack
 
@@ -62,7 +65,8 @@ npm run start
 
 ## Source Code Repo
 
-Front End - https://github.com/pesto-students/n5-qbook-frontend-kappa-5/
+- Front End - https://github.com/pesto-students/n5-qbook-frontend-kappa-5/
+- Back End  - https://github.com/pesto-students/n5-qbook-backend-kappa-5
 
 ## Resources
 
@@ -126,8 +130,8 @@ The support tab allows to send any query to the doctor. An automated email is tr
 - Scan the QR code 
 - The below form will be opened where the patient can fill in their details and authenticate with phone number via OTP verification and click on Book Appointment.
 ![image](https://user-images.githubusercontent.com/5499396/136137684-1fec903d-3801-482c-96c4-6c00b7dbeefa.png)
-After validation, the patient can select to pay via cash or online. On selecting the online payment mode, the patient is redirected to razor pay screen where the patient can fill in the payment details and complete their transaction.
-Once the appointment is confirmed, the patient is redirected to the confirmation page where details like the queue number and the expected waiting time will be displayed.
+- After validation, the patient can select to pay via cash or online. On selecting the online payment mode, the patient is redirected to razor pay screen where the patient can fill in the payment details and complete their transaction.
+- Once the appointment is confirmed, the patient is redirected to the confirmation page where details like the queue number and the expected waiting time will be displayed.
 
 ![image](https://user-images.githubusercontent.com/5499396/136137854-4e21ed90-2570-4659-bf81-08c7cfce2ba0.png)
 
